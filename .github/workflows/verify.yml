@@ -36,6 +36,7 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y verilator
       - run: python -m pip install '.[fast]'
       - run: cd hardware && sbt 'runMain zircon.GenerateAll ../build/rtl'
+      - run: python scripts/validate_rtl.py --unit fp16.fma
       - run: python scripts/validate_rtl.py
       - run: python scripts/validate_rtl.py --unsigned --unit int8.add --unit int8.mul --unit int8.div --unit int16.add --unit int16.mul --unit int16.div --unit int32.add --unit int32.mul --unit int32.div
       - run: python scripts/validate_network_rtl.py
@@ -49,6 +50,12 @@ jobs:
             build/alignment-summary.json
             build/rtl/**/alignment.json
             build/rtl/**/failure.json
+            build/rtl/**/Unit.sv
+            build/rtl/**/manifest.json
+            build/rtl/**/build-id.json
+            build/rtl/**/stimulus.txt
+            build/rtl/**/python.trace
+            build/rtl/**/rtl.trace
             build/rtl/**/generate.log
             build/rtl/**/compile.log
             build/rtl/**/exhaustive-*.json
