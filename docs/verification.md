@@ -41,3 +41,11 @@ macOS ARM 上的固定镜像通过 AMD64 仿真运行。镜像附带的 Kepler �
 `python scripts/collect_reports.py` 将测试、穷举、逐周期、性能和物理记录汇总为 `reports/validation.json`，同时生成配置表和包内 `qualification.json`。完整 Python 回归记录实际源内容的 SHA-256；RTL 记录绑定生成内容的 SHA-256。更换实现、契约或自定义时序后，原验证状态自动失效，不能沿用已合格标记。
 
 `describe()` 区分 `unqualified`、`cycle-verified` 与 `dual-verified`，并给出每项门槛及物理评估级别。硬件生成的 manifest 默认保持未合格，使用其中的 RTL 哈希与发布配置表关联验收证据。
+
+## 仿真器交叉核对与版本兼容
+
+在 Linux 的 Verilator 5.020 默认优化下，FP16 FMA 曾把 `a=1066, b=457, c=48378, RNE` 算成 `0xbffa`，正确结果为 `0xbcfa` 并置 NX。两平台生成的 RTL 字节完全一致；Verilator 5.050 和 Icarus 对原始 12000 拍刺激均通过。5.020 关闭 `const-bit-op-tree` 与 `expand` 后，CI 的同一 FP16 回归通过。
+
+验证脚本对 5.022 之前的版本显式关闭这两项优化，并将选项写入构建标识。相关上游修复见 [NOT 位运算优化修复](https://github.com/verilator/verilator/pull/4847) 和 [移位宽度修复](https://github.com/verilator/verilator/pull/4849)。这项兼容处理不改变 Chisel 或生成的 RTL。
+
+`python scripts/replay_iverilog.py build/rtl/fp16_fma` 可用独立 RTL 仿真器重放保存的刺激和 Python 期望轨迹。CI 保留 RTL、manifest、刺激、双边轨迹和失败信息；本地失败还会归档到独立目录，后续成功运行不会复用旧错误记录。

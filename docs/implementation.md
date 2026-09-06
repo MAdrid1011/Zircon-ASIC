@@ -58,3 +58,7 @@ val integerDivision = Module(Arithmetic("int16", "div", signed = false))
 ```
 
 `Contract.bundled()` 读取 JAR 中的契约，`new Contract(path)` 可读取显式配置。生成器允许使用 `ZIRCON_CONTRACT` 指定候选配置；候选需重新完成数值、周期与时序验收。
+
+## 物理约束与实现开销
+
+面积包含统一接口的 32 位标签、有效位、停顿控制和观察端口。TC 评估的硬约束固定为 1000 ps 周期、200 ps IO 预算和 50 ps 时钟不确定度。个别配置增加布局工具的 setup/hold 修复目标裕量，这只要求工具进一步优化，不放宽上述 STA 约束；具体数值记录在物理报告中。

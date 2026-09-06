@@ -14,17 +14,17 @@ ROOT = Path(__file__).resolve().parents[1]
 IMAGE = "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386"
 
 
-def run(unit,corner="TC",target="global_route"):
+def run(unit,corner="TC",target="global_route",setup_margin=0,hold_margin=0):
     # ORFS writes shared stage files; two campaigns must never share a workdir.
     lockdir=ROOT/"build/ppa/locks"
     lockdir.mkdir(parents=True,exist_ok=True)
     lockname=hashlib.sha256(f"{unit}:{corner}".encode()).hexdigest()+".lock"
     with (lockdir/lockname).open("w") as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
-        return _run(unit,corner,target)
+        return _run(unit,corner,target,setup_margin,hold_margin)
 
 
-def _run(unit,corner,target):
+def _run(unit,corner,target,setup_margin,hold_margin):
     parts = unit.split(".")
     name,op = parts[:2]
     unsigned = len(parts) == 3 and parts[2] == "unsigned"
@@ -37,7 +37,9 @@ def _run(unit,corner,target):
     manifest=json.loads((rtl.parent/"manifest.json").read_text())
     rtl_bytes = rtl.read_bytes()
     rtl_hash = hashlib.sha256(rtl_bytes).hexdigest()
-    out = ROOT/f"build/ppa/{directory}_{corner}"/rtl_hash[:12]
+    if manifest.get("rtl_sha256",rtl_hash) != rtl_hash:
+        raise RuntimeError("RTL and manifest differ; finish generation before physical evaluation")
+    out = ROOT/f"build/ppa/{directory}_{corner}"/(rtl_hash[:12]+(f"_sm{setup_margin}" if setup_margin else "")+(f"_hm{hold_margin}" if hold_margin else ""))
     out.mkdir(parents=True,exist_ok=True)
     snapshot = out/"Unit.sv"
     if not snapshot.exists(): snapshot.write_bytes(rtl_bytes)
@@ -54,6 +56,8 @@ export CORE_ASPECT_RATIO = 1
 export CORE_MARGIN = 2
 export PLACE_DENSITY_LB_ADDON = 0.20
 export TNS_END_PERCENT = 20
+export SETUP_SLACK_MARGIN = {setup_margin}
+export HOLD_SLACK_MARGIN = {hold_margin}
 export NUM_CORES = 2
 # FP4 division is an intentional 2048x9 constant ROM, mapped into gates.
 export SYNTH_MEMORY_MAX_BITS = 32768
@@ -65,13 +69,15 @@ export REPORTS_DIR = {container}/reports
 export LOG_DIR = {container}/logs
 export OBJECTS_DIR = {container}/objects
 """
-    (out/"config.mk").write_text(config)
-    (out/"constraint.sdc").write_text("""# ASAP7 timing units are picoseconds: 1000 ps is 1 GHz.
+    constraints="""# ASAP7 timing units are picoseconds: 1000 ps is 1 GHz.
 create_clock -name core_clock -period 1000 [get_ports clock]
 set_input_delay 200 -clock core_clock [all_inputs -no_clocks]
 set_output_delay 200 -clock core_clock [all_outputs]
 set_clock_uncertainty 50 [get_clocks core_clock]
-""")
+"""
+    for filename,content in [("config.mk",config),("constraint.sdc",constraints)]:
+        path=out/filename
+        if not path.exists() or path.read_text()!=content: path.write_text(content)
     make_target = {"global_route": "grt"}.get(target, target)
     command = ["docker","run","--rm","--platform","linux/amd64","-v",f"{ROOT}:/workspace",IMAGE,
                "bash","-lc",f"source /OpenROAD-flow-scripts/env.sh && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG={container}/config.mk RESULTS_DIR={container}/results REPORTS_DIR={container}/reports LOG_DIR={container}/logs OBJECTS_DIR={container}/objects {make_target}"]
@@ -84,8 +90,9 @@ set_clock_uncertainty 50 [get_clocks core_clock]
     report = dict(unit=unit,corner=corner,platform="ASAP7",voltage={"WC":0.63,"TC":0.70,"BC":0.77}[corner],
                   temperature_c={"WC":100,"TC":0,"BC":25}[corner],clock_period_ps=1000,io_delay_ps=200,uncertainty_ps=50,
                   image=IMAGE,rtl_sha256=rtl_hash,source_snapshot=True,latency=manifest["latency"],
+                  configuration_sha256=hashlib.sha256((config+constraints+IMAGE).encode()).hexdigest(),
                   initiation_interval=1 if manifest["kind"]=="elastic" else manifest["latency"],
-                  target=target,synth_memory_max_bits=32768,post_resize_formal_lec=False,exit_code=result.returncode,elapsed_seconds=time.monotonic()-start,metrics=metrics)
+                  target=target,setup_repair_margin_ps=setup_margin,hold_repair_margin_ps=hold_margin,synth_memory_max_bits=32768,post_resize_formal_lec=False,exit_code=result.returncode,elapsed_seconds=time.monotonic()-start,metrics=metrics)
     (out/"physical.json").write_text(json.dumps(report,indent=2)+"\n")
     if result.returncode: raise RuntimeError(f"{unit}: physical flow failed; inspect {out/'flow.log'}")
     print(f"Completed {unit} {corner} {target}: {out/'physical.json'}",flush=True)
@@ -97,9 +104,11 @@ if __name__ == "__main__":
     p.add_argument("--corner",default="TC",choices=["BC","TC","WC"])
     p.add_argument("--target",default="global_route",choices=["synth","floorplan","place","cts","global_route","route","finish"])
     p.add_argument("--jobs",type=int,default=1)
+    p.add_argument("--setup-margin",type=int,default=0,help="extra setup repair target in ps; STA clock and uncertainty remain unchanged")
+    p.add_argument("--hold-margin",type=int,default=0,help="extra hold repair target in ps")
     a = p.parse_args()
     with ThreadPoolExecutor(max_workers=a.jobs) as pool:
-        futures={unit:pool.submit(run,unit,a.corner,a.target) for unit in a.units}
+        futures={unit:pool.submit(run,unit,a.corner,a.target,a.setup_margin,a.hold_margin) for unit in a.units}
         errors=[]
         for unit,future in futures.items():
             try: future.result()

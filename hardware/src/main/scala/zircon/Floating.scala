@@ -47,9 +47,9 @@ class Prepared(f: Format) extends Bundle {
 abstract class FloatingElasticModule(val format: Format,s: Spec) extends ElasticModule(format.width,s) {
   def pipedRound(x: Magnitude,k: Int,start: Int): Response = {
     if(spec.phases.contains("grs")) {
-      val norm = stage(FloatLogic.normalize(x,format,k),start)
+      val norm = stage(FloatLogic.normalize(x,format,k,format.name == "e4m3fn" && spec.op == "fma",format.name == "fp32" && spec.op == "fma"),start)
       val prepared = stage(FloatLogic.prepare(norm,format,k),start+1)
-      stage(FloatLogic.finish(prepared,format,spec.name == "fp32" && spec.op == "fma"),start+2)
+      stage(FloatLogic.finish(prepared,format),start+2)
     } else stage(FloatLogic.round(x,format,k),start)
   }
 }
@@ -127,15 +127,22 @@ object FloatLogic {
     o.exp := x.exp; o.meta := x.meta
     o
   }
-  def normalize(x: Magnitude,f: Format,k: Int): Normalized = {
+  def normalize(x: Magnitude,f: Format,k: Int,parallelCut: Boolean = false,compactQuantum: Boolean = false): Normalized = {
     val n = Wire(new Normalized(f,k)); n.raw := x
     val topBit = (k-1).U - PriorityEncoder(Reverse(x.mag))
     n.top := Adders.signedAdd(x.exp,topBit.zext,f.ew)
     val normalCut = topBit.zext-f.fb.S
-    n.quantum := Mux(n.top < f.emin.S,(f.emin-f.fb).S,
-      Adders.signedAdd(x.exp,normalCut,f.ew))
-    // Cancellation of the exponent in the normal case avoids two serial adders.
-    n.cut := Mux(n.top < f.emin.S,Adders.signedAdd((f.emin-f.fb).S,x.exp,f.ew,true),normalCut)
+    if(parallelCut) {
+      val tinyCut = Adders.signedAdd((f.emin-f.fb).S,x.exp,f.ew,true)
+      val isTiny = normalCut < tinyCut
+      n.quantum := Mux(isTiny,(f.emin-f.fb).S,Adders.signedAdd(x.exp,normalCut,f.ew))
+      n.cut := Mux(isTiny,tinyCut,normalCut)
+    } else {
+      n.quantum := (if(compactQuantum) Adders.signedAdd(Mux(n.top < f.emin.S,f.emin.S,n.top),(-f.fb).S,f.ew)
+        else Mux(n.top < f.emin.S,(f.emin-f.fb).S,Adders.signedAdd(x.exp,normalCut,f.ew)))
+      // Cancellation of the exponent in the normal case avoids two serial adders.
+      n.cut := Mux(n.top < f.emin.S,Adders.signedAdd((f.emin-f.fb).S,x.exp,f.ew,true),if(compactQuantum) topBit.zext-f.fb.S else normalCut)
+    }
     n
   }
   def prepare(n: Normalized,f: Format,k: Int): Prepared = {
@@ -309,9 +316,12 @@ class FpFma(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
     val mag = Wire(new Magnitude(f,k))
     val productSign = stage(sign,fusedStage)
     val zeroSign = stage(Mux(!productNonzero && cc.zero && sign === cc.sign,sign,mm.rounding === 2.U),fusedStage)
-    // -(a+b) = ~a + ~b + 2 (mod 2^k). Compute both signs concurrently.
-    val negativePair = Compressors.reduce(Seq(~pair(0),~pair(1),2.U(k.W)),k,2)
-    val negated = Adders.brentKung(negativePair(0).pad(sumWidth),negativePair(1).pad(sumWidth),sumWidth)(k-1,0)
+    // Small formats compute -(a+b) = ~a + ~b + 2 concurrently. Wide formats
+    // retain the smaller serial absolute-value candidate after measured STA.
+    val negativePair = if(f.width <= 8) Compressors.reduce(Seq(~pair(0),~pair(1),2.U(k.W)),k,2) else Seq.empty
+    val negated = if(f.width > 8)
+      Adders.brentKung((~sum.asUInt).pad(sumWidth),0.U(sumWidth.W),sumWidth,true.B)(k-1,0)
+      else Adders.brentKung(negativePair(0).pad(sumWidth),negativePair(1).pad(sumWidth),sumWidth)(k-1,0)
     mag.mag := Mux(sum < 0.S,negated,sum.asUInt)
     mag.sign := Mux(sum === 0.S,zeroSign,productSign ^ (sum < 0.S))
     mag.exp := stage(aligned.exp,fusedStage); mag.meta := stage(mm,fusedStage)

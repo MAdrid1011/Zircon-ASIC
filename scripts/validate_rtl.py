@@ -13,6 +13,7 @@ import subprocess
 import sys
 import time
 import hashlib
+import shutil
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -107,6 +108,7 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
         if o.accepted or rst or flush: held = None
         k += 1
     (dest/"stimulus.txt").write_text("".join(rows))
+    (dest/"python.trace").write_text("\n".join(" ".join(map(str,x)) for x in expected)+"\n")
     run([str(exe),str(dest/"stimulus.txt"),str(dest/"rtl.trace")],dest/"run.log")
     actual = [[int(v) for v in line.split()] for line in (dest/"rtl.trace").read_text().splitlines()]
     assert len(actual) == len(expected)
@@ -114,13 +116,18 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
         fields = [0,1,6,7,8,9] + ([2,3,4,5] if py[1] else [])
         if any(py[j] != rtl[j] for j in fields):
             (dest/"python.trace").write_text("\n".join(" ".join(map(str,x)) for x in expected))
-            failure = dict(seed=seed,cycle=i,fields=[j for j in fields if py[j] != rtl[j]],python=py,rtl=rtl,stimulus=rows[i].strip())
+            failure = dict(seed=seed,cycle=i,fields=[j for j in fields if py[j] != rtl[j]],python=py,rtl=rtl,stimulus=rows[i].strip(),**build_id)
             (dest/"failure.json").write_text(json.dumps(failure,indent=2))
+            archive=ROOT/"build/failures"/f"{name}_{op}_{rtl_hash[:12]}_{seed}_{time.time_ns()}"
+            archive.mkdir(parents=True)
+            for filename in ["Unit.sv","manifest.json","build-id.json","failure.json","stimulus.txt","python.trace","rtl.trace"]:
+                if (dest/filename).exists():shutil.copyfile(dest/filename,archive/filename)
             raise AssertionError(f"{name}.{op} signed={signed}: {failure}; traces in {dest}")
     result = dict(format=name,operation=op,signed=signed,seed=seed,cycles=k,contract_hash=contract_hash(),**build_id,
                   statistics=unit.stats.report(),cycle_discrepancy=0,numerical_discrepancy=0,
                   test="testfloat-backpressure-reset-flush" if vectors is not None else "exhaustive" if exhaustive else "random-backpressure-reset-flush",physical_qualification=False)
     (dest/"alignment.json").write_text(json.dumps(result,indent=2)+"\n")
+    (dest/"failure.json").unlink(missing_ok=True)
     (dest/"events.json").write_text(json.dumps(events))
     print(f"PASS {name}.{op} {'signed' if signed else 'unsigned'}: {k} cycles, {unit.stats.delivered} delivered",flush=True)
     return result

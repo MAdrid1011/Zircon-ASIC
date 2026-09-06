@@ -2,7 +2,9 @@
 
 Zircon-ASIC 提供独立安装的 Python 位精确计算、周期模拟器和原生 Chisel 算术部件。两端读取同一份版本化契约，验证数值、请求接收、输出有效、背压、标签、级占用、除法迭代、复位与清空。
 
-当前为开发版。数值正确、周期对齐、ASAP7 时序合格是三项独立门槛；没有完成全部门槛的配置不标记为正式双实现。实测记录由 `scripts/collect_reports.py` 汇总，硬件级数以包内契约为准，实测状态见 [配置清单](reports/CONFIGURATIONS.md)。初始浮点流水级数在物理评估后已调整，仍需完成时序收敛。
+当前版本为 **0.1.0**，38 个配置全部通过数值回归、逐周期对齐和下述 ASAP7 TC、1 GHz 物理评估。周期回归未发现任何拍偏差。实测记录由 `scripts/collect_reports.py` 汇总，硬件级数以包内契约为准，详见 [配置清单](reports/CONFIGURATIONS.md)、[结构取舍](reports/DECISIONS.md) 和 [CPU 性能](reports/PERFORMANCE.md)。初始浮点流水级数已根据物理测量调整。
+
+仓库及 [版本附件](https://github.com/MAdrid1011/Zircon-ASIC/releases/tag/v0.1.0) 保持私有。附件包括 Python wheel、源码包、Chisel JAR，以及绑定 RTL 哈希的完整配置与验证证据包。
 
 ## 安装与计算
 
