@@ -20,6 +20,16 @@ sys.path.insert(0, str(ROOT/"src"))
 from zircon_asic import *
 
 
+def verilator_configuration():
+    version=subprocess.check_output(["verilator","--version"],text=True).strip()
+    match=re.search(r"Verilator (\d+)\.(\d+)",version)
+    number=tuple(map(int,match.groups())) if match else (0,0)
+    # Verilator 5.020 has known NOT/shift bit-tree miscompilations, fixed in
+    # 5.022 (#4832/#4847 and #4837/#4849). Keep the compatibility path explicit.
+    flags=["-fno-const-bit-op-tree","-fno-expand"] if number < (5,22) else []
+    return version,flags
+
+
 def run(cmd, log, cwd=ROOT):
     with open(log, "w") as f:
         process = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, cwd=cwd)
@@ -48,10 +58,11 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
     exe = dest/"obj/trace"
     rtl_hash=hashlib.sha256(sv.read_bytes()).hexdigest()
     harness_hash=hashlib.sha256(harness.read_bytes()).hexdigest()
-    build_id=dict(rtl_sha256=rtl_hash,harness_sha256=harness_hash,verilator=subprocess.check_output(["verilator","--version"],text=True).strip())
+    version,compatibility_flags=verilator_configuration()
+    build_id=dict(rtl_sha256=rtl_hash,harness_sha256=harness_hash,verilator=version,compatibility_flags=compatibility_flags)
     id_path=dest/"build-id.json"
     if not exe.exists() or not id_path.exists() or json.loads(id_path.read_text()) != build_id:
-        run(["verilator","--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,
+        run(["verilator",*compatibility_flags,"--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,
              "--Mdir",str(dest/"obj"),"-CFLAGS","-std=c++17",str(sv),str(harness),"-o","trace"],dest/"compile.log")
         if hashlib.sha256(sv.read_bytes()).hexdigest()!=rtl_hash:raise RuntimeError("RTL changed during compilation; rerun validation")
         id_path.write_text(json.dumps(build_id,indent=2)+"\n")

@@ -7,14 +7,15 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"src"))
 from zircon_asic import *
-from validate_rtl import run
+from validate_rtl import run,verilator_configuration
 
 
 def main():
     out=ROOT/"build/rtl/network";out.mkdir(parents=True,exist_ok=True)
     run(["sbt",f"runMain zircon.GenerateNetwork {out}"],out/"generate.log",ROOT/"hardware")
     harness=out/"trace.cpp";harness.write_text((ROOT/"scripts/rtl_trace.cpp").read_text().replace("@TOP@","VNetworkExample"))
-    run(["verilator","--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module","NetworkExample","--Mdir",str(out/"obj"),"-CFLAGS","-std=c++17",str(out/"Unit.sv"),str(harness),"-o","trace"],out/"compile.log")
+    version,compatibility_flags=verilator_configuration()
+    run(["verilator",*compatibility_flags,"--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module","NetworkExample","--Mdir",str(out/"obj"),"-CFLAGS","-std=c++17",str(out/"Unit.sv"),str(harness),"-o","trace"],out/"compile.log")
     net=Network().add("a",INT8Add()).add("fifo",FIFO(3)).add("b",INT8Mul()).add("d",DelayLine(2))
     net.connect("a","fifo").connect("fifo","b",b=3).connect("b","d").sink("d")
     rng=np.random.default_rng(5128);rows=[];expected=[];held=None
@@ -45,6 +46,7 @@ def main():
     (out/"alignment.json").write_text(json.dumps(dict(cycles=len(rows),seed=5128,contract_hash=contract_hash(),
         rtl_sha256=hashlib.sha256((out/"Unit.sv").read_bytes()).hexdigest(),
         harness_sha256=hashlib.sha256(harness.read_bytes()).hexdigest(),
+        verilator=version,compatibility_flags=compatibility_flags,
         discrepancy_cycles=0,network="INT8Add -> FIFO(3) -> INT8Mul(*3) -> DelayLine(2)"),indent=2))
     print("PASS composed Chisel/Python network: 20000 cycles")
 

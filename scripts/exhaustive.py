@@ -13,11 +13,19 @@ from zircon_asic import *
 from zircon_asic.evidence import implementation_hash
 
 
-def validate(name,op,shard=0,shards=1,backend="numba"):
+def build_small_oracle():
     exe=ROOT/"build/small_oracle"; source=ROOT/"scripts/small_oracle.cpp"
-    if not exe.exists() or source.stat().st_mtime>exe.stat().st_mtime:
+    signature=dict(source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),compiler=subprocess.check_output(["c++","--version"],text=True).splitlines()[0])
+    identity=ROOT/"build/small-oracle-build-id.json"
+    if not exe.exists() or not identity.exists() or json.loads(identity.read_text())!=signature:
         exe.parent.mkdir(exist_ok=True)
         subprocess.run(["c++","-std=c++17","-O3",str(source),"-o",str(exe)],check=True)
+        identity.write_text(json.dumps(signature,indent=2)+"\n")
+    return exe
+
+
+def validate(name,op,shard=0,shards=1,backend="numba"):
+    exe=build_small_oracle();source=ROOT/"scripts/small_oracle.cpp"
     unit=FloatingPointUnit(name,op);w=unit.format.width
     total=1 << (w*(3 if op=="fma" else 2))
     start,end=total*shard//shards,total*(shard+1)//shards

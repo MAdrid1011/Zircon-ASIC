@@ -1,18 +1,21 @@
 """Sharded small-format RTL exhaustive checking with a streaming C++ driver."""
 from pathlib import Path
 import argparse,json,re,subprocess,sys,time,hashlib
-from validate_rtl import ROOT,run,validate
+from validate_rtl import ROOT,run,validate,verilator_configuration
+from exhaustive import build_small_oracle
 sys.path.insert(0,str(ROOT/"src"))
 from zircon_asic import contract
 
 
 def check(name,op,shard=0,shards=1):
+    oracle=build_small_oracle()
     # Establish an assertion-enabled build and independent random control check.
     validate(name,op,cycles=12000)
     dest=ROOT/f"build/rtl/{name}_{op}";sv=dest/"Unit.sv"
     top=re.search(r"^module (\w+)\(",sv.read_text(),re.M)[1]
     cpp=dest/"small_rtl.cpp";cpp.write_text((ROOT/"scripts/small_rtl.cpp").read_text().replace("@TOP@",f"V{top}"))
-    run(["verilator","--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,"--Mdir",str(dest/"small_obj"),"-CFLAGS","-std=c++17 -O3",str(sv),str(cpp),"-o","check"],dest/"small_compile.log")
+    version,compatibility_flags=verilator_configuration()
+    run(["verilator",*compatibility_flags,"--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,"--Mdir",str(dest/"small_obj"),"-CFLAGS","-std=c++17 -O3",str(sv),str(cpp),"-o","check"],dest/"small_compile.log")
     w=4 if name=="e2m1" else 8;lat=contract()["units"][f"{name}.{op}"]["latency"]
     total=1<<(w*(3 if op=="fma" else 2));begin,end=total*shard//shards,total*(shard+1)//shards
     start=time.monotonic();count=0;opid=["add","mul","fma","div"].index(op)
@@ -20,10 +23,10 @@ def check(name,op,shard=0,shards=1):
         b=min(a+65536,end)
         for rm in range(5):
             ref=dest/"reference.bin"
-            with ref.open("wb") as f:subprocess.run([str(ROOT/"build/small_oracle"),name,str(opid),str(a),str(b),str(rm)],stdout=f,check=True)
+            with ref.open("wb") as f:subprocess.run([str(oracle),name,str(opid),str(a),str(b),str(rm)],stdout=f,check=True)
             subprocess.run([str(dest/"small_obj/check"),str(w),str(opid),str(rm),str(lat),str(a),str(b),str(ref)],check=True)
             count+=b-a
-    result=dict(format=name,operation=op,backend="verilator",shard=shard,shards=shards,begin=begin,end=end,cases=count,seconds=time.monotonic()-start,numerical_discrepancy=0,cycle_discrepancy=0,rtl_sha256=hashlib.sha256(sv.read_bytes()).hexdigest())
+    result=dict(format=name,operation=op,backend="verilator",shard=shard,shards=shards,begin=begin,end=end,cases=count,seconds=time.monotonic()-start,numerical_discrepancy=0,cycle_discrepancy=0,rtl_sha256=hashlib.sha256(sv.read_bytes()).hexdigest(),verilator=version,compatibility_flags=compatibility_flags)
     (dest/f"exhaustive-{shard}-of-{shards}.json").write_text(json.dumps(result,indent=2)+"\n")
     print(result,flush=True)
 
