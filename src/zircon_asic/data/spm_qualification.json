@@ -1,0 +1,872 @@
+{
+  "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+  "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+  "configurations": {
+    "1536:16:16:3": {
+      "status": "cycle-verified",
+      "configuration": {
+        "capacity_bytes": 1536,
+        "data_width": 16,
+        "banks": 16,
+        "ports": 3,
+        "ihp": false
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": null,
+      "rtl_sha256": "e45a5dacbe077838cc8d5aef05ba45fad8208098dd2841ac8391c30f1321463a",
+      "alignment_source": "build/rtl/spm-1536-16-16-3/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "16384:32:4:4": {
+      "status": "dual-verified",
+      "configuration": {
+        "capacity_bytes": 16384,
+        "data_width": 32,
+        "banks": 4,
+        "ports": 4,
+        "ihp": true
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": {
+        "configuration": "spm-16384-32-4-4-ihp",
+        "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+        "physical_rtl_sha256": "e783bc7d96e659eae80f447e58e536611d7eda9b0c31a24dc780d8a6898c3781",
+        "top": "SPMPhysical",
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "period_ns": 10,
+        "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+        "banks": 4,
+        "ports": 4,
+        "macro_manifest": {
+          "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+          "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+          "files": {
+            "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+            "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+            "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+          }
+        },
+        "exit_code": 0,
+        "elapsed_seconds": 527.7106492089806,
+        "qualification": "unqualified",
+        "target": "finish",
+        "config_sha256": "3d852b457a1a467f1152fd2c8ca4adbf2083dcfd1ae9d00ca5344a4073e2dfd2",
+        "checks": {
+          "sta": [
+            {
+              "corner": "typ",
+              "setup_ns": 2.378022,
+              "hold_ns": 0.111398,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -3.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -2.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    -1.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    -0.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    0.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    1.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    2.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    3.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    4.378021,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    6.378021,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    8.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    12.378022,
+                    0.111398,
+                    9.2e-05,
+                    0.111398
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                7.62109375,
+                7.6220703125
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 131.19795003203075
+            },
+            {
+              "corner": "slow",
+              "setup_ns": 0.16815,
+              "hold_ns": 0.250645,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -5.831851,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -4.831851,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    -3.831851,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    -2.83185,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    -1.83185,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    -0.83185,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    0.16815,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    1.16815,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    2.168149,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    4.168149,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    6.16815,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    10.16815,
+                    0.250645,
+                    0.000181,
+                    0.250645
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                9.8310546875,
+                9.83203125
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 101.70838299562972
+            }
+          ],
+          "macro_count": 4,
+          "expected_macro_count": 4,
+          "route_drc": {
+            "detailedroute__route__drc_errors__iter:0": 417,
+            "detailedroute__route__drc_errors__iter:1": 67,
+            "detailedroute__route__drc_errors__iter:2": 27,
+            "detailedroute__route__drc_errors__iter:3": 0,
+            "detailedroute__route__drc_errors__iter:4": 9,
+            "detailedroute__route__drc_errors__iter:5": 3,
+            "detailedroute__route__drc_errors__iter:6": 3,
+            "detailedroute__route__drc_errors__iter:7": 0,
+            "detailedroute__route__drc_errors": 0
+          },
+          "area": {
+            "finish__design__instance__area__class:macro": 560731,
+            "finish__design__instance__area__class:fill_cell": 285082,
+            "finish__design__instance__area__class:antenna_cell": 228.614,
+            "finish__design__instance__area__class:clock_buffer": 5875.03,
+            "finish__design__instance__area__class:timing_repair_buffer": 27939.9,
+            "finish__design__instance__area__class:inverter": 175.997,
+            "finish__design__instance__area__class:clock_inverter": 23.5872,
+            "finish__design__instance__area__class:sequential_cell": 34684.1,
+            "finish__design__instance__area__class:multi_input_combinational_cell": 40027.5,
+            "finish__design__instance__area": 669685,
+            "finish__design__die__area": 1060870.0,
+            "finish__design__core__area": 973244,
+            "finish__design__instance__area__stdcell": 108955,
+            "finish__design__instance__area__macros": 560731,
+            "finish__design__instance__area__padcells": 0,
+            "finish__design__instance__area__cover": 0
+          },
+          "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+          "netlist_sha256": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+          "passed": true
+        },
+        "gate": {
+          "cycles": 108203,
+          "seed": 751,
+          "discrepancy_cycles": 0,
+          "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+          "netlist_sha256": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+          "sources": {
+            "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/results/6_final.v": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+            "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/gate/sg13g2_stdcell_functional.v": "229d1b9a38177af5ef39b0b4678be080ea4c0bbc7e2138d377e3882e19007008",
+            "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+          },
+          "timing_simulation": false,
+          "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+          "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+        },
+        "source": "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/physical.json"
+      },
+      "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+      "alignment_source": "build/rtl/spm-16384-32-4-4-ihp/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "240:64:2:3": {
+      "status": "cycle-verified",
+      "configuration": {
+        "capacity_bytes": 240,
+        "data_width": 64,
+        "banks": 2,
+        "ports": 3,
+        "ihp": false
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": null,
+      "rtl_sha256": "cfd00a194f93b4abaf3a3ecbe1e688a05e5df6ad1d938c894f7bcd9f92735dce",
+      "alignment_source": "build/rtl/spm-240-64-2-3/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "4096:32:1:1": {
+      "status": "dual-verified",
+      "configuration": {
+        "capacity_bytes": 4096,
+        "data_width": 32,
+        "banks": 1,
+        "ports": 1,
+        "ihp": true
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": {
+        "configuration": "spm-4096-32-1-1-ihp",
+        "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+        "physical_rtl_sha256": "de4a3fde925ea69a376e4012ebcac4eba7ff0d91608069694834568a7cef0f48",
+        "top": "SPMPhysical",
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "period_ns": 10,
+        "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+        "banks": 1,
+        "ports": 1,
+        "macro_manifest": {
+          "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+          "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+          "files": {
+            "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+            "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+            "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+          }
+        },
+        "exit_code": 0,
+        "elapsed_seconds": 194.8600420000148,
+        "qualification": "unqualified",
+        "target": "finish",
+        "config_sha256": "f3524a58360f314517d62e876958ee19e0bbb272598d7440996486f97d84dc51",
+        "checks": {
+          "sta": [
+            {
+              "corner": "typ",
+              "setup_ns": 4.143488,
+              "hold_ns": 0.007493,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -1.856512,
+                    0.007493
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -0.856512,
+                    0.007493
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    0.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    1.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    2.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    3.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    4.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    5.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    6.143487,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    8.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    10.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    14.143489,
+                    0.007493,
+                    0.00091,
+                    0.007493
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                5.8564453125,
+                5.857421875
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 170.7235745248416
+            },
+            {
+              "corner": "slow",
+              "setup_ns": 1.633181,
+              "hold_ns": 0.065481,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -4.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -3.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    -2.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    -1.36682,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    -0.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    0.633181,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    1.633181,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    2.633181,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    3.63318,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    5.63318,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    7.63318,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    11.63318,
+                    0.065481,
+                    0.000368,
+                    0.065481
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                8.3662109375,
+                8.3671875
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 119.51447245564893
+            }
+          ],
+          "macro_count": 1,
+          "expected_macro_count": 1,
+          "route_drc": {
+            "detailedroute__route__drc_errors__iter:0": 337,
+            "detailedroute__route__drc_errors__iter:1": 108,
+            "detailedroute__route__drc_errors__iter:2": 74,
+            "detailedroute__route__drc_errors__iter:3": 2,
+            "detailedroute__route__drc_errors__iter:4": 2,
+            "detailedroute__route__drc_errors__iter:5": 0,
+            "detailedroute__route__drc_errors": 0
+          },
+          "area": {
+            "finish__design__instance__area__class:macro": 140183,
+            "finish__design__instance__area__class:fill_cell": 116069,
+            "finish__design__instance__area__class:clock_buffer": 2540.16,
+            "finish__design__instance__area__class:timing_repair_buffer": 4604.95,
+            "finish__design__instance__area__class:inverter": 16.3296,
+            "finish__design__instance__area__class:clock_inverter": 70.7616,
+            "finish__design__instance__area__class:sequential_cell": 8475.06,
+            "finish__design__instance__area__class:multi_input_combinational_cell": 6704.21,
+            "finish__design__instance__area": 162594,
+            "finish__design__die__area": 330803,
+            "finish__design__core__area": 283282,
+            "finish__design__instance__area__stdcell": 22411.5,
+            "finish__design__instance__area__macros": 140183,
+            "finish__design__instance__area__padcells": 0,
+            "finish__design__instance__area__cover": 0
+          },
+          "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+          "netlist_sha256": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+          "passed": true
+        },
+        "gate": {
+          "cycles": 102059,
+          "seed": 751,
+          "discrepancy_cycles": 0,
+          "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+          "netlist_sha256": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+          "sources": {
+            "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/results/6_final.v": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+            "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/gate/sg13g2_stdcell_functional.v": "229d1b9a38177af5ef39b0b4678be080ea4c0bbc7e2138d377e3882e19007008",
+            "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+          },
+          "timing_simulation": false,
+          "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+          "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+        },
+        "source": "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/physical.json"
+      },
+      "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+      "alignment_source": "build/rtl/spm-4096-32-1-1-ihp/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "64:8:4:8": {
+      "status": "cycle-verified",
+      "configuration": {
+        "capacity_bytes": 64,
+        "data_width": 8,
+        "banks": 4,
+        "ports": 8,
+        "ihp": false
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": null,
+      "rtl_sha256": "64460d5021d137322870864a8ca5a038b68b9d6f67018c0a73e5d23100f213ca",
+      "alignment_source": "build/rtl/spm-64-8-4-8/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    }
+  }
+}

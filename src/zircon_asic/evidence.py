@@ -10,7 +10,7 @@ def implementation_hash() -> str:
     digest = hashlib.sha256()
     for directory in [root, root.joinpath("data")]:
         for path in sorted(directory.iterdir(), key=lambda p: p.name):
-            if not path.is_file() or path.name == "qualification.json": continue
+            if not path.is_file() or path.name.endswith("qualification.json"): continue
             if not path.name.endswith((".py", ".json", ".bin")): continue
             digest.update((directory.name + "/" + path.name).encode())
             digest.update(path.read_bytes())

@@ -1,7 +1,9 @@
 """Common bit-level arithmetic and cycle interfaces."""
 from dataclasses import dataclass
 from enum import IntEnum, IntFlag
-from typing import Any
+from typing import Any, Generic, TypeVar
+
+Payload = TypeVar("Payload")
 
 
 class Rounding(IntEnum):
@@ -55,18 +57,18 @@ class BatchResponse:
 
 
 @dataclass(frozen=True, slots=True)
-class Inputs:
-    request: Request | None = None
+class Inputs(Generic[Payload]):
+    request: Payload | None = None
     out_ready: bool = True
     reset: bool = False
     flush: bool = False
 
 
 @dataclass(frozen=True, slots=True)
-class Outputs:
+class Outputs(Generic[Payload]):
     in_ready: bool
     out_valid: bool
-    response: Response | None
+    response: Payload | None
     accepted: bool
     delivered: bool
     occupancy: int

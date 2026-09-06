@@ -1,95 +1,172 @@
 # Zircon-ASIC
 
-Zircon-ASIC 提供独立安装的 Python 位精确计算、周期模拟器和原生 Chisel 算术部件。两端读取同一份版本化契约，验证数值、请求接收、输出有效、背压、标签、级占用、除法迭代、复位与清空。
+> 位精确算术、片上存储与逐周期对齐的 Chisel IP 库。
 
-当前版本为 **0.1.0**，38 个配置全部通过数值回归、逐周期对齐和下述 ASAP7 TC、1 GHz 物理评估。周期回归未发现任何拍偏差。实测记录由 `scripts/collect_reports.py` 汇总，硬件级数以包内契约为准，详见 [配置清单](reports/CONFIGURATIONS.md)、[结构取舍](reports/DECISIONS.md) 和 [CPU 性能](reports/PERFORMANCE.md)。初始浮点流水级数已根据物理测量调整。
+Zircon-ASIC 提供可独立安装的 Python 模拟器和生成 SystemVerilog 的 Chisel 硬件库，用于构建加速器与自定义计算架构。两端读取同一份版本化契约，在相同请求、背压、复位和清空序列下逐拍核对数值结果、握手与流水状态。
 
-仓库及 [版本附件](https://github.com/MAdrid1011/Zircon-ASIC/releases/tag/v0.1.0) 保持私有。附件包括 Python wheel、源码包、Chisel JAR，以及绑定 RTL 哈希的完整配置与验证证据包。
+| 浮点格式 | 操作 | 整数格式 | 操作 |
+|---|---|---|---|
+| FP32、FP16、FP8 E4M3FN/E5M2、FP4 E2M1 | add · mul · FMA · div | INT8、INT16、INT32 | add · mul · div（有符号/无符号） |
 
-## 安装与计算
+**SPM** 支持 8/16/32/64 bit 数据、1/2/4/8/16 个 bank、1～8 个请求端、字节写掩码与轮询仲裁。无背压访问延迟为 2 拍，每 bank 的启动间隔为 1 拍。算术、SPM、FIFO 和延迟线可以通过 `Network` 组合，使用 Python 或 Numba 执行同一架构模型。
 
-```sh
-python -m pip install .          # Python 和 NumPy 即可
-python -m pip install '.[fast]'   # 可选 Numba 加速
+## 核心能力
+
+- **位精确数值路径**：原始位编码、五种舍入方式、异常标志、次正规数、NaN/Inf 与有限 FP8/FP4 的明确规则。
+- **周期模型可用于架构探索**：统一 `valid/ready`、流水占用、迭代阶段、背压、reset 与 flush；`tag` 可关联每笔事务的接收和交付周期。
+- **硬件实现可直接集成**：原生 Chisel `Decoupled` 接口，按宽度选择加法器、部分积压缩树和迭代除法器。
+- **共享存储与模块连接**：显式选择请求端，映射响应字段和常量，统一提交各模块状态。
+
+## 快速开始：Python
+
+基础安装只需要 Python 3.11+ 和 NumPy；Numba 是批量计算与内置网络的可选加速后端。
+
+```bash
+git clone https://github.com/MAdrid1011/Zircon-ASIC.git
+cd Zircon-ASIC
+python -m pip install .
+# 可选：安装 Numba 加速后端
+python -m pip install '.[fast]'
 ```
+
+功能计算不修改周期状态：
 
 ```python
-from zircon_asic import FP32Fma, INT8Div, Request, Rounding
+from zircon_asic import FP32Fma, Request
 
 fma = FP32Fma()
-result = fma.compute(Request(0x3f800000, 0x40000000, 0x40400000))
-assert result.bits == 0x40a00000  # 1 * 2 + 3 = 5
-
-division = INT8Div()
-result = division.compute(Request(0xf9, 3))  # -7 / 3
-assert result.bits == 0xfe and result.remainder == 0xff
-
-batch = fma.compute_batch([0x3f800000] * 1024, 0x40000000, 0x40400000)
-print(fma.describe())
+response = fma.compute(Request(0x3F800000, 0x40000000, 0x40400000))
+assert response.bits == 0x40A00000  # 1.0 × 2.0 + 3.0 = 5.0
 ```
 
-输入、输出使用原始位编码，避免宿主浮点类型改变 NaN、舍入或低精度格式。`compute_batch` 支持 NumPy 广播，返回 `bits`、`flags`、`tags` 和 `remainder` 数组；`backend="python"` 和 `backend="numba"` 可显式选择实现。`auto` 在没有安装 Numba 时回退到完整 Python 实现。
-
-| 格式 | 类前缀 | 操作 |
-|---|---|---|
-| binary32 / binary16 | `FP32` / `FP16` | `Add`、`Mul`、`Fma`、`Div` |
-| E4M3FN / E5M2 | `FP8E4M3FN` / `FP8E5M2` | 同上 |
-| E2M1 | `FP4` | 同上 |
-| INT8 / INT16 / INT32 | `INT8` / `INT16` / `INT32` | `Add`、`Mul`、`Div` |
-
-参数化类为 `FpAdd/FpMul/FpFma/FpDiv(format)` 和 `IntAdd/IntMul/IntDiv(width, signed=True)`。整数无符号模式使用 `signed=False`。所有类具有相同的计算与周期方法。
-
-## 周期模拟
+逐周期模拟使用 `step()`；调用前读取 `unit.cycle`，即可记录该拍的握手事件：
 
 ```python
 from zircon_asic import FP16Add, Inputs, Request
 
 unit = FP16Add()
-for cycle in range(8):
-    request = Request(0x3c00, 0x4000, tag=7) if cycle == 0 else None
-    ports = unit.step(Inputs(request, out_ready=cycle != 6))
+for _ in range(16):
+    cycle = unit.cycle
+    ports = unit.step(Inputs(
+        Request(0x3C00, 0x4000, tag=7) if cycle == 0 else None,
+        out_ready=(cycle != 6),
+    ))
     if ports.delivered:
-        print(cycle, ports.response)
+        print(f"delivered at cycle {cycle}: {ports.response}")
 ```
 
-`eval(inputs)` 观察本拍端口，`tick()` 提交状态；`step(inputs)` 完成两者。接收发生在第 `k` 拍、无背压延迟为 `L` 时，输出在 `k+L` 拍交付。输出被阻塞时保持内容和 `valid`。`Inputs(reset=True)` 和 `Inputs(flush=True)` 优先于握手，取消全部在途请求。
+`accepted` 表示请求在本拍被接收，`out_valid` 表示结果已到输出端，`delivered` 表示结果与下游完成握手。无背压时，在第 `k` 拍接收、延迟为 `L` 的请求会在第 `k+L` 拍交付。完整语义见 [共同契约](docs/contract.md)。
 
-`reset()` 是带统计清零的立即复位；`flush()` 立即取消在途请求并保留累计统计。需要与 RTL 比较时使用随拍输入。功能计算不改变周期状态。
+SPM 使用相同的周期接口，读写请求通过 `MemoryRequest` 表达：
 
 ```python
-from zircon_asic import Network, FIFO, DelayLine, INT8Add, INT8Mul, Request
+from zircon_asic import SPM, MemoryRequest, Inputs
 
-net = Network().add("add", INT8Add()).add("fifo", FIFO(3)).add("mul", INT8Mul())
-net.connect("add", "fifo").connect("fifo", "mul", b=3)
-net.source("add", [Request(i, 2, tag=i) for i in range(32)]).sink("mul")
-results = net.run(100, backend="numba")
+spm = SPM(capacity_bytes=4096, data_width=32, banks=1, ports=1)
+spm.load_image(bytes(4096))
+spm.compute(MemoryRequest(address=0x100, write=True, data=17))
+assert spm.step(Inputs(MemoryRequest(address=0x100, tag=7))).accepted
+spm.step()
+out = spm.step()
+assert out.delivered and out.response.bits == 17  # 第 0 拍接收，第 2 拍交付
 ```
 
-网络统一观察后提交。当前网络支持单输入、单输出节点组成的有向链和多条独立链，显式拒绝多驱动、隐式广播及环；连接可指定第二、第三操作数。FIFO、延迟线和整个内置网络都支持 Numba 循环。任意 Python 回调、动态路由、广播和多输入汇合不在当前编译调度器的支持范围内。
+参见 [SPM 文档](docs/hardware/spm.md)、[读 SPM → 乘法 → 写 SPM 示例](examples/spm.py) 和 [用户控制器示例](examples/spm_controller.py)。
 
-## Chisel 与验证
+## 快速开始：Chisel
 
-需要 JDK 21、sbt、C++ 编译器和 Verilator。Python 基础安装不需要这些工具。
+Chisel 库需要 JDK 21 与 sbt。在本仓库的 `hardware` 目录执行 `sbt publishLocal`，然后在调用工程的 `build.sbt` 中添加：
 
-```sh
+```scala
+scalaVersion := "2.13.18"
+libraryDependencies += "org.zirconasic" %% "zircon-asic" % "0.2.0"
+addCompilerPlugin("org.chipsalliance" % "chisel-plugin" % "7.15.0" cross CrossVersion.full)
+```
+
+`Arithmetic` 根据内置共同契约实例化算术单元。以下顶层完整连接请求、响应与清空接口：
+
+```scala
+import chisel3._
+import chisel3.util._
+import zircon._
+
+class MyDatapath extends Module {
+  val io = IO(new Bundle {
+    val in = Flipped(Decoupled(new zircon.Request(32)))
+    val out = Decoupled(new zircon.Response(32))
+    val flush = Input(Bool())
+  })
+  val fma = Module(Arithmetic("fp32", "fma"))
+  fma.io.in <> io.in
+  io.out <> fma.io.out
+  fma.io.flush := io.flush
+}
+```
+
+从源码生成一个独立 RTL 顶层：
+
+```bash
 cd hardware
 sbt 'runMain zircon.Generate fp32 fma ../build/rtl/fp32_fma'
-cd ..
-python scripts/build_oracles.py
-python -m pytest -q
-python scripts/validate_rtl.py
-python scripts/validate_network_rtl.py
-python scripts/testfloat_vectors.py --rtl
-python scripts/exhaustive.py
-python scripts/exhaustive_rtl.py
 ```
 
-Chisel 输出 `Unit.sv` 和带共同契约的 `manifest.json`。随机验证逐拍比较端口、有效输出全部字段及内部观察点，包含长背压、气泡、复位和清空。失败保留刺激、随机种子、首个分歧周期和双边轨迹。
+输出目录含 `Unit.sv` 与 `manifest.json`。后者绑定格式、时延、阶段、共同契约和 RTL SHA-256。接口、阻塞和接线要求见 [硬件接口与控制](docs/hardware/interface.md)。
 
-`exhaustive.py` 使用独立 C++ 128 位精确有理数参考，覆盖 FP4/FP8 全部二元和 FMA 输入、五种舍入方式。`exhaustive_rtl.py` 对同一参考验证 RTL 数值和无背压逐笔延迟。FMA 可使用 `--shard 0 --shards 256` 分片执行。FP32/FP16 使用固定提交的 Berkeley SoftFloat 测试参考和 TestFloat 系统化向量前缀；生产路径不链接 SoftFloat。
+## 模块与时序
 
-物理评估使用固定摘要的 OpenROAD 容器和 ASAP7 RVT 库，命令为 `python scripts/ppa.py fp32.fma`。默认典型角 TC、0.70 V、0 °C，1000 ps 周期、200 ps 输入输出预算、50 ps 时钟不确定度。默认运行至全局布线，以估算 RC 进行静态时序分析；`--target finish` 进一步运行详细布线。WC、0.63 V、100 °C 作为额外压力测试。报告保留失败和负裕量；流程结束不等于时序通过。
+| 模块族 | 操作 | 控制类型 | 延迟（拍） |
+|---|---|---|---|
+| FP32 | add / mul / FMA / div | 弹性流水 / 迭代 | 6 / 7 / 8 / 19 |
+| FP16 | add / mul / FMA / div | 弹性流水 / 迭代 | 6 / 7 / 8 / 13 |
+| E4M3FN | add / mul / FMA / div | 弹性流水 / 迭代 | 4 / 4 / 5 / 12 |
+| E5M2 | add / mul / FMA / div | 弹性流水 / 迭代 | 4 / 4 / 5 / 11 |
+| E2M1 | add / mul / FMA / div | 弹性流水 | 1 / 1 / 2 / 1 |
+| INT8 | add / mul / div | 弹性流水 / 迭代 | 1 / 2 / 10 |
+| INT16 | add / mul / div | 弹性流水 / 迭代 | 1 / 2 / 13 |
+| INT32 | add / mul / div | 弹性流水 / 迭代 | 1 / 3 / 21 |
+| SPM | read / write | 同步存储与响应队列 | 2 |
 
-独立可运行示例见 [功能与周期调用](examples/quickstart.py) 和 [组合网络](examples/network.py)。
+弹性算术单元的启动间隔为 1；迭代除法器的无背压启动间隔等于完整延迟。SPM 每 bank 每拍服务一次读或写。阶段、容量和实现变体分别由 [算术契约](src/zircon_asic/data/contract.json) 与 [SPM 契约](src/zircon_asic/data/spm.json) 定义。
 
-详细说明见 [数值与接口契约](docs/contract.md)、[模拟器与硬件结构](docs/implementation.md) 和 [验证与复现](docs/verification.md)。脉动阵列、FFT、混合精度累加和块缩放格式属于后续扩展。
+## 验证状态
+
+`balanced-v1` 的 38 个配置均通过数值、Python/RTL 逐周期和 ASAP7 TC 1 GHz 评估门槛。逐周期回归比较 `in_ready`、`out_valid`、有效响应字段与内部观察点；当前回归记录的周期差异为 0。具体证据见 [配置清单](reports/CONFIGURATIONS.md)、[结构取舍](reports/DECISIONS.md) 和 [验证文档](docs/verification.md)。
+
+SPM 的 4 KiB / 1 bank / 1 请求端和 16 KiB / 4 banks / 4 请求端两个 32 bit 配置，已完成 IHP SG13G2 真实 SRAM 宏的详细布线、寄生提取和 **100 MHz** 两角时序检查，以及综合网表功能回放。Python、Numba、RTL 各配置运行 5 组十万拍长回归，周期差异为 0。完整结果、CPU 加速测量与配置限制见 [SPM 验证记录](reports/SPM.md)。这些结果是公开 PDK 下的实现证据。
+
+| 硬件 | 工艺与测试角 | 时钟 | 物理阶段 |
+|---|---|---:|---|
+| 38 项算术配置 | ASAP7 RVT，TC 0.70 V / 0 °C | 1 GHz | FP32 FMA／除法为详细布线，其余为全局布线与估算 RC |
+| 两项 SPM 参考配置 | IHP SG13G2，TT 1.20 V / 25 °C、SS 1.08 V / 125 °C | 100 MHz | 真实 SRAM 宏、详细布线、提取 RC、两角 STA |
+
+## 文档导航
+
+从 [文档导航](docs/README.md) 或 [硬件架构总览](docs/hardware/README.md) 开始。每个 Chisel 源文件都有对应的模块说明。
+
+| 文档 | 内容 |
+|---|---|
+| [共同契约](docs/contract.md) | 位编码、舍入、异常、周期定义 |
+| [接口与流水控制](docs/hardware/interface.md) | `Request`、`Response`、`ElasticModule`、`IterativeModule` |
+| [整数算术](docs/hardware/integer.md) | 加法器、Dadda 压缩树、整数除法 |
+| [浮点加乘与 FMA](docs/hardware/floating.md) | 解码、对齐、规格化、舍入、特殊值 |
+| [浮点除法与 FP4](docs/hardware/division-and-fp4.md) | SRT/非恢复除法与 E2M1 精确路径 |
+| [传输与组合](docs/hardware/transport.md) | FIFO、延迟线、链式网络和边界 |
+| [普通 SPM](docs/hardware/spm.md) | 寻址、写掩码、轮询仲裁、周期接口与 SRAM 宏 |
+| [集成与生成](docs/hardware/integration.md) | 工厂、契约加载、JAR、RTL 生成 |
+| [验证与复现](docs/verification.md) | 数值、周期、RTL 与物理评估 |
+
+## 目录
+
+```text
+src/zircon_asic/                 Python 数值、周期与网络模拟器
+hardware/src/main/scala/zircon/  Chisel 算术、存储、传输与生成器
+docs/hardware/                   按硬件模块组织的结构说明
+tests/                           Python 数值与周期测试
+scripts/                         RTL 对齐、外部参考、报告和 PPA 脚本
+reports/                         已生成的配置、取舍和性能记录
+examples/                        独立调用与网络组合示例
+```
+
+## 许可证与贡献
+
+Zircon-ASIC 使用 [Apache-2.0](LICENSE) 许可证。第三方组件见 [许可与来源](THIRD_PARTY_NOTICES.md)。问题反馈与改进提交见 [贡献指南](CONTRIBUTING.md)，安全问题见 [报告渠道](SECURITY.md)。

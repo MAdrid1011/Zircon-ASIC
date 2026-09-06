@@ -1,6 +1,6 @@
 {
   "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
-  "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+  "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
   "units": {
     "fp32.add": {
       "status": "dual-verified",
@@ -1394,113 +1394,11 @@
   },
   "python": {
     "exit_code": 0,
-    "collected": 100,
-    "passed": [
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[add-e2m1]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[add-e4m3fn]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[add-e5m2]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[mul-e2m1]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[mul-e4m3fn]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[mul-e5m2]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[fma-e2m1]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[fma-e4m3fn]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[fma-e5m2]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[div-e2m1]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[div-e4m3fn]",
-      "tests/test_cpp_oracle.py::test_exact_oracles_agree[div-e5m2]",
-      "tests/test_cycles.py::test_latency[FP32Fma]",
-      "tests/test_cycles.py::test_latency[FP16Add]",
-      "tests/test_cycles.py::test_latency[FP4Div]",
-      "tests/test_cycles.py::test_latency[INT32Mul]",
-      "tests/test_cycles.py::test_latency[INT8Div]",
-      "tests/test_cycles.py::test_latency[FP32Div]",
-      "tests/test_cycles.py::test_random_stall_flush[FP32Fma]",
-      "tests/test_cycles.py::test_random_stall_flush[INT8Div]",
-      "tests/test_cycles.py::test_custom_profile_and_tick_guard",
-      "tests/test_fast.py::test_fast_float[add-fp32]",
-      "tests/test_fast.py::test_fast_float[add-fp16]",
-      "tests/test_fast.py::test_fast_float[add-e4m3fn]",
-      "tests/test_fast.py::test_fast_float[add-e5m2]",
-      "tests/test_fast.py::test_fast_float[add-e2m1]",
-      "tests/test_fast.py::test_fast_float[mul-fp32]",
-      "tests/test_fast.py::test_fast_float[mul-fp16]",
-      "tests/test_fast.py::test_fast_float[mul-e4m3fn]",
-      "tests/test_fast.py::test_fast_float[mul-e5m2]",
-      "tests/test_fast.py::test_fast_float[mul-e2m1]",
-      "tests/test_fast.py::test_fast_float[fma-fp32]",
-      "tests/test_fast.py::test_fast_float[fma-fp16]",
-      "tests/test_fast.py::test_fast_float[fma-e4m3fn]",
-      "tests/test_fast.py::test_fast_float[fma-e5m2]",
-      "tests/test_fast.py::test_fast_float[fma-e2m1]",
-      "tests/test_fast.py::test_fast_float[div-fp32]",
-      "tests/test_fast.py::test_fast_float[div-fp16]",
-      "tests/test_fast.py::test_fast_float[div-e4m3fn]",
-      "tests/test_fast.py::test_fast_float[div-e5m2]",
-      "tests/test_fast.py::test_fast_float[div-e2m1]",
-      "tests/test_fast.py::test_fast_integer[False-add-8]",
-      "tests/test_fast.py::test_fast_integer[False-add-16]",
-      "tests/test_fast.py::test_fast_integer[False-add-32]",
-      "tests/test_fast.py::test_fast_integer[False-mul-8]",
-      "tests/test_fast.py::test_fast_integer[False-mul-16]",
-      "tests/test_fast.py::test_fast_integer[False-mul-32]",
-      "tests/test_fast.py::test_fast_integer[False-div-8]",
-      "tests/test_fast.py::test_fast_integer[False-div-16]",
-      "tests/test_fast.py::test_fast_integer[False-div-32]",
-      "tests/test_fast.py::test_fast_integer[True-add-8]",
-      "tests/test_fast.py::test_fast_integer[True-add-16]",
-      "tests/test_fast.py::test_fast_integer[True-add-32]",
-      "tests/test_fast.py::test_fast_integer[True-mul-8]",
-      "tests/test_fast.py::test_fast_integer[True-mul-16]",
-      "tests/test_fast.py::test_fast_integer[True-mul-32]",
-      "tests/test_fast.py::test_fast_integer[True-div-8]",
-      "tests/test_fast.py::test_fast_integer[True-div-16]",
-      "tests/test_fast.py::test_fast_integer[True-div-32]",
-      "tests/test_integer_reference.py::test_integer_reference[False-8]",
-      "tests/test_integer_reference.py::test_integer_reference[False-16]",
-      "tests/test_integer_reference.py::test_integer_reference[False-32]",
-      "tests/test_integer_reference.py::test_integer_reference[True-8]",
-      "tests/test_integer_reference.py::test_integer_reference[True-16]",
-      "tests/test_integer_reference.py::test_integer_reference[True-32]",
-      "tests/test_network.py::test_global_commit",
-      "tests/test_network.py::test_network_latency_and_cycle_rejection",
-      "tests/test_network.py::test_compiled_network[False]",
-      "tests/test_network.py::test_compiled_network[True]",
-      "tests/test_numeric.py::test_ieee_edges",
-      "tests/test_numeric.py::test_fma_single_rounding",
-      "tests/test_numeric.py::test_finite_formats",
-      "tests/test_numeric.py::test_integer[False-8]",
-      "tests/test_numeric.py::test_integer[False-16]",
-      "tests/test_numeric.py::test_integer[False-32]",
-      "tests/test_numeric.py::test_integer[True-8]",
-      "tests/test_numeric.py::test_integer[True-16]",
-      "tests/test_numeric.py::test_integer[True-32]",
-      "tests/test_numeric.py::test_batch_broadcast",
-      "tests/test_numeric.py::test_numpy_binary32_rne",
-      "tests/test_rational.py::test_fp4_exhaustive[add]",
-      "tests/test_rational.py::test_fp4_exhaustive[mul]",
-      "tests/test_rational.py::test_fp4_exhaustive[fma]",
-      "tests/test_rational.py::test_fp4_exhaustive[div]",
-      "tests/test_rational.py::test_fp8_rational[add-e4m3fn]",
-      "tests/test_rational.py::test_fp8_rational[add-e5m2]",
-      "tests/test_rational.py::test_fp8_rational[mul-e4m3fn]",
-      "tests/test_rational.py::test_fp8_rational[mul-e5m2]",
-      "tests/test_rational.py::test_fp8_rational[fma-e4m3fn]",
-      "tests/test_rational.py::test_fp8_rational[fma-e5m2]",
-      "tests/test_rational.py::test_fp8_rational[div-e4m3fn]",
-      "tests/test_rational.py::test_fp8_rational[div-e5m2]",
-      "tests/test_softfloat.py::test_softfloat[add-16]",
-      "tests/test_softfloat.py::test_softfloat[add-32]",
-      "tests/test_softfloat.py::test_softfloat[mul-16]",
-      "tests/test_softfloat.py::test_softfloat[mul-32]",
-      "tests/test_softfloat.py::test_softfloat[fma-16]",
-      "tests/test_softfloat.py::test_softfloat[fma-32]",
-      "tests/test_softfloat.py::test_softfloat[div-16]",
-      "tests/test_softfloat.py::test_softfloat[div-32]"
-    ],
-    "skipped": [],
-    "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+    "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
+    "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
     "unchanged_during_tests": true,
-    "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320"
+    "collected": 114,
+    "skipped": 0
   },
   "alignment": [
     {
@@ -1736,6 +1634,60 @@
       "current_contract": true
     },
     {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 4096,
+        "data_width": 32,
+        "banks": 1,
+        "ports": 1,
+        "ihp": false
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 22059,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 22059,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 22059,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 22059,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 22059,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "2c224e2ef18eb0809a99235998a159c2b9572306b8ad5c1e9c866d34b0021e08",
+        "harness": "5ebc0195be92fbb62babcea3ce55343c672815852ad6f19cb052b62ff40687de",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-4096-32-1-1/Unit.sv": "2c224e2ef18eb0809a99235998a159c2b9572306b8ad5c1e9c866d34b0021e08"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-4096-32-1-1/alignment.json",
+      "current_contract": false
+    },
+    {
       "format": "e5m2",
       "operation": "div",
       "signed": true,
@@ -1763,6 +1715,71 @@
       "physical_qualification": false,
       "source": "build/rtl/e5m2_div/alignment.json",
       "current_contract": true
+    },
+    {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "cycles": 20155,
+      "seed": 4921,
+      "discrepancy_cycles": 0,
+      "rtl_sha256": "b3e21aacd25ec9e9700239b0f8ab3cfc3a15c4fbc8ddfb5a23245f8e21398038",
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+      "source": "build/rtl/spm-network/alignment.json",
+      "current_contract": false
+    },
+    {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 240,
+        "data_width": 64,
+        "banks": 2,
+        "ports": 3,
+        "ihp": false
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "cfd00a194f93b4abaf3a3ecbe1e688a05e5df6ad1d938c894f7bcd9f92735dce",
+        "harness": "4aed3e6022e44b9c00bf58a76d18208be395089154bf8578b19550933abeaee8",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-240-64-2-3/Unit.sv": "cfd00a194f93b4abaf3a3ecbe1e688a05e5df6ad1d938c894f7bcd9f92735dce"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-240-64-2-3/alignment.json",
+      "current_contract": false
     },
     {
       "format": "int8",
@@ -1952,6 +1969,63 @@
       "current_contract": true
     },
     {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 4096,
+        "data_width": 32,
+        "banks": 1,
+        "ports": 1,
+        "ihp": true
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+        "harness": "5ebc0195be92fbb62babcea3ce55343c672815852ad6f19cb052b62ff40687de",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-4096-32-1-1-ihp/Unit.sv": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+          "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-4096-32-1-1-ihp/alignment.json",
+      "current_contract": false
+    },
+    {
       "format": "fp32",
       "operation": "div",
       "signed": true,
@@ -2066,6 +2140,60 @@
       "physical_qualification": false,
       "source": "build/rtl/fp32_mul/alignment.json",
       "current_contract": true
+    },
+    {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 16384,
+        "data_width": 32,
+        "banks": 4,
+        "ports": 4,
+        "ihp": false
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 28203,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 28203,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 28203,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 28203,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 28203,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "b780d2ea95bb77f30d48502213e8d138c2922bbf85c41674b5805a3ef3a5d913",
+        "harness": "58c4359401d3af3a9b8d8506d98f86653a310981f9dd113046b41425c7b30055",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-16384-32-4-4/Unit.sv": "b780d2ea95bb77f30d48502213e8d138c2922bbf85c41674b5805a3ef3a5d913"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-16384-32-4-4/alignment.json",
+      "current_contract": false
     },
     {
       "format": "e4m3fn",
@@ -2211,6 +2339,60 @@
       "physical_qualification": false,
       "source": "build/rtl/fp16_div/alignment.json",
       "current_contract": true
+    },
+    {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 64,
+        "data_width": 8,
+        "banks": 4,
+        "ports": 8,
+        "ihp": false
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "64460d5021d137322870864a8ca5a038b68b9d6f67018c0a73e5d23100f213ca",
+        "harness": "72b9fcfd2b194e65218db599f2475a2c5b3e11c67a7d800462d4225c8871d7ea",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-64-8-4-8/Unit.sv": "64460d5021d137322870864a8ca5a038b68b9d6f67018c0a73e5d23100f213ca"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-64-8-4-8/alignment.json",
+      "current_contract": false
     },
     {
       "format": "int32",
@@ -2387,6 +2569,60 @@
       "current_contract": true
     },
     {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 1536,
+        "data_width": 16,
+        "banks": 16,
+        "ports": 3,
+        "ihp": false
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "e45a5dacbe077838cc8d5aef05ba45fad8208098dd2841ac8391c30f1321463a",
+        "harness": "20c33af8929a81ea7ec6c23ab0f1ef335a46161c2235ae432720c25482420f80",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-1536-16-16-3/Unit.sv": "e45a5dacbe077838cc8d5aef05ba45fad8208098dd2841ac8391c30f1321463a"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-1536-16-16-3/alignment.json",
+      "current_contract": false
+    },
+    {
       "format": "int8",
       "operation": "mul",
       "signed": true,
@@ -2414,6 +2650,63 @@
       "physical_qualification": false,
       "source": "build/rtl/int8_mul/alignment.json",
       "current_contract": true
+    },
+    {
+      "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+      "configuration": {
+        "capacity_bytes": 16384,
+        "data_width": 32,
+        "banks": 4,
+        "ports": 4,
+        "ihp": true
+      },
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        }
+      ],
+      "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+      "build": {
+        "rtl": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+        "harness": "58c4359401d3af3a9b8d8506d98f86653a310981f9dd113046b41425c7b30055",
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "sources": {
+          "build/rtl/spm-16384-32-4-4-ihp/Unit.sv": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+          "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+        }
+      },
+      "qualification": "cycle-verified",
+      "source": "build/rtl/spm-16384-32-4-4-ihp/alignment.json",
+      "current_contract": false
     },
     {
       "format": "int16",
@@ -3005,8 +3298,8 @@
       "begin": 0,
       "end": 65536,
       "cases": 327680,
-      "seconds": 0.07302479195641354,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.09996733401203528,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3022,8 +3315,8 @@
       "begin": 0,
       "end": 65536,
       "cases": 327680,
-      "seconds": 0.05882520799059421,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.05208629200933501,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3039,8 +3332,8 @@
       "begin": 0,
       "end": 256,
       "cases": 1280,
-      "seconds": 0.0249982500099577,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.027741665951907635,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3070,8 +3363,8 @@
       "begin": 0,
       "end": 256,
       "cases": 1280,
-      "seconds": 0.019722666998859495,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.02255783398868516,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3087,8 +3380,8 @@
       "begin": 0,
       "end": 65536,
       "cases": 327680,
-      "seconds": 0.05946687498362735,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.07083904196042567,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3146,8 +3439,8 @@
       "begin": 0,
       "end": 16777216,
       "cases": 83886080,
-      "seconds": 17.996371791989077,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 24.876670208002906,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3163,8 +3456,8 @@
       "begin": 0,
       "end": 4096,
       "cases": 20480,
-      "seconds": 0.032605334010440856,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.025879999971948564,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3180,8 +3473,8 @@
       "begin": 0,
       "end": 16777216,
       "cases": 83886080,
-      "seconds": 18.23662187496666,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 23.5475495000137,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3211,8 +3504,8 @@
       "begin": 0,
       "end": 65536,
       "cases": 327680,
-      "seconds": 0.05036345904227346,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.08021054201526567,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3228,8 +3521,8 @@
       "begin": 0,
       "end": 65536,
       "cases": 327680,
-      "seconds": 0.06427920801797882,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.06986329104984179,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3273,8 +3566,8 @@
       "begin": 0,
       "end": 65536,
       "cases": 327680,
-      "seconds": 0.07460016600089148,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.06301112502114847,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",
@@ -3290,8 +3583,8 @@
       "begin": 0,
       "end": 256,
       "cases": 1280,
-      "seconds": 0.3295493330224417,
-      "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+      "seconds": 0.4534149169921875,
+      "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
       "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
       "oracle_sha256": "e02ae3c298562386cfe51257c4599dfb056e79b3af902aa660a52807f8fd368b",
       "oracle": "independent C++ exact 128-bit rational/encoding search",

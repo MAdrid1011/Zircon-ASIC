@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "interface_version": 1,
+  "profile": "spm-v1",
+  "address_width": 32,
+  "tag_width": 32,
+  "data_widths": [8, 16, 32, 64],
+  "banks": [1, 2, 4, 8, 16],
+  "max_ports": 8,
+  "latency": 2,
+  "bank_ii": 1,
+  "credits_per_port": 2,
+  "response_depth": 2,
+  "mapping": "word_interleaved",
+  "arbitration": "round_robin_on_accept",
+  "reset_retains_memory": true,
+  "storage": {
+    "address_unit": "byte", "byte_order": "little", "access_size": "data_width / 8",
+    "alignment": "natural", "bank_mapping": "(address / word_bytes) % banks",
+    "row_mapping": "(address / word_bytes) / banks", "mask_unit": "byte",
+    "mask_one": "update", "zero_mask": "normal_acknowledged_write",
+    "power_on": "undefined", "read_value": "snapshot_at_acceptance",
+    "write_commit": "acceptance_edge", "response_error_bits": 0, "write_ack_bits": 0,
+    "error_priority": ["OUT_OF_RANGE", "MISALIGNED"],
+    "statuses": {"OK": 0, "OUT_OF_RANGE": 1, "MISALIGNED": 2}
+  },
+  "pipeline": {
+    "input_fifo_depth": 0, "bank_operations_per_cycle": 1,
+    "acceptance": "bank_service_reserved_and_response_credit_available",
+    "access_return_stage": 1, "response_fifo_depth": 2, "response_fifo_flow": false,
+    "outstanding_limit_per_port": 2, "same_cycle_delivery_releases_credit": true,
+    "error_uses_bank": false, "error_updates_round_robin": false,
+    "round_robin_reset": 0, "round_robin_next": "(winner + 1) % ports",
+    "per_port_response_order": "acceptance_order", "blocked_output": "stable_all_fields",
+    "cancel_priority": "reset_or_flush_before_all_handshakes_and_new_writes",
+    "cancel_discards": ["return_stage", "response_fifo", "round_robin_pointers"],
+    "cancel_retains": ["committed_memory"]
+  },
+  "profiles": {
+    "spm-4k-1p1b": {"capacity_bytes": 4096, "data_width": 32, "banks": 1, "ports": 1},
+    "spm-16k-4p4b": {"capacity_bytes": 16384, "data_width": 32, "banks": 4, "ports": 4}
+  },
+  "ihp": {
+    "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+    "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+    "period_ns": 10,
+    "qualification": "unqualified"
+  }
+}

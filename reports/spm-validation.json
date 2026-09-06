@@ -1,0 +1,2737 @@
+{
+  "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+  "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+  "configurations": {
+    "1536:16:16:3": {
+      "status": "cycle-verified",
+      "configuration": {
+        "capacity_bytes": 1536,
+        "data_width": 16,
+        "banks": 16,
+        "ports": 3,
+        "ihp": false
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": null,
+      "rtl_sha256": "e45a5dacbe077838cc8d5aef05ba45fad8208098dd2841ac8391c30f1321463a",
+      "alignment_source": "build/rtl/spm-1536-16-16-3/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 21547,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "16384:32:4:4": {
+      "status": "dual-verified",
+      "configuration": {
+        "capacity_bytes": 16384,
+        "data_width": 32,
+        "banks": 4,
+        "ports": 4,
+        "ihp": true
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": {
+        "configuration": "spm-16384-32-4-4-ihp",
+        "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+        "physical_rtl_sha256": "e783bc7d96e659eae80f447e58e536611d7eda9b0c31a24dc780d8a6898c3781",
+        "top": "SPMPhysical",
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "period_ns": 10,
+        "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+        "banks": 4,
+        "ports": 4,
+        "macro_manifest": {
+          "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+          "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+          "files": {
+            "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+            "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+            "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+          }
+        },
+        "exit_code": 0,
+        "elapsed_seconds": 527.7106492089806,
+        "qualification": "unqualified",
+        "target": "finish",
+        "config_sha256": "3d852b457a1a467f1152fd2c8ca4adbf2083dcfd1ae9d00ca5344a4073e2dfd2",
+        "checks": {
+          "sta": [
+            {
+              "corner": "typ",
+              "setup_ns": 2.378022,
+              "hold_ns": 0.111398,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -3.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -2.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    -1.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    -0.621978,
+                    0.111398
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    0.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    1.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    2.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    3.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    4.378021,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    6.378021,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    8.378022,
+                    0.111398
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    12.378022,
+                    0.111398,
+                    9.2e-05,
+                    0.111398
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                7.62109375,
+                7.6220703125
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 131.19795003203075
+            },
+            {
+              "corner": "slow",
+              "setup_ns": 0.16815,
+              "hold_ns": 0.250645,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -5.831851,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -4.831851,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    -3.831851,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    -2.83185,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    -1.83185,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    -0.83185,
+                    0.250645
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    0.16815,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    1.16815,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    2.168149,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    4.168149,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    6.16815,
+                    0.250645
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    10.16815,
+                    0.250645,
+                    0.000181,
+                    0.250645
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                9.8310546875,
+                9.83203125
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 101.70838299562972
+            }
+          ],
+          "macro_count": 4,
+          "expected_macro_count": 4,
+          "route_drc": {
+            "detailedroute__route__drc_errors__iter:0": 417,
+            "detailedroute__route__drc_errors__iter:1": 67,
+            "detailedroute__route__drc_errors__iter:2": 27,
+            "detailedroute__route__drc_errors__iter:3": 0,
+            "detailedroute__route__drc_errors__iter:4": 9,
+            "detailedroute__route__drc_errors__iter:5": 3,
+            "detailedroute__route__drc_errors__iter:6": 3,
+            "detailedroute__route__drc_errors__iter:7": 0,
+            "detailedroute__route__drc_errors": 0
+          },
+          "area": {
+            "finish__design__instance__area__class:macro": 560731,
+            "finish__design__instance__area__class:fill_cell": 285082,
+            "finish__design__instance__area__class:antenna_cell": 228.614,
+            "finish__design__instance__area__class:clock_buffer": 5875.03,
+            "finish__design__instance__area__class:timing_repair_buffer": 27939.9,
+            "finish__design__instance__area__class:inverter": 175.997,
+            "finish__design__instance__area__class:clock_inverter": 23.5872,
+            "finish__design__instance__area__class:sequential_cell": 34684.1,
+            "finish__design__instance__area__class:multi_input_combinational_cell": 40027.5,
+            "finish__design__instance__area": 669685,
+            "finish__design__die__area": 1060870.0,
+            "finish__design__core__area": 973244,
+            "finish__design__instance__area__stdcell": 108955,
+            "finish__design__instance__area__macros": 560731,
+            "finish__design__instance__area__padcells": 0,
+            "finish__design__instance__area__cover": 0
+          },
+          "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+          "netlist_sha256": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+          "passed": true
+        },
+        "gate": {
+          "cycles": 108203,
+          "seed": 751,
+          "discrepancy_cycles": 0,
+          "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+          "netlist_sha256": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+          "sources": {
+            "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/results/6_final.v": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+            "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/gate/sg13g2_stdcell_functional.v": "229d1b9a38177af5ef39b0b4678be080ea4c0bbc7e2138d377e3882e19007008",
+            "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+          },
+          "timing_simulation": false,
+          "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+          "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+        },
+        "source": "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/physical.json"
+      },
+      "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+      "alignment_source": "build/rtl/spm-16384-32-4-4-ihp/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 108203,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "240:64:2:3": {
+      "status": "cycle-verified",
+      "configuration": {
+        "capacity_bytes": 240,
+        "data_width": 64,
+        "banks": 2,
+        "ports": 3,
+        "ihp": false
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": null,
+      "rtl_sha256": "cfd00a194f93b4abaf3a3ecbe1e688a05e5df6ad1d938c894f7bcd9f92735dce",
+      "alignment_source": "build/rtl/spm-240-64-2-3/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 20071,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "4096:32:1:1": {
+      "status": "dual-verified",
+      "configuration": {
+        "capacity_bytes": 4096,
+        "data_width": 32,
+        "banks": 1,
+        "ports": 1,
+        "ihp": true
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": {
+        "configuration": "spm-4096-32-1-1-ihp",
+        "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+        "physical_rtl_sha256": "de4a3fde925ea69a376e4012ebcac4eba7ff0d91608069694834568a7cef0f48",
+        "top": "SPMPhysical",
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "period_ns": 10,
+        "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+        "banks": 1,
+        "ports": 1,
+        "macro_manifest": {
+          "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+          "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+          "files": {
+            "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+            "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+            "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+            "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+          }
+        },
+        "exit_code": 0,
+        "elapsed_seconds": 194.8600420000148,
+        "qualification": "unqualified",
+        "target": "finish",
+        "config_sha256": "f3524a58360f314517d62e876958ee19e0bbb272598d7440996486f97d84dc51",
+        "checks": {
+          "sta": [
+            {
+              "corner": "typ",
+              "setup_ns": 4.143488,
+              "hold_ns": 0.007493,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -1.856512,
+                    0.007493
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -0.856512,
+                    0.007493
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    0.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    1.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    2.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    3.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    4.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    5.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    6.143487,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    8.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    10.143488,
+                    0.007493
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    14.143489,
+                    0.007493,
+                    0.00091,
+                    0.007493
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                5.8564453125,
+                5.857421875
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 170.7235745248416
+            },
+            {
+              "corner": "slow",
+              "setup_ns": 1.633181,
+              "hold_ns": 0.065481,
+              "check_setup": "",
+              "clock_checks": "",
+              "passed": true,
+              "scan": [
+                {
+                  "period_ns": 4,
+                  "slacks_ns": [
+                    -4.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 5,
+                  "slacks_ns": [
+                    -3.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 6,
+                  "slacks_ns": [
+                    -2.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 7,
+                  "slacks_ns": [
+                    -1.36682,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 8,
+                  "slacks_ns": [
+                    -0.366819,
+                    0.065481
+                  ],
+                  "passed": false
+                },
+                {
+                  "period_ns": 9,
+                  "slacks_ns": [
+                    0.633181,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 10,
+                  "slacks_ns": [
+                    1.633181,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 11,
+                  "slacks_ns": [
+                    2.633181,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 12,
+                  "slacks_ns": [
+                    3.63318,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 14,
+                  "slacks_ns": [
+                    5.63318,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 16,
+                  "slacks_ns": [
+                    7.63318,
+                    0.065481
+                  ],
+                  "passed": true
+                },
+                {
+                  "period_ns": 20,
+                  "slacks_ns": [
+                    11.63318,
+                    0.065481,
+                    0.000368,
+                    0.065481
+                  ],
+                  "passed": false
+                }
+              ],
+              "period_boundary_ns": [
+                8.3662109375,
+                8.3671875
+              ],
+              "period_resolution_ns": 0.001,
+              "highest_scanned_mhz": 119.51447245564893
+            }
+          ],
+          "macro_count": 1,
+          "expected_macro_count": 1,
+          "route_drc": {
+            "detailedroute__route__drc_errors__iter:0": 337,
+            "detailedroute__route__drc_errors__iter:1": 108,
+            "detailedroute__route__drc_errors__iter:2": 74,
+            "detailedroute__route__drc_errors__iter:3": 2,
+            "detailedroute__route__drc_errors__iter:4": 2,
+            "detailedroute__route__drc_errors__iter:5": 0,
+            "detailedroute__route__drc_errors": 0
+          },
+          "area": {
+            "finish__design__instance__area__class:macro": 140183,
+            "finish__design__instance__area__class:fill_cell": 116069,
+            "finish__design__instance__area__class:clock_buffer": 2540.16,
+            "finish__design__instance__area__class:timing_repair_buffer": 4604.95,
+            "finish__design__instance__area__class:inverter": 16.3296,
+            "finish__design__instance__area__class:clock_inverter": 70.7616,
+            "finish__design__instance__area__class:sequential_cell": 8475.06,
+            "finish__design__instance__area__class:multi_input_combinational_cell": 6704.21,
+            "finish__design__instance__area": 162594,
+            "finish__design__die__area": 330803,
+            "finish__design__core__area": 283282,
+            "finish__design__instance__area__stdcell": 22411.5,
+            "finish__design__instance__area__macros": 140183,
+            "finish__design__instance__area__padcells": 0,
+            "finish__design__instance__area__cover": 0
+          },
+          "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+          "netlist_sha256": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+          "passed": true
+        },
+        "gate": {
+          "cycles": 102059,
+          "seed": 751,
+          "discrepancy_cycles": 0,
+          "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+          "netlist_sha256": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+          "sources": {
+            "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/results/6_final.v": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+            "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/gate/sg13g2_stdcell_functional.v": "229d1b9a38177af5ef39b0b4678be080ea4c0bbc7e2138d377e3882e19007008",
+            "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+            "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+          },
+          "timing_simulation": false,
+          "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+          "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+        },
+        "source": "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/physical.json"
+      },
+      "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+      "alignment_source": "build/rtl/spm-4096-32-1-1-ihp/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 102059,
+          "random_cycles": 100000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    },
+    "64:8:4:8": {
+      "status": "cycle-verified",
+      "configuration": {
+        "capacity_bytes": 64,
+        "data_width": 8,
+        "banks": 4,
+        "ports": 8,
+        "ihp": false
+      },
+      "cycle_alignment": true,
+      "functional_tests": true,
+      "performance": true,
+      "network_alignment": true,
+      "physical": null,
+      "rtl_sha256": "64460d5021d137322870864a8ca5a038b68b9d6f67018c0a73e5d23100f213ca",
+      "alignment_source": "build/rtl/spm-64-8-4-8/alignment.json",
+      "runs": [
+        {
+          "seed": 751,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 752,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 753,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 754,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        },
+        {
+          "seed": 755,
+          "cycles": 20139,
+          "random_cycles": 20000,
+          "discrepancy_cycles": 0
+        }
+      ]
+    }
+  },
+  "python": {
+    "exit_code": 0,
+    "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
+    "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
+    "unchanged_during_tests": true,
+    "collected": 114,
+    "skipped": 0
+  },
+  "benchmark": {
+    "host": "macOS-26.7-arm64-arm-64bit",
+    "python": "3.12.7",
+    "numpy": "1.26.4",
+    "numba": "0.59.1",
+    "cycles": 1000000,
+    "repeats": 5,
+    "cases": [
+      {
+        "case": "single",
+        "warmup_seconds": 0.5058703329996206,
+        "seconds": {
+          "python": [
+            15.767580250045285,
+            16.64089162502205,
+            21.770278832991607,
+            25.582575458975043,
+            16.38684379204642
+          ],
+          "numba": [
+            0.4892502909642644,
+            0.4408434170181863,
+            0.4589708329876885,
+            0.4453115420183167,
+            0.4709007500205189
+          ]
+        },
+        "speedup": 36.25696978759526,
+        "matched_final_state": true,
+        "target_passed": true
+      },
+      {
+        "case": "conflict",
+        "warmup_seconds": 0.00022304197773337364,
+        "seconds": {
+          "python": [
+            35.01974675001111,
+            37.18861591699533,
+            46.305959665973205,
+            30.466460041992832,
+            29.942324417002965
+          ],
+          "numba": [
+            1.7778537910198793,
+            1.7770762080326676,
+            1.6950910830055363,
+            1.79783649998717,
+            2.023977833974641
+          ]
+        },
+        "speedup": 19.697765320691396,
+        "matched_final_state": true,
+        "target_passed": true
+      },
+      {
+        "case": "mixed",
+        "warmup_seconds": 0.00029850000282749534,
+        "seconds": {
+          "python": [
+            43.354092749999836,
+            39.55031333299121,
+            42.105523040983826,
+            34.33963995898375,
+            34.90464383305516
+          ],
+          "numba": [
+            0.5940049170167185,
+            0.5847184169688262,
+            0.5830484170001,
+            0.5885702499654144,
+            0.5879807910532691
+          ]
+        },
+        "speedup": 67.26463506085538,
+        "matched_final_state": true,
+        "target_passed": true
+      }
+    ],
+    "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+    "peak_rss_bytes": 447692800
+  },
+  "cold_compilation": {
+    "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+    "fresh_cache": true,
+    "compile_seconds": 8.686314790975302,
+    "cold_call_seconds": 8.930561000015587
+  },
+  "macro_adapter": {
+    "passed": true,
+    "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+    "addresses": [
+      0,
+      1,
+      511,
+      1023
+    ],
+    "masks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "coverage": [
+      "overwrite ones with zero",
+      "masked preservation",
+      "zero mask",
+      "consecutive reads/writes",
+      "disabled write"
+    ],
+    "sources": {
+      "build/spm-macro/Bank.sv": "cd33f7bf18d72937380bebf6ec6e0ae4ba24656e9b5ff2e5c6e8597b25b61dbb",
+      "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+      "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+      "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+    }
+  },
+  "platform_views": {
+    "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+    "files": {
+      "lib/sg13g2_stdcell_typ_1p20V_25C.lib": "968b0cfdcefc49a88d9a5c48874769eaad9aba3509e1240b5e14a821bb07a3c4",
+      "lib/sg13g2_stdcell_slow_1p08V_125C.lib": "ed1cff6e4d66d89d200e94c2213b8926a71c451218ca2df9b1157c98460e4b1d",
+      "lef/sg13g2_stdcell.lef": "c7575039af0b124e1834c407bfb9ac7a2db576d1e3533d98474dad3fbc2af589",
+      "lef/sg13g2_tech.lef": "054f5b7b24d72365b4b1088be1331e04c1c2e3805de9f99c37e71938ed231efc",
+      "gds/sg13g2_stdcell.gds": "6ee92931ad70eeb8f79ca89fe0d4f38892d9e7e14d1a1b21bfb7118e55bf232f",
+      "verilog/sg13g2_stdcell.v": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+      "IHP_rcx_patterns.rules": "ffda02d57a6ecb39b02268be9511d89ef072911f17bd2dcd095f3f3cbeb5a905",
+      "rcx_patterns.rules": "ffda02d57a6ecb39b02268be9511d89ef072911f17bd2dcd095f3f3cbeb5a905",
+      "setRC.tcl": "286edf3042ecbbd6c2741d931e7dac5983dbccdff0af9a7e7c2c6bc975fd061a",
+      "config.mk": "5705790357ccd37bd71f82397faf8ece7ecf8ce5c97d730915fb56ec8a138c8d",
+      "pdn.tcl": "b4a333acd7ad86b061ab03b61eeb7974dce2ca804a9eda33e74395c5b772212f"
+    },
+    "source": "ORFS SG13G2 platform views; distinct from unmodified upstream PDK files"
+  },
+  "network": {
+    "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+    "cycles": 20155,
+    "seed": 4921,
+    "discrepancy_cycles": 0,
+    "rtl_sha256": "b3e21aacd25ec9e9700239b0f8ab3cfc3a15c4fbc8ddfb5a23245f8e21398038",
+    "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
+    "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701"
+  },
+  "physical_history": [
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 153.80602550000185,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "ceb9c50dcb357c5b0acfee8a94042d8fcc6e870c8f69ae5abf6c85de548889fa",
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/physical.json"
+    },
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+      "physical_rtl_sha256": "c06b7cecea658bae7199a7b9545873b9ed7040cac25ad788e0327e4a10c69bba",
+      "top": "SPMPhysical",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 259.86913999996614,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "47878e91e792a1519fa70b40d90960909887025252912c29ba226382637931df",
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/prod-c06b7cecea65-slow-hm50/physical.json"
+    },
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 49.355098208005074,
+      "qualification": "unqualified",
+      "target": "floorplan",
+      "config_sha256": "b3a0f1f5487cbcc9dee816715b3a3b46c2acf7b52bcd8e439161dd8f0efe4a2b",
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-m5-ring-v2/physical.json"
+    },
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 242.27141091699013,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "e628ed76505d0075b33108c6d0f2654dc3a7c589baeb5adff098bb38b774d6b8",
+      "checks": {
+        "sta": [
+          {
+            "corner": "typ",
+            "setup_ns": 2.623101,
+            "hold_ns": 0.030388,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -3.376899,
+                  0.030388
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -2.376899,
+                  0.030388
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -1.376899,
+                  0.030388
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -0.376899,
+                  0.030388
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  0.623101,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  1.623101,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  2.623101,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  3.623101,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  4.623101,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  6.623101,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  8.6231,
+                  0.030388
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  12.623101,
+                  0.030388
+                ],
+                "passed": true
+              }
+            ],
+            "highest_scanned_mhz": 125.0
+          },
+          {
+            "corner": "slow",
+            "setup_ns": 0.942777,
+            "hold_ns": 0.065937,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -5.057223,
+                  0.065937
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -4.057223,
+                  0.065937
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -3.057223,
+                  0.065937
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -2.057223,
+                  0.065937
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  -1.057223,
+                  0.065937
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  -0.057223,
+                  0.065937
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  0.942777,
+                  0.065937
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  1.942777,
+                  0.065937
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  2.942776,
+                  0.065937
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  4.942777,
+                  0.065937
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  6.942777,
+                  0.065937
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  10.942778,
+                  0.065937
+                ],
+                "passed": true
+              }
+            ],
+            "highest_scanned_mhz": 100.0
+          }
+        ],
+        "macro_count": 1,
+        "expected_macro_count": 1,
+        "route_drc": {
+          "detailedroute__route__drc_errors__iter:0": 347,
+          "detailedroute__route__drc_errors__iter:1": 151,
+          "detailedroute__route__drc_errors__iter:2": 87,
+          "detailedroute__route__drc_errors__iter:3": 2,
+          "detailedroute__route__drc_errors__iter:4": 2,
+          "detailedroute__route__drc_errors__iter:5": 0,
+          "detailedroute__route__drc_errors": 0
+        },
+        "area": {
+          "finish__design__instance__area__class:macro": 140183,
+          "finish__design__instance__area__class:fill_cell": 114888,
+          "finish__design__instance__area__class:clock_buffer": 2540.16,
+          "finish__design__instance__area__class:timing_repair_buffer": 5082.13,
+          "finish__design__instance__area__class:inverter": 16.3296,
+          "finish__design__instance__area__class:clock_inverter": 76.2048,
+          "finish__design__instance__area__class:sequential_cell": 8524.05,
+          "finish__design__instance__area__class:multi_input_combinational_cell": 7353.76,
+          "finish__design__instance__area": 163775,
+          "finish__design__die__area": 330803,
+          "finish__design__core__area": 283282,
+          "finish__design__instance__area__stdcell": 23592.6,
+          "finish__design__instance__area__macros": 140183,
+          "finish__design__instance__area__padcells": 0,
+          "finish__design__instance__area__cover": 0
+        },
+        "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+        "netlist_sha256": "b7b6ebd8a5726c4eeeac855b1a32c9134193c02f57bd6c07535d3f16aef55ca2",
+        "passed": true
+      },
+      "gate": {
+        "cycles": 102059,
+        "seed": 751,
+        "discrepancy_cycles": 0,
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "netlist_sha256": "b7b6ebd8a5726c4eeeac855b1a32c9134193c02f57bd6c07535d3f16aef55ca2",
+        "sources": {
+          "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-a4e0fb1407ed-slow-hm50/results/6_final.v": "b7b6ebd8a5726c4eeeac855b1a32c9134193c02f57bd6c07535d3f16aef55ca2",
+          "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-a4e0fb1407ed-slow-hm50/gate/sg13g2_stdcell_functional.v": "3f8ef4e3357a1d66e47b2da05e12917622fb329f69e1b4b7e8e1925e742a6adc",
+          "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+        },
+        "timing_simulation": false,
+        "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+        "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+      },
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-a4e0fb1407ed-slow-hm50/physical.json"
+    },
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 210.68317283299984,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "bdb91967350eebbe169488c5439ccf8e6f0f994cc748a30f161607ec637f5123",
+      "checks": {
+        "sta": [
+          {
+            "corner": "typ",
+            "setup_ns": 2.456095,
+            "hold_ns": -0.001818,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": false,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -3.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -2.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -1.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -0.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  0.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  1.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  2.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  3.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  4.456094,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  6.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  8.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  12.456095,
+                  -0.001818
+                ],
+                "passed": false
+              }
+            ],
+            "highest_scanned_mhz": 0
+          },
+          {
+            "corner": "slow",
+            "setup_ns": 0.678356,
+            "hold_ns": 0.029087,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -5.321645,
+                  0.029087
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -4.321644,
+                  0.029087
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -3.321645,
+                  0.029087
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -2.321645,
+                  0.029087
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  -1.321645,
+                  0.029087
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  -0.321644,
+                  0.029087
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  0.678356,
+                  0.029087
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  1.678356,
+                  0.029087
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  2.678355,
+                  0.029087
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  4.678355,
+                  0.029087
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  6.678355,
+                  0.029087
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  10.678356,
+                  0.029087
+                ],
+                "passed": true
+              }
+            ],
+            "highest_scanned_mhz": 100.0
+          }
+        ],
+        "macro_count": 1,
+        "expected_macro_count": 1,
+        "route_drc": {
+          "detailedroute__route__drc_errors__iter:0": 7,
+          "detailedroute__route__drc_errors__iter:1": 2,
+          "detailedroute__route__drc_errors__iter:2": 0,
+          "detailedroute__route__drc_errors__iter:3": 2,
+          "detailedroute__route__drc_errors__iter:4": 2,
+          "detailedroute__route__drc_errors__iter:5": 0,
+          "detailedroute__route__drc_errors": 0
+        },
+        "area": {},
+        "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+        "netlist_sha256": "56a535c4d99a3ae4af808543052ec3447bf1c1a36c673f98477a64b470d0068c",
+        "passed": false
+      },
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-m5-v1/physical.json"
+    },
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 204.21526554197771,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "bc43b242dc495cba49a5b2456582e1784cd2554d498366dc5b67c42e1bb56a05",
+      "checks": {
+        "sta": [
+          {
+            "corner": "typ",
+            "setup_ns": 2.456095,
+            "hold_ns": -0.001818,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": false,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -3.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -2.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -1.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -0.543905,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  0.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  1.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  2.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  3.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  4.456094,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  6.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  8.456095,
+                  -0.001818
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  12.456095,
+                  -0.001818
+                ],
+                "passed": false
+              }
+            ],
+            "highest_scanned_mhz": 0
+          },
+          {
+            "corner": "slow",
+            "setup_ns": 0.678356,
+            "hold_ns": 0.029109,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -5.321645,
+                  0.029109
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -4.321644,
+                  0.029109
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -3.321645,
+                  0.029109
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -2.321645,
+                  0.029109
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  -1.321645,
+                  0.029109
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  -0.321644,
+                  0.029109
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  0.678356,
+                  0.029109
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  1.678356,
+                  0.029109
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  2.678355,
+                  0.029109
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  4.678355,
+                  0.029109
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  6.678355,
+                  0.029109
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  10.678356,
+                  0.029109
+                ],
+                "passed": true
+              }
+            ],
+            "highest_scanned_mhz": 100.0
+          }
+        ],
+        "macro_count": 1,
+        "expected_macro_count": 1,
+        "route_drc": {
+          "detailedroute__route__drc_errors__iter:0": 7,
+          "detailedroute__route__drc_errors__iter:1": 2,
+          "detailedroute__route__drc_errors__iter:2": 0,
+          "detailedroute__route__drc_errors__iter:3": 2,
+          "detailedroute__route__drc_errors__iter:4": 2,
+          "detailedroute__route__drc_errors__iter:5": 0,
+          "detailedroute__route__drc_errors": 0
+        },
+        "area": {
+          "finish__design__instance__area__class:macro": 140183,
+          "finish__design__instance__area__class:fill_cell": 114848,
+          "finish__design__instance__area__class:antenna_cell": 5.4432,
+          "finish__design__instance__area__class:clock_buffer": 2585.52,
+          "finish__design__instance__area__class:timing_repair_buffer": 5056.73,
+          "finish__design__instance__area__class:inverter": 16.3296,
+          "finish__design__instance__area__class:clock_inverter": 76.2048,
+          "finish__design__instance__area__class:sequential_cell": 8524.05,
+          "finish__design__instance__area__class:multi_input_combinational_cell": 7368.28,
+          "finish__design__instance__area": 163815,
+          "finish__design__die__area": 330803,
+          "finish__design__core__area": 283282,
+          "finish__design__instance__area__stdcell": 23632.6,
+          "finish__design__instance__area__macros": 140183,
+          "finish__design__instance__area__padcells": 0,
+          "finish__design__instance__area__cover": 0
+        },
+        "rtl_sha256": "b2a329de740b577641815bcfbb03ff8fbad317feeebd4f9f59daf9c8946baa7b",
+        "netlist_sha256": "56a535c4d99a3ae4af808543052ec3447bf1c1a36c673f98477a64b470d0068c",
+        "passed": false
+      },
+      "gate": {
+        "cycles": 102059,
+        "seed": 751,
+        "discrepancy_cycles": 0,
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "netlist_sha256": "56a535c4d99a3ae4af808543052ec3447bf1c1a36c673f98477a64b470d0068c",
+        "sources": {
+          "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-a4e0fb1407ed/results/6_final.v": "56a535c4d99a3ae4af808543052ec3447bf1c1a36c673f98477a64b470d0068c",
+          "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-a4e0fb1407ed/gate/sg13g2_stdcell_functional.v": "3f8ef4e3357a1d66e47b2da05e12917622fb329f69e1b4b7e8e1925e742a6adc",
+          "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+        },
+        "timing_simulation": false,
+        "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+        "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+      },
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/b2a329de740b/pdn-a4e0fb1407ed/physical.json"
+    },
+    {
+      "configuration": "spm-4096-32-1-1-ihp",
+      "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+      "physical_rtl_sha256": "de4a3fde925ea69a376e4012ebcac4eba7ff0d91608069694834568a7cef0f48",
+      "top": "SPMPhysical",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 1,
+      "ports": 1,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 194.8600420000148,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "f3524a58360f314517d62e876958ee19e0bbb272598d7440996486f97d84dc51",
+      "checks": {
+        "sta": [
+          {
+            "corner": "typ",
+            "setup_ns": 4.143488,
+            "hold_ns": 0.007493,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -1.856512,
+                  0.007493
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -0.856512,
+                  0.007493
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  0.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  1.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  2.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  3.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  4.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  5.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  6.143487,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  8.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  10.143488,
+                  0.007493
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  14.143489,
+                  0.007493,
+                  0.00091,
+                  0.007493
+                ],
+                "passed": false
+              }
+            ],
+            "period_boundary_ns": [
+              5.8564453125,
+              5.857421875
+            ],
+            "period_resolution_ns": 0.001,
+            "highest_scanned_mhz": 170.7235745248416
+          },
+          {
+            "corner": "slow",
+            "setup_ns": 1.633181,
+            "hold_ns": 0.065481,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -4.366819,
+                  0.065481
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -3.366819,
+                  0.065481
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -2.366819,
+                  0.065481
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -1.36682,
+                  0.065481
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  -0.366819,
+                  0.065481
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  0.633181,
+                  0.065481
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  1.633181,
+                  0.065481
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  2.633181,
+                  0.065481
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  3.63318,
+                  0.065481
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  5.63318,
+                  0.065481
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  7.63318,
+                  0.065481
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  11.63318,
+                  0.065481,
+                  0.000368,
+                  0.065481
+                ],
+                "passed": false
+              }
+            ],
+            "period_boundary_ns": [
+              8.3662109375,
+              8.3671875
+            ],
+            "period_resolution_ns": 0.001,
+            "highest_scanned_mhz": 119.51447245564893
+          }
+        ],
+        "macro_count": 1,
+        "expected_macro_count": 1,
+        "route_drc": {
+          "detailedroute__route__drc_errors__iter:0": 337,
+          "detailedroute__route__drc_errors__iter:1": 108,
+          "detailedroute__route__drc_errors__iter:2": 74,
+          "detailedroute__route__drc_errors__iter:3": 2,
+          "detailedroute__route__drc_errors__iter:4": 2,
+          "detailedroute__route__drc_errors__iter:5": 0,
+          "detailedroute__route__drc_errors": 0
+        },
+        "area": {
+          "finish__design__instance__area__class:macro": 140183,
+          "finish__design__instance__area__class:fill_cell": 116069,
+          "finish__design__instance__area__class:clock_buffer": 2540.16,
+          "finish__design__instance__area__class:timing_repair_buffer": 4604.95,
+          "finish__design__instance__area__class:inverter": 16.3296,
+          "finish__design__instance__area__class:clock_inverter": 70.7616,
+          "finish__design__instance__area__class:sequential_cell": 8475.06,
+          "finish__design__instance__area__class:multi_input_combinational_cell": 6704.21,
+          "finish__design__instance__area": 162594,
+          "finish__design__die__area": 330803,
+          "finish__design__core__area": 283282,
+          "finish__design__instance__area__stdcell": 22411.5,
+          "finish__design__instance__area__macros": 140183,
+          "finish__design__instance__area__padcells": 0,
+          "finish__design__instance__area__cover": 0
+        },
+        "rtl_sha256": "c560beeb43758cbee175397eeb6dea80f5a5c9e5d411794b8899f06b83d033b4",
+        "netlist_sha256": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+        "passed": true
+      },
+      "gate": {
+        "cycles": 102059,
+        "seed": 751,
+        "discrepancy_cycles": 0,
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "netlist_sha256": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+        "sources": {
+          "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/results/6_final.v": "d8984641e1208a427bd5e770507883c5bdd6547b147affcd675018f7ddd6c5ba",
+          "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/gate/sg13g2_stdcell_functional.v": "229d1b9a38177af5ef39b0b4678be080ea4c0bbc7e2138d377e3882e19007008",
+          "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+        },
+        "timing_simulation": false,
+        "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+        "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+      },
+      "source": "build/ppa_spm/spm-4096-32-1-1-ihp/c560beeb4375/prod-de4a3fde925e-slow-hm50/physical.json"
+    },
+    {
+      "configuration": "spm-16384-32-4-4-ihp",
+      "rtl_sha256": "538cfa4394826e2c927d442bb71227765fb79e8f03ec69442b065b6e08ddafef",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 4,
+      "ports": 4,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 137,
+      "elapsed_seconds": 1738.2984275000053,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "eb0056e2fcecf8bbd69c241aa16a86d88c42e0c6d740fced55ed61b7af0bb544",
+      "source": "build/ppa_spm/spm-16384-32-4-4-ihp/538cfa439482/physical.json"
+    },
+    {
+      "configuration": "spm-16384-32-4-4-ihp",
+      "rtl_sha256": "538cfa4394826e2c927d442bb71227765fb79e8f03ec69442b065b6e08ddafef",
+      "physical_rtl_sha256": "f49a2e4633b2c21c022bca4c5d1f13d7a8dfd854e5d5faebe94393bb8d4928fb",
+      "top": "SPMPhysical",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 4,
+      "ports": 4,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 137,
+      "elapsed_seconds": 1300.8390565000009,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "ae70830cf64a3684495339af27c287c55d8cac962bc362db04d063a4b712f40a",
+      "source": "build/ppa_spm/spm-16384-32-4-4-ihp/538cfa439482/prod-f49a2e4633b2-slow-hm50/physical.json"
+    },
+    {
+      "configuration": "spm-16384-32-4-4-ihp",
+      "rtl_sha256": "538cfa4394826e2c927d442bb71227765fb79e8f03ec69442b065b6e08ddafef",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 4,
+      "ports": 4,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 137,
+      "elapsed_seconds": 687.1613361660275,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "1a680fc4fb89c1a71d0e535e604ec496071b48e173d8f1e03a7c7ae1577e7aec",
+      "source": "build/ppa_spm/spm-16384-32-4-4-ihp/538cfa439482/pdn-a4e0fb1407ed-slow-hm50/physical.json"
+    },
+    {
+      "configuration": "spm-16384-32-4-4-ihp",
+      "rtl_sha256": "538cfa4394826e2c927d442bb71227765fb79e8f03ec69442b065b6e08ddafef",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 4,
+      "ports": 4,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 137,
+      "elapsed_seconds": 1495.6607333749998,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "64713437defa72f56b1d5113fd17ed816431560eccd299677841bb3bcc4735d2",
+      "source": "build/ppa_spm/spm-16384-32-4-4-ihp/538cfa439482/pdn-m5-v1/physical.json"
+    },
+    {
+      "configuration": "spm-16384-32-4-4-ihp",
+      "rtl_sha256": "538cfa4394826e2c927d442bb71227765fb79e8f03ec69442b065b6e08ddafef",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 4,
+      "ports": 4,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 665.010219458025,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "fedcada2913b1fae782838a1b98e8300b10801c2a250fa6b4553e04b182e8b99",
+      "source": "build/ppa_spm/spm-16384-32-4-4-ihp/538cfa439482/pdn-a4e0fb1407ed/physical.json"
+    },
+    {
+      "configuration": "spm-16384-32-4-4-ihp",
+      "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+      "physical_rtl_sha256": "e783bc7d96e659eae80f447e58e536611d7eda9b0c31a24dc780d8a6898c3781",
+      "top": "SPMPhysical",
+      "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+      "period_ns": 10,
+      "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+      "banks": 4,
+      "ports": 4,
+      "macro_manifest": {
+        "commit": "5e6d592e4002946a4616f798c357f0f3c06cf3b6",
+        "source": "https://raw.githubusercontent.com/IHP-GmbH/IHP-Open-PDK/5e6d592e4002946a4616f798c357f0f3c06cf3b6/ihp-sg13g2/libs.ref/sg13g2_sram/",
+        "files": {
+          "verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12",
+          "verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "lef/RM_IHPSG13_1P_1024x32_c2_bm_bist.lef": "b345b6c44defa630a7266fb1ee878b153e4b22b88461aa8216d3883592c18db2",
+          "gds/RM_IHPSG13_1P_1024x32_c2_bm_bist.gds": "4d1178811e3b83a8f6fc85f017fdd8d9b43629f785929ad60dbbaa2a763b96b1",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_typ_1p20V_25C.lib": "4eba4f904ad61e1c0dbb78a6b636e486335be19803370048276438e41a0c26d3",
+          "lib/RM_IHPSG13_1P_1024x32_c2_bm_bist_slow_1p08V_125C.lib": "34497364ed23734a929454b451ee9d209b16923e03b80cba258379069af1908c"
+        }
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 527.7106492089806,
+      "qualification": "unqualified",
+      "target": "finish",
+      "config_sha256": "3d852b457a1a467f1152fd2c8ca4adbf2083dcfd1ae9d00ca5344a4073e2dfd2",
+      "checks": {
+        "sta": [
+          {
+            "corner": "typ",
+            "setup_ns": 2.378022,
+            "hold_ns": 0.111398,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -3.621978,
+                  0.111398
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -2.621978,
+                  0.111398
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -1.621978,
+                  0.111398
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -0.621978,
+                  0.111398
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  0.378022,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  1.378022,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  2.378022,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  3.378022,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  4.378021,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  6.378021,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  8.378022,
+                  0.111398
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  12.378022,
+                  0.111398,
+                  9.2e-05,
+                  0.111398
+                ],
+                "passed": false
+              }
+            ],
+            "period_boundary_ns": [
+              7.62109375,
+              7.6220703125
+            ],
+            "period_resolution_ns": 0.001,
+            "highest_scanned_mhz": 131.19795003203075
+          },
+          {
+            "corner": "slow",
+            "setup_ns": 0.16815,
+            "hold_ns": 0.250645,
+            "check_setup": "",
+            "clock_checks": "",
+            "passed": true,
+            "scan": [
+              {
+                "period_ns": 4,
+                "slacks_ns": [
+                  -5.831851,
+                  0.250645
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 5,
+                "slacks_ns": [
+                  -4.831851,
+                  0.250645
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 6,
+                "slacks_ns": [
+                  -3.831851,
+                  0.250645
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 7,
+                "slacks_ns": [
+                  -2.83185,
+                  0.250645
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 8,
+                "slacks_ns": [
+                  -1.83185,
+                  0.250645
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 9,
+                "slacks_ns": [
+                  -0.83185,
+                  0.250645
+                ],
+                "passed": false
+              },
+              {
+                "period_ns": 10,
+                "slacks_ns": [
+                  0.16815,
+                  0.250645
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 11,
+                "slacks_ns": [
+                  1.16815,
+                  0.250645
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 12,
+                "slacks_ns": [
+                  2.168149,
+                  0.250645
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 14,
+                "slacks_ns": [
+                  4.168149,
+                  0.250645
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 16,
+                "slacks_ns": [
+                  6.16815,
+                  0.250645
+                ],
+                "passed": true
+              },
+              {
+                "period_ns": 20,
+                "slacks_ns": [
+                  10.16815,
+                  0.250645,
+                  0.000181,
+                  0.250645
+                ],
+                "passed": false
+              }
+            ],
+            "period_boundary_ns": [
+              9.8310546875,
+              9.83203125
+            ],
+            "period_resolution_ns": 0.001,
+            "highest_scanned_mhz": 101.70838299562972
+          }
+        ],
+        "macro_count": 4,
+        "expected_macro_count": 4,
+        "route_drc": {
+          "detailedroute__route__drc_errors__iter:0": 417,
+          "detailedroute__route__drc_errors__iter:1": 67,
+          "detailedroute__route__drc_errors__iter:2": 27,
+          "detailedroute__route__drc_errors__iter:3": 0,
+          "detailedroute__route__drc_errors__iter:4": 9,
+          "detailedroute__route__drc_errors__iter:5": 3,
+          "detailedroute__route__drc_errors__iter:6": 3,
+          "detailedroute__route__drc_errors__iter:7": 0,
+          "detailedroute__route__drc_errors": 0
+        },
+        "area": {
+          "finish__design__instance__area__class:macro": 560731,
+          "finish__design__instance__area__class:fill_cell": 285082,
+          "finish__design__instance__area__class:antenna_cell": 228.614,
+          "finish__design__instance__area__class:clock_buffer": 5875.03,
+          "finish__design__instance__area__class:timing_repair_buffer": 27939.9,
+          "finish__design__instance__area__class:inverter": 175.997,
+          "finish__design__instance__area__class:clock_inverter": 23.5872,
+          "finish__design__instance__area__class:sequential_cell": 34684.1,
+          "finish__design__instance__area__class:multi_input_combinational_cell": 40027.5,
+          "finish__design__instance__area": 669685,
+          "finish__design__die__area": 1060870.0,
+          "finish__design__core__area": 973244,
+          "finish__design__instance__area__stdcell": 108955,
+          "finish__design__instance__area__macros": 560731,
+          "finish__design__instance__area__padcells": 0,
+          "finish__design__instance__area__cover": 0
+        },
+        "rtl_sha256": "151e06c64150605899d610605b7f9c4114a8956dc878722f02b67d3842795394",
+        "netlist_sha256": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+        "passed": true
+      },
+      "gate": {
+        "cycles": 108203,
+        "seed": 751,
+        "discrepancy_cycles": 0,
+        "verilator": "Verilator 5.050 2026-07-01 rev vUNKNOWN-built20260701",
+        "netlist_sha256": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+        "sources": {
+          "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/results/6_final.v": "5110c61f0e2454ff83e26f8e62394973c43310b6b8b2de1484abf0cc88649399",
+          "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/gate/sg13g2_stdcell_functional.v": "229d1b9a38177af5ef39b0b4678be080ea4c0bbc7e2138d377e3882e19007008",
+          "build/ihp/verilog/RM_IHPSG13_1P_1024x32_c2_bm_bist.v": "0775d362aafb4c375f37ebfc8820404c363aa60e5ab5cf67c28c4fd330ce095d",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral.v": "5aa61ac427a9c7253f5bcfbc4bf0717a6ffb28db514b1d5cad0ecb52a11d5790",
+          "build/ihp/verilog/RM_IHPSG13_1P_core_behavioral_bm_bist.v": "d0a6258f8e9c93d1d5b1f78c0a1d66f30d28b1ad8037e5e07f53d1a4e3670b12"
+        },
+        "timing_simulation": false,
+        "stdcell_original_sha256": "28343754a828972d614c15b7db27892e92a8c16e49fc06ed69d858a659942ed4",
+        "compatibility": "connect specify helper wires and add 10 ps Q output delay to prevent zero-delay CTS delta races; no SDF timing validation"
+      },
+      "source": "build/ppa_spm/spm-16384-32-4-4-ihp/151e06c64150/prod-e783bc7d96e6-slow-hm50/physical.json"
+    }
+  ]
+}

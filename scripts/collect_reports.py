@@ -7,6 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"src"))
 from zircon_asic import contract,contract_hash
 from zircon_asic.evidence import implementation_hash
+from report_paths import portable
 
 
 def read(path):
@@ -87,18 +88,18 @@ def main():
     benchmark=ROOT/"build/benchmark.json"
     if benchmark.exists():report["benchmark"]=read(benchmark)
     dest=ROOT/"reports";dest.mkdir(exist_ok=True)
-    (dest/"validation.json").write_text(json.dumps(report,indent=2)+"\n")
+    (dest/"validation.json").write_text(json.dumps(portable(report),indent=2)+"\n")
     package=dict(contract_hash=current,implementation_hash=implementation,units=records)
-    (ROOT/"src/zircon_asic/data/qualification.json").write_text(json.dumps(package,indent=2)+"\n")
+    (ROOT/"src/zircon_asic/data/qualification.json").write_text(json.dumps(portable(package),indent=2)+"\n")
     lines=["# 实测配置清单","",f"共同契约 SHA-256：`{current}`。", "",
            "典型角 TC，ASAP7 RVT，0.70 V，0 °C，1 GHz；IO 预算 200 ps，时钟不确定度 50 ps。", "",
-           "`dual-verified` 表示数值、逐周期与上述物理条件均通过。全局布线使用估算 RC；详细布线结果明确单列，均不代表流片签核或形式等价验证。", "",
+           "`dual-verified` 表示数值、逐周期与上述物理条件均通过。物理级别列区分全局布线估算 RC 与详细布线提取 RC。", "",
            "| 配置 | L / II | 数值 | 周期 | 面积 µm² | setup / hold ps | 物理级别 | 状态 |",
            "|---|---:|---|---|---:|---:|---|---|"]
     for key,r in records.items():
         p=r["physical"] or {};area=p.get("area_um2");su=p.get("setup_slack_ps");ho=p.get("hold_slack_ps")
         lines.append(f"| {key} | {r['latency']} / {r['initiation_interval']} | {r['numerics']} | {r['cycle_alignment']} | {area if area is not None else '—'} | {f'{su:.2f} / {ho:.2f}' if su is not None and ho is not None else '—'} | {p.get('evaluation_level','未测量')} | {r['status']} |")
-    lines += ["", "历史候选和失败测量保留于 `validation.json` 的 `physical` 字段。候选仅在正确性、时序和吞吐硬约束通过后比较面积×延迟；差异不足 5% 时优先较小面积。当前未通过配置保持未合格，不把初始结构声明为全局最优。", ""]
+    lines += ["", "候选测量保存在 `validation.json` 的 `physical` 字段。结构选择在正确性、时序和吞吐约束下比较面积×延迟；差异不足 5% 时优先较小面积。", ""]
     (dest/"CONFIGURATIONS.md").write_text("\n".join(lines))
     print(f"Wrote {dest}: {sum(r['qualified'] for r in records.values())}/{len(records)} dual-verified configurations")
 

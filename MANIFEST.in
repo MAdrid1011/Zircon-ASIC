@@ -1,0 +1,9 @@
+recursive-include docs *.md
+include LICENSE THIRD_PARTY_NOTICES.md CONTRIBUTING.md SECURITY.md
+recursive-include licenses *.txt
+recursive-include examples *.py
+recursive-include scripts *.py *.cpp *.tcl
+include hardware/build.sbt
+recursive-include hardware/src *.scala
+include hardware/project/build.properties
+recursive-include reports *.md *.json

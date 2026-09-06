@@ -1,6 +1,6 @@
 {
   "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
-  "implementation_hash": "7fa584677b328a0df0d9205f96ab809b0d667aff4b99498630fa6664ae122e81",
+  "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
   "units": {
     "fp32.add": {
       "status": "dual-verified",

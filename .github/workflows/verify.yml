@@ -9,6 +9,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install '.[fast,test]'
+      - run: python scripts/check_docs.py
       - run: python scripts/build_oracles.py
       - run: python -m pytest -q --junitxml=build/pytest.xml
       - run: python scripts/exhaustive.py
@@ -41,6 +42,12 @@ jobs:
       - run: python scripts/validate_rtl.py
       - run: python scripts/validate_rtl.py --unsigned --unit int8.add --unit int8.mul --unit int8.div --unit int16.add --unit int16.mul --unit int16.div --unit int32.add --unit int32.mul --unit int32.div
       - run: python scripts/validate_network_rtl.py
+      - run: python scripts/fetch_ihp.py
+      - run: python scripts/validate_spm_macro.py
+      - run: python scripts/validate_spm.py --ihp
+      - run: python scripts/validate_spm.py --ihp --capacity 16384 --banks 4 --ports 4
+      - run: python scripts/validate_spm.py --capacity 240 --width 64 --banks 2 --ports 3
+      - run: python scripts/validate_spm_network.py
       - run: python scripts/build_oracles.py && python scripts/testfloat_vectors.py --rtl
       - run: python scripts/exhaustive_rtl.py
       - uses: actions/upload-artifact@v4
@@ -57,6 +64,9 @@ jobs:
             build/rtl/**/stimulus.txt
             build/rtl/**/python.trace
             build/rtl/**/rtl.trace
+            build/rtl/**/seed-*.stim
+            build/rtl/**/seed-*.python
+            build/rtl/**/seed-*.rtl
             build/rtl/**/icarus-replay.json
             build/rtl/**/generate.log
             build/rtl/**/compile.log

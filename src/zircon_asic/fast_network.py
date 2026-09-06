@@ -118,6 +118,10 @@ def _run(cfg, downstream, upstream, operands, source, lengths, position, sink,
 
 
 def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False):
+    from .spm import SPM
+    if any(isinstance(u,SPM) for u in net.units.values()) or any(e.mapping is not None for e in net.connections):
+        from .fast_mixed import run_network as mixed
+        return mixed(net,cycles,ready=ready,reset=reset,flush=flush,trace=trace)
     names = net._order(); n = len(names); lookup = {name:i for i,name in enumerate(names)}
     cfg = np.zeros((n,10),np.int64)
     upstream,downstream = np.full(n,-1,np.int64),np.full(n,-1,np.int64)

@@ -20,32 +20,46 @@
 
 ## 物理评估
 
-`scripts/ppa.py` 使用固定摘要的官方 OpenROAD Flow Scripts 镜像，默认 ASAP7 RVT 的 TC/0.70 V/0 °C，WC/0.63 V/100 °C 作为压力测试。时钟周期为 1000 ps，输入与输出延迟各 200 ps，时钟不确定度为 50 ps。这是一组公开记录的评估条件，不是代工厂流片签核。
+`scripts/ppa.py` 使用固定摘要的官方 OpenROAD Flow Scripts 镜像，默认 ASAP7 RVT 的 TC/0.70 V/0 °C，WC/0.63 V/100 °C 作为压力测试。时钟周期为 1000 ps，输入与输出延迟各 200 ps，时钟不确定度为 50 ps。
 
-每次新物理运行冻结 RTL 内容，以 SHA-256 建立独立结果目录。共同评估级别为全局布线后的估算 RC 静态时序分析，要求 setup/hold 裕量均非负。详细布线测量另行记录；不会把脚本退出码为零或“综合完成”当作 1 GHz 通过。面积引用标准单元实例面积，同时保留布局和布线产生的缓冲器影响。
+每次新物理运行冻结 RTL 内容，以 SHA-256 建立独立结果目录。共同评估级别为全局布线后的估算 RC 静态时序分析，要求 setup/hold 裕量均非负。详细布线结果按提取 RC 进行静态时序分析，并在配置表中标明物理阶段。面积引用标准单元实例面积，同时保留布局和布线产生的缓冲器影响。
 
-macOS ARM 上的固定镜像通过 AMD64 仿真运行。镜像附带的 Kepler 形式工具发生了非法指令错误，因此物理脚本关闭自动 post-resize LEC，并在报告显式记为未执行；算术参考、Chisel 断言和 RTL 周期回归仍独立执行。该限制不应被描述为形式等价验证通过。
+物理流程使用 OpenROAD 完成实现与 STA，数值和周期行为通过独立参考、Chisel 断言及 RTL 回归检查。报告分别记录仿真、时序和形式检查状态；该流程的 post-resize LEC 设置为关闭。
 
-初始级数只是候选。硬约束为正确性、1 GHz 和指定吞吐；在通过的候选之间比较面积乘无背压最坏延迟，差异不足 5% 时优先面积较小者。逐配置状态见 `reports/CONFIGURATIONS.md`。未通过配置不提供正式双实现或最优声明。
+结构选择以正确性、1 GHz 和指定吞吐为约束；在通过的候选之间比较面积乘无背压最坏延迟，差异不足 5% 时优先面积较小者。逐配置状态见 `reports/CONFIGURATIONS.md`。
+
+## SPM 验证
+
+独立字节数组参考检查读写与字节掩码。Python、Numba 和 RTL 逐拍比较全部端口的握手、响应、轮询指针、返回阶段、队列占用与实际写入事件。宏包装器使用 IHP 官方功能模型检查全部 16 种字节掩码、覆盖写、连续读写和停用状态。
+
+| 配置或场景 | 回归 |
+|---|---|
+| 4 KiB / 32 bit / 1 bank / 1 请求端，IHP 宏 | 5 个种子，每种子 100,000 拍随机刺激，另含初始化与读回 |
+| 16 KiB / 32 bit / 4 banks / 4 请求端，IHP 宏 | 5 个种子，每种子 100,000 拍随机刺激，另含初始化与读回 |
+| 通用同步存储配置 | 每配置 5 个种子，每种子 20,000 拍随机刺激 |
+| 读 SPM → INT32Mul → 写 SPM | Python／RTL 逐拍比较，含加载和读回共 20,155 拍 |
+| Python／Numba | 轨迹、状态、存储内容和跨后端连续运行检查 |
+
+两个宏配置使用 IHP SG13G2：100 MHz，输入／输出最大延迟各 2 ns、最小延迟 0 ns，setup 不确定度 0.5 ns、hold 不确定度 0.1 ns。TT 1.20 V / 25°C 和 SS 1.08 V / 125°C 均执行详细布线后提取 RC 的 setup、hold、时钟脉宽和宏时序检查。
+
+综合网表通过官方 SRAM 模型进行功能回放。Verilator 标准单元功能模型显式连接 specify 延迟参考线，并在 Q 输出加入 10 ps 延迟以处理零延迟时钟树的事件顺序；原文件与适配文件分别记录摘要。时序测量使用独立 STA。完整运行入口与 CPU 性能见 [SPM 文档](hardware/spm.md) 和 [SPM 报告](../reports/SPM.md)。
 
 ## 测试工具与来源
 
 - [SoftFloat](https://github.com/ucb-bar/berkeley-softfloat-3)：测试用参考，固定提交见 `scripts/build_oracles.py`。
-- [TestFloat](https://www.jhauser.us/arithmetic/TestFloat-3/doc/testfloat_gen.html)：系统化测试向量工具，固定提交并本地构建。`scripts/testfloat_vectors.py --rtl` 默认对每种舍入方式使用 level-1 流的前 2048 项，覆盖全部 FP16/FP32 算子；报告记录种子、实际数量和向量哈希。这是有界前缀测试，不声称完成 TestFloat 全部 level-1 用例。
+- [TestFloat](https://www.jhauser.us/arithmetic/TestFloat-3/doc/testfloat_gen.html)：系统化测试向量工具，固定提交并本地构建。`scripts/testfloat_vectors.py --rtl` 默认对每种舍入方式使用 level-1 流的前 2048 项，覆盖全部 FP16/FP32 算子；报告记录种子、实际数量和向量哈希。
 - [Chisel](https://www.chisel-lang.org/docs/explanations/interfaces-and-connections)：7.15.0，firtool 1.158.0；使用原生 Scala/Chisel 数据通路。
 - [OpenROAD Flow Scripts](https://openroad-flow-scripts.readthedocs.io/en/latest/user/DockerShell.html)：容器摘要固定在 `scripts/ppa.py`。
 - [OCP FP8](https://www.opencompute.org/documents/ocp-8-bit-floating-point-specification-ofp8-revision-1-0-2023-06-20-pdf) 和 [MX 格式](https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf)：编码背景。本库的标量算术、饱和和异常契约另行明确。
 
 ## 报告与状态失效
 
-`python scripts/collect_reports.py` 将测试、穷举、逐周期、性能和物理记录汇总为 `reports/validation.json`，同时生成配置表和包内 `qualification.json`。完整 Python 回归记录实际源内容的 SHA-256；RTL 记录绑定生成内容的 SHA-256。更换实现、契约或自定义时序后，原验证状态自动失效，不能沿用已合格标记。
+`python scripts/collect_reports.py` 将测试、穷举、逐周期、性能和物理记录汇总为 `reports/validation.json`，同时生成配置表和包内 `qualification.json`。完整 Python 回归记录实际源内容的 SHA-256；RTL 记录绑定生成内容的 SHA-256。验证状态按实现、契约和 RTL 摘要匹配；更换实现或自定义时序后重新建立相应验证记录。
 
 `describe()` 区分 `unqualified`、`cycle-verified` 与 `dual-verified`，并给出每项门槛及物理评估级别。硬件生成的 manifest 默认保持未合格，使用其中的 RTL 哈希与发布配置表关联验收证据。
 
 ## 仿真器交叉核对与版本兼容
 
-在 Linux 的 Verilator 5.020 默认优化下，FP16 FMA 曾把 `a=1066, b=457, c=48378, RNE` 算成 `0xbffa`，正确结果为 `0xbcfa` 并置 NX。两平台生成的 RTL 字节完全一致；Verilator 5.050 和 Icarus 对原始 12000 拍刺激均通过。5.020 关闭 `const-bit-op-tree` 与 `expand` 后，CI 的同一 FP16 回归通过。
+Verilator 5.022 之前的版本使用 `-fno-const-bit-op-tree -fno-expand`，兼容其位运算和移位优化行为。验证脚本按版本自动设置选项，并将其写入构建标识。相关上游修复见 [NOT 位运算优化修复](https://github.com/verilator/verilator/pull/4847) 和 [移位宽度修复](https://github.com/verilator/verilator/pull/4849)。这项兼容处理不改变 Chisel 或生成的 RTL。
 
-验证脚本对 5.022 之前的版本显式关闭这两项优化，并将选项写入构建标识。相关上游修复见 [NOT 位运算优化修复](https://github.com/verilator/verilator/pull/4847) 和 [移位宽度修复](https://github.com/verilator/verilator/pull/4849)。这项兼容处理不改变 Chisel 或生成的 RTL。
-
-`python scripts/replay_iverilog.py build/rtl/fp16_fma` 可用独立 RTL 仿真器重放保存的刺激和 Python 期望轨迹。CI 保留 RTL、manifest、刺激、双边轨迹和失败信息；本地失败还会归档到独立目录，后续成功运行不会复用旧错误记录。
+`python scripts/replay_iverilog.py build/rtl/fp16_fma` 可用独立 RTL 仿真器重放保存的刺激和 Python 期望轨迹。CI 保存 RTL、manifest、刺激和双边轨迹。发生差异时，诊断归档记录种子、首个分歧周期和对应实现摘要。

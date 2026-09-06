@@ -4,7 +4,7 @@
 
 典型角 TC，ASAP7 RVT，0.70 V，0 °C，1 GHz；IO 预算 200 ps，时钟不确定度 50 ps。
 
-`dual-verified` 表示数值、逐周期与上述物理条件均通过。全局布线使用估算 RC；详细布线结果明确单列，均不代表流片签核或形式等价验证。
+`dual-verified` 表示数值、逐周期与上述物理条件均通过。物理级别列区分全局布线估算 RC 与详细布线提取 RC。
 
 | 配置 | L / II | 数值 | 周期 | 面积 µm² | setup / hold ps | 物理级别 | 状态 |
 |---|---:|---|---|---:|---:|---|---|
@@ -47,4 +47,4 @@
 | int32.div | 21 / 21 | passed | passed | 766.296 | 57.38 / 3.27 | global-route-estimated-RC | dual-verified |
 | int32.div.unsigned | 21 / 21 | passed | passed | 706.372 | 64.05 / 2.95 | global-route-estimated-RC | dual-verified |
 
-历史候选和失败测量保留于 `validation.json` 的 `physical` 字段。候选仅在正确性、时序和吞吐硬约束通过后比较面积×延迟；差异不足 5% 时优先较小面积。当前未通过配置保持未合格，不把初始结构声明为全局最优。
+候选测量保存在 `validation.json` 的 `physical` 字段。结构选择在正确性、时序和吞吐约束下比较面积×延迟；差异不足 5% 时优先较小面积。

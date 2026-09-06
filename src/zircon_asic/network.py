@@ -78,6 +78,15 @@ class Connection:
     b: int = 0
     c: int = 0
     rounding: int = 0
+    source_port: int = 0
+    destination_port: int = 0
+    mapping: dict | None = None
+
+
+@dataclass(frozen=True)
+class Field:
+    """Serializable response-field reference in a connection mapping."""
+    name: str
 
 
 class Network:
@@ -92,28 +101,52 @@ class Network:
 
     def add(self, name, unit):
         if name in self.units: raise ValueError(f"duplicate node {name}")
+        if any(u is unit for u in self.units.values()): raise ValueError("a state owner may only be added once; use its ports")
         self.units[name] = unit
         return self
 
-    def connect(self, source, destination, *, b=0, c=0, rounding=0):
+    def connect(self, source, destination, *, b=0, c=0, rounding=0, source_port=0, destination_port=0, mapping=None):
         if source not in self.units or destination not in self.units: raise KeyError("unknown node")
-        if any(e.source == source or e.destination == destination for e in self.connections):
+        self._port(source,source_port); self._port(destination,destination_port)
+        if any((e.source,e.source_port) == (source,source_port) or (e.destination,e.destination_port) == (destination,destination_port) for e in self.connections):
             raise ValueError("multiple drivers or fanout require explicit stream components")
-        self.connections.append(Connection(source,destination,b,c,rounding))
+        if self._key(source,source_port) in self.sinks or self._key(destination,destination_port) in self.sources:
+            raise ValueError("port already attached to a source or sink")
+        if mapping is not None:
+            from .spm import SPM
+            fields = {"address","write","data","mask","tag"} if isinstance(self.units[destination],SPM) else {"a","b","c","rounding","tag"}
+            if not isinstance(mapping,dict) or set(mapping)-fields: raise ValueError("unknown request mapping field")
+            for v in mapping.values():
+                if isinstance(v,Field):
+                    from .spm import MemoryResponse
+                    schema = MemoryResponse if isinstance(self.units[source],SPM) else Response
+                    if v.name not in schema.__dataclass_fields__: raise ValueError("unknown response field")
+                elif not isinstance(v,(int,bool)): raise TypeError("mapping supports integer constants and Field references")
+        self.connections.append(Connection(source,destination,b,c,rounding,source_port,destination_port,mapping))
         try: self._order()
         except ValueError: self.connections.pop(); raise
         return self
 
-    def source(self, node, requests):
+    @staticmethod
+    def _key(node,port=0):
+        return node if port == 0 else (node,port)
+
+    def _port(self,node,port):
         if node not in self.units: raise KeyError(node)
-        if any(e.destination == node for e in self.connections): raise ValueError("node already connected")
-        self.sources[node] = InputSource(list(requests))
+        if not isinstance(port,int) or not 0 <= port < getattr(self.units[node],"ports",1): raise ValueError("invalid port")
+
+    def source(self, node, requests, *, port=0):
+        if node not in self.units: raise KeyError(node)
+        self._port(node,port)
+        if any((e.destination,e.destination_port) == (node,port) for e in self.connections): raise ValueError("port already connected")
+        self.sources[self._key(node,port)] = InputSource(list(requests))
         return self
 
-    def sink(self, node):
+    def sink(self, node, *, port=0):
         if node not in self.units: raise KeyError(node)
-        if any(e.source == node for e in self.connections): raise ValueError("node already connected")
-        self.sinks[node] = OutputSink()
+        self._port(node,port)
+        if any((e.source,e.source_port) == (node,port) for e in self.connections): raise ValueError("port already connected")
+        self.sinks[self._key(node,port)] = OutputSink()
         return self
 
     def _order(self):
@@ -125,30 +158,61 @@ class Network:
         return order
 
     def step(self, *, ready=True, reset=False, flush=False):
+        from .spm import SPM, MemoryRequest, MemoryResponse, MemoryStatus
         order = self._order()
-        outgoing = {e.source:e for e in self.connections}
-        incoming = {e.destination:e for e in self.connections}
-        observed, actual_inputs = {}, {}
-        for name in reversed(order):
-            sink_ready = ready.get(name,True) if isinstance(ready,dict) else ready
-            out_ready = observed[outgoing[name].destination].in_ready if name in outgoing else sink_ready
-            observed[name] = self.units[name].eval(Inputs(out_ready=out_ready,reset=reset,flush=flush))
+        outgoing = {self._key(e.source,e.source_port):e for e in self.connections}
+        incoming = {self._key(e.destination,e.destination_port):e for e in self.connections}
+        snapshots, requests, outputs = {}, {}, {}
+        # Payloads of supported modules depend only on old registered state.
         for name in order:
-            req = self.sources[name].peek() if name in self.sources else None
-            if name in incoming:
-                e = incoming[name]; upstream = observed[e.source]
-                if upstream.out_valid:
-                    r = upstream.response
-                    req = Request(r.bits,int(r.flags),r.remainder,tag=r.tag) if getattr(self.units[name],"transport",False) else Request(r.bits,e.b,e.c,e.rounding,r.tag)
-            sink_ready = ready.get(name,True) if isinstance(ready,dict) else ready
-            out_ready = observed[outgoing[name].destination].in_ready if name in outgoing else sink_ready
-            actual_inputs[name] = Inputs(req,out_ready,reset,flush)
-        # No state is committed until every component has observed old state.
-        outputs = {name:self.units[name].eval(actual_inputs[name]) for name in order}
+            u=self.units[name]; ports=getattr(u,"ports",1)
+            empty=tuple(Inputs(reset=reset,flush=flush) for _ in range(ports))
+            obs=u.eval(empty if ports>1 else empty[0])
+            for p,o in enumerate(obs if ports>1 else (obs,)): snapshots[self._key(name,p)]=o
+        for name in order:
+            u=self.units[name]
+            for p in range(getattr(u,"ports",1)):
+                key=self._key(name,p)
+                req=self.sources[key].peek() if key in self.sources else None
+                if key in incoming:
+                    e=incoming[key]; o=snapshots[self._key(e.source,e.source_port)]
+                    if o.out_valid:
+                        r=o.response
+                        if isinstance(r,MemoryResponse) and (r.write or r.status != MemoryStatus.OK):
+                            raise ValueError("only successful memory read responses may feed a data connection")
+                        if e.mapping is not None:
+                            args={k:getattr(r,v.name) if isinstance(v,Field) else v for k,v in e.mapping.items()}
+                            req=MemoryRequest(**args) if isinstance(u,SPM) else Request(**args)
+                        elif isinstance(u,SPM): raise ValueError("memory destination requires explicit request mapping")
+                        elif getattr(u,"transport",False): req=Request(r.bits,int(getattr(r,"flags",0)),getattr(r,"remainder",0),tag=r.tag)
+                        else:
+                            if isinstance(r,MemoryResponse):
+                                width=u.format.width if hasattr(u,"format") else u.width
+                                if r.bits >= 1<<width: raise ValueError("memory response exceeds arithmetic operand width")
+                            req=Request(r.bits,e.b,e.c,e.rounding,r.tag)
+                requests[key]=req
+        for name in reversed(order):
+            u=self.units[name]; ins=[]
+            for p in range(getattr(u,"ports",1)):
+                key=self._key(name,p)
+                rdy=ready.get(key,True) if isinstance(ready,dict) else ready
+                if key in outgoing:
+                    e=outgoing[key]; rdy=outputs[self._key(e.destination,e.destination_port)].in_ready
+                ins.append(Inputs(requests[key],rdy,reset,flush))
+            obs=u.eval(tuple(ins) if len(ins)>1 else ins[0])
+            for p,o in enumerate(obs if len(ins)>1 else (obs,)): outputs[self._key(name,p)]=o
+        # Validate memory diagnostics before any owner commits.
+        for name in order:
+            u=self.units[name]
+            if isinstance(u,SPM):
+                for p in range(u.ports):
+                    key=self._key(name,p)
+                    if outputs[key].accepted: u._check_read(requests[key])
         for name in order:
             self.units[name].tick()
-            if name in self.sources and outputs[name].accepted: self.sources[name].position += 1
-            if name in self.sinks and outputs[name].delivered: self.sinks[name].received.append((self.cycle,outputs[name].response))
+        for key,o in outputs.items():
+            if key in self.sources and o.accepted: self.sources[key].position += 1
+            if key in self.sinks and o.delivered: self.sinks[key].received.append((self.cycle,o.response))
         self.cycle += 1
         return outputs
 
@@ -160,6 +224,10 @@ class Network:
         result = []
         for i in range(cycles):
             r = ready if isinstance(ready,(bool,dict)) else ready[i]
+            if hasattr(r,"ndim") and r.ndim == 1:
+                keys=[self._key(name,p) for name in self._order() for p in range(getattr(self.units[name],"ports",1))]
+                if len(r)!=len(keys): raise ValueError("one ready value per endpoint required")
+                r=dict(zip(keys,map(bool,r)))
             output = self.step(ready=r,reset=bool(reset[i]) if reset is not None else False,flush=bool(flush[i]) if flush is not None else False)
             if trace: result.append(output)
         return result if trace else {n:s.received for n,s in self.sinks.items()}
