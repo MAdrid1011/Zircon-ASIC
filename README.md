@@ -2,7 +2,7 @@
 
 Zircon-ASIC 提供独立安装的 Python 位精确计算、周期模拟器和原生 Chisel 算术部件。两端读取同一份版本化契约，验证数值、请求接收、输出有效、背压、标签、级占用、除法迭代、复位与清空。
 
-当前为开发版。数值正确、周期对齐、ASAP7 时序合格是三项独立门槛；没有完成全部门槛的配置不标记为正式双实现。实测记录由 `scripts/collect_reports.py` 汇总，硬件级数以包内契约为准。初始 FP32 流水级数在物理评估后已调整，仍需完成时序收敛。
+当前为开发版。数值正确、周期对齐、ASAP7 时序合格是三项独立门槛；没有完成全部门槛的配置不标记为正式双实现。实测记录由 `scripts/collect_reports.py` 汇总，硬件级数以包内契约为准，实测状态见 [配置清单](reports/CONFIGURATIONS.md)。初始浮点流水级数在物理评估后已调整，仍需完成时序收敛。
 
 ## 安装与计算
 
@@ -45,7 +45,7 @@ from zircon_asic import FP16Add, Inputs, Request
 unit = FP16Add()
 for cycle in range(8):
     request = Request(0x3c00, 0x4000, tag=7) if cycle == 0 else None
-    ports = unit.step(Inputs(request, out_ready=cycle != 2))
+    ports = unit.step(Inputs(request, out_ready=cycle != 6))
     if ports.delivered:
         print(cycle, ports.response)
 ```
@@ -77,14 +77,17 @@ python scripts/build_oracles.py
 python -m pytest -q
 python scripts/validate_rtl.py
 python scripts/validate_network_rtl.py
+python scripts/testfloat_vectors.py --rtl
 python scripts/exhaustive.py
 python scripts/exhaustive_rtl.py
 ```
 
 Chisel 输出 `Unit.sv` 和带共同契约的 `manifest.json`。随机验证逐拍比较端口、有效输出全部字段及内部观察点，包含长背压、气泡、复位和清空。失败保留刺激、随机种子、首个分歧周期和双边轨迹。
 
-`exhaustive.py` 使用独立 C++ 128 位精确有理数参考，覆盖 FP4/FP8 全部二元和 FMA 输入、五种舍入方式。`exhaustive_rtl.py` 对同一参考验证 RTL 数值和无背压逐笔延迟。FMA 可使用 `--shard 0 --shards 256` 分片执行。FP32/FP16 使用固定提交的 Berkeley SoftFloat 测试参考；生产路径不链接 SoftFloat。
+`exhaustive.py` 使用独立 C++ 128 位精确有理数参考，覆盖 FP4/FP8 全部二元和 FMA 输入、五种舍入方式。`exhaustive_rtl.py` 对同一参考验证 RTL 数值和无背压逐笔延迟。FMA 可使用 `--shard 0 --shards 256` 分片执行。FP32/FP16 使用固定提交的 Berkeley SoftFloat 测试参考和 TestFloat 系统化向量前缀；生产路径不链接 SoftFloat。
 
-物理评估使用固定摘要的 OpenROAD 容器和 ASAP7 RVT 库，命令为 `python scripts/ppa.py fp32.fma`。默认最差角 SS、0.63 V、100 °C，1000 ps 周期、200 ps 输入输出预算、50 ps 时钟不确定度。报告会保留失败和负裕量；流程结束不等于时序通过。
+物理评估使用固定摘要的 OpenROAD 容器和 ASAP7 RVT 库，命令为 `python scripts/ppa.py fp32.fma`。默认典型角 TC、0.70 V、0 °C，1000 ps 周期、200 ps 输入输出预算、50 ps 时钟不确定度。默认运行至全局布线，以估算 RC 进行静态时序分析；`--target finish` 进一步运行详细布线。WC、0.63 V、100 °C 作为额外压力测试。报告保留失败和负裕量；流程结束不等于时序通过。
+
+独立可运行示例见 [功能与周期调用](examples/quickstart.py) 和 [组合网络](examples/network.py)。
 
 详细说明见 [数值与接口契约](docs/contract.md)、[模拟器与硬件结构](docs/implementation.md) 和 [验证与复现](docs/verification.md)。脉动阵列、FFT、混合精度累加和块缩放格式属于后续扩展。

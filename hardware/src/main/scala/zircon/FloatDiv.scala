@@ -4,13 +4,16 @@ import chisel3._
 import chisel3.util._
 
 class FpDiv(f: Format,s: Spec) extends IterativeModule(f.width,s) {
-  val radixBits = if (f.name == "fp32") 4 else if (f.name == "fp16") 2 else 1
+  val radixBits = if (s.variant.startsWith("radix16")) 4 else if (s.variant.startsWith("radix4")) 2 else 1
   val fractionalBits = s.iterations*radixBits
   val qw = fractionalBits+4
   val k = qw+4
   val aa = Reg(new Decoded(f)); val bb = Reg(new Decoded(f)); val meta = Reg(new Meta(f))
   val rem = Reg(SInt((f.p+6).W)); val q = Reg(SInt(qw.W)); val d = Reg(SInt((f.p+3).W))
-  val exp = Reg(SInt(12.W)); val sign = Reg(Bool())
+  val qp = Reg(UInt(qw.W)); val qn = Reg(UInt(qw.W))
+  val tripleD = Reg(SInt((f.p+4).W))
+  val negativeD = Reg(SInt((f.p+3).W)); val negativeTripleD = Reg(SInt((f.p+4).W))
+  val exp = Reg(SInt(f.ew.W)); val sign = Reg(Bool())
   val mag = Reg(new Magnitude(f,k)); val out = Reg(new Response(f.width)); io.out.bits := out
   when(io.in.fire) {
     val a = FloatLogic.decode(io.in.bits.a,f); val b = FloatLogic.decode(io.in.bits.b,f)
@@ -19,42 +22,64 @@ class FpDiv(f: Format,s: Spec) extends IterativeModule(f.width,s) {
   }
   when(phase === 1.U && !cancel) {
     d := bb.sig.zext
+    val triple = Adders.signedAdd(bb.sig.zext,bb.sig.zext << 1,f.p+4)
+    tripleD := triple
+    negativeD := -bb.sig.zext
+    negativeTripleD := Adders.signedAdd(0.S,triple,f.p+4,true)
+    qn := 0.U
     if (radixBits == 1) {
       q := (aa.sig >= bb.sig).asUInt.zext
       rem := aa.sig.zext-bb.sig.zext
     } else {
       val twice = aa.sig << 1
-      val seed = Mux(twice >= (bb.sig +& (bb.sig << 1)),2.U,Mux(twice >= bb.sig,1.U,0.U))
+      val seed = Mux(!aa.sig.orR,0.U,Mux(twice.zext >= triple,2.U,1.U))
       q := seed.zext
-      rem := aa.sig.zext-Mux(seed === 2.U,bb.sig << 1,Mux(seed === 1.U,bb.sig,0.U)).zext
+      qp := seed
+      val minusOne = Adders.signedAdd(aa.sig.zext,bb.sig.zext,f.p+6,true)
+      val minusTwo = Adders.signedAdd(aa.sig.zext,bb.sig.zext << 1,f.p+6,true)
+      rem := Mux(seed === 2.U,minusTwo,Mux(seed === 1.U,minusOne,0.S))
     }
   }
-  def srt(r: SInt,quotient: SInt): (SInt,SInt) = {
+  def srt(r: SInt,positive: UInt,negative: UInt): (SInt,UInt,UInt) = {
     val x = r << 2; val twice = x << 1
-    val triple = d + (d << 1)
-    val digit = Mux(twice >= triple,2.S,Mux(twice >= d,1.S,Mux(twice <= -triple,(-2).S,Mux(twice <= -d,(-1).S,0.S))))
-    val mult = Mux(digit === 2.S,d << 1,Mux(digit === 1.S,d,Mux(digit === (-1).S,-d,Mux(digit === (-2).S,-(d << 1),0.S))))
-    val nr = Wire(SInt((f.p+6).W)); val nq = Wire(SInt(qw.W))
-    nr := x-mult; nq := (quotient << 2)+digit
-    (nr,nq)
+    val triple = tripleD
+    val digit = Mux(twice >= triple,2.S,Mux(twice >= d,1.S,Mux(twice <= negativeTripleD,(-2).S,Mux(twice <= negativeD,(-1).S,0.S))))
+    // Speculative remainder candidates run in parallel with quotient selection.
+    val minusOne = Adders.signedAdd(x,d,f.p+6,true)
+    val minusTwo = Adders.signedAdd(x,d << 1,f.p+6,true)
+    val plusOne = Adders.signedAdd(x,d,f.p+6)
+    val plusTwo = Adders.signedAdd(x,d << 1,f.p+6)
+    val nr = Wire(SInt((f.p+6).W)); val np = Wire(UInt(qw.W)); val nn = Wire(UInt(qw.W))
+    nr := Mux(digit === 2.S,minusTwo,Mux(digit === 1.S,minusOne,
+      Mux(digit === (-1).S,plusOne,Mux(digit === (-2).S,plusTwo,x))))
+    np := Cat(positive(qw-3,0),Mux(digit >= 0.S,digit.asUInt(1,0),0.U(2.W)))
+    nn := Cat(negative(qw-3,0),Mux(digit < 0.S,(-digit).asUInt(1,0),0.U(2.W)))
+    (nr,np,nn)
   }
   for(i <- 0 until s.iterations) when(phase === (i+2).U && !cancel) {
     if (radixBits == 1) {
       val next = Mux(rem >= 0.S,(rem << 1)-d,(rem << 1)+d)
       rem := next; q := (q << 1)+(next >= 0.S).asUInt.zext
     } else {
-      val (r1,q1) = srt(rem,q)
-      val (rn,qn) = if (radixBits == 4) srt(r1,q1) else (r1,q1)
-      rem := rn; q := qn
+      val (r1,p1,n1) = srt(rem,qp,qn)
+      val (rn,pn,nn) = if (radixBits == 4) srt(r1,p1,n1) else (r1,p1,n1)
+      rem := rn; qp := pn; qn := nn
     }
   }
-  when(phase === (s.latency-2).U && !cancel) {
-    val correctedQ = if (radixBits == 1) q else Mux(rem < 0.S,q-1.S,q)
-    val correctedR = Mux(rem < 0.S,rem+d,rem)
-    mag.mag := (correctedQ.asUInt << 1) | (correctedR =/= 0.S).asUInt
+  when(phase === s.phases.indexOf("correct").U && !cancel) {
+    val sumWidth = 1 << log2Ceil(qw)
+    val correctedQ = if (radixBits == 1) q.asUInt else
+      Adders.brentKung(qp.pad(sumWidth),(~qn).pad(sumWidth),sumWidth,!(rem < 0.S))(qw-1,0)
+    val remainderNonzero = Mux(rem < 0.S,rem =/= negativeD,rem =/= 0.S)
+    mag.mag := (correctedQ << 1) | remainderNonzero.asUInt
     mag.exp := exp-1.S; mag.sign := sign; mag.meta := meta
   }
-  when(phase === (s.latency-1).U && !cancel) { out := FloatLogic.round(mag,f,k) }
+  if(s.phases.contains("grs")) {
+    val normalized = Reg(new Normalized(f,k)); val prepared = Reg(new Prepared(f))
+    when(phase === s.phases.indexOf("round_normalize").U && !cancel) { normalized := FloatLogic.normalize(mag,f,k) }
+    when(phase === s.phases.indexOf("grs").U && !cancel) { prepared := FloatLogic.prepare(normalized,f,k) }
+    when(phase === (s.latency-1).U && !cancel) { out := FloatLogic.finish(prepared,f) }
+  } else when(phase === (s.latency-1).U && !cancel) { out := FloatLogic.round(mag,f,k) }
 }
 
 class Fp4Div(f: Format,s: Spec) extends ElasticModule(f.width,s) {

@@ -14,24 +14,30 @@
 
 `scripts/validate_rtl.py` 在每次运行前持久化全部输入和期望行为。驱动器在低电平设置端口并观察，再提交上升沿，符合共同契约的拍边界。逐拍比较 `in_ready`、`out_valid`、`stageValid`、`occupancy`、`phase`、`iteration`，在输出有效时比较全部响应字段，包括阻塞拍。
 
-测试包含连续请求、随机气泡、持续长背压、满载、排空、复位和清空，记录每笔接收、首次可见和交付时刻。结果出现差异时保留 `stimulus.txt`、`python.trace`、`rtl.trace` 和含种子的 `failure.json`。不同 RTL 版本不得复用同一条验收记录。
+测试包含连续请求、随机气泡、持续长背压、满载、排空、复位和清空，记录每笔接收、首次可见和交付时刻。结果出现差异时保留 `stimulus.txt`、`python.trace`、`rtl.trace` 和含种子的 `failure.json`。不同 RTL 版本不得复用同一条验收记录。Verilator 可执行文件缓存同时绑定 RTL、驱动器的 SHA-256 与工具版本；源文件变化会强制重新编译。
 
 `scripts/validate_network_rtl.py` 检查组合网络；`tests/test_network.py` 还验证插入顺序无关、Python/Numba 轨迹一致和跨后端状态延续。
 
 ## 物理评估
 
-`scripts/ppa.py` 使用固定摘要的官方 OpenROAD Flow Scripts 镜像，默认 ASAP7 RVT 的 SS/0.63 V/100 °C。时钟周期为 1000 ps，输入与输出延迟各 200 ps，时钟不确定度为 50 ps。这是一组公开记录的评估条件，不是代工厂流片签核。
+`scripts/ppa.py` 使用固定摘要的官方 OpenROAD Flow Scripts 镜像，默认 ASAP7 RVT 的 TC/0.70 V/0 °C，WC/0.63 V/100 °C 作为压力测试。时钟周期为 1000 ps，输入与输出延迟各 200 ps，时钟不确定度为 50 ps。这是一组公开记录的评估条件，不是代工厂流片签核。
 
-每次新物理运行冻结 RTL 内容，以 SHA-256 建立独立结果目录。合格判断要求布线后 setup/hold 裕量均非负；不会把脚本退出码为零或“综合完成”当作 1 GHz 通过。面积引用标准单元实例面积，同时保留布局和布线产生的缓冲器影响。
+每次新物理运行冻结 RTL 内容，以 SHA-256 建立独立结果目录。共同评估级别为全局布线后的估算 RC 静态时序分析，要求 setup/hold 裕量均非负。详细布线测量另行记录；不会把脚本退出码为零或“综合完成”当作 1 GHz 通过。面积引用标准单元实例面积，同时保留布局和布线产生的缓冲器影响。
 
 macOS ARM 上的固定镜像通过 AMD64 仿真运行。镜像附带的 Kepler 形式工具发生了非法指令错误，因此物理脚本关闭自动 post-resize LEC，并在报告显式记为未执行；算术参考、Chisel 断言和 RTL 周期回归仍独立执行。该限制不应被描述为形式等价验证通过。
 
-初始级数只是候选。硬约束为正确性、1 GHz 和指定吞吐；在通过的候选之间比较面积乘无背压最坏延迟，差异不足 5% 时优先面积较小者。当前尚未完成所有候选的时序收敛和面积筛选，不提供“所有部件已最优”的声明。
+初始级数只是候选。硬约束为正确性、1 GHz 和指定吞吐；在通过的候选之间比较面积乘无背压最坏延迟，差异不足 5% 时优先面积较小者。逐配置状态见 `reports/CONFIGURATIONS.md`。未通过配置不提供正式双实现或最优声明。
 
 ## 测试工具与来源
 
 - [SoftFloat](https://github.com/ucb-bar/berkeley-softfloat-3)：测试用参考，固定提交见 `scripts/build_oracles.py`。
-- [TestFloat](https://www.jhauser.us/arithmetic/TestFloat-3/doc/testfloat_gen.html)：扩展测试向量工具；提交固定在构建脚本中，尚未作为当前测试生成器使用。
+- [TestFloat](https://www.jhauser.us/arithmetic/TestFloat-3/doc/testfloat_gen.html)：系统化测试向量工具，固定提交并本地构建。`scripts/testfloat_vectors.py --rtl` 默认对每种舍入方式使用 level-1 流的前 2048 项，覆盖全部 FP16/FP32 算子；报告记录种子、实际数量和向量哈希。这是有界前缀测试，不声称完成 TestFloat 全部 level-1 用例。
 - [Chisel](https://www.chisel-lang.org/docs/explanations/interfaces-and-connections)：7.15.0，firtool 1.158.0；使用原生 Scala/Chisel 数据通路。
 - [OpenROAD Flow Scripts](https://openroad-flow-scripts.readthedocs.io/en/latest/user/DockerShell.html)：容器摘要固定在 `scripts/ppa.py`。
 - [OCP FP8](https://www.opencompute.org/documents/ocp-8-bit-floating-point-specification-ofp8-revision-1-0-2023-06-20-pdf) 和 [MX 格式](https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf)：编码背景。本库的标量算术、饱和和异常契约另行明确。
+
+## 报告与状态失效
+
+`python scripts/collect_reports.py` 将测试、穷举、逐周期、性能和物理记录汇总为 `reports/validation.json`，同时生成配置表和包内 `qualification.json`。完整 Python 回归记录实际源内容的 SHA-256；RTL 记录绑定生成内容的 SHA-256。更换实现、契约或自定义时序后，原验证状态自动失效，不能沿用已合格标记。
+
+`describe()` 区分 `unqualified`、`cycle-verified` 与 `dual-verified`，并给出每项门槛及物理评估级别。硬件生成的 manifest 默认保持未合格，使用其中的 RTL 哈希与发布配置表关联验收证据。

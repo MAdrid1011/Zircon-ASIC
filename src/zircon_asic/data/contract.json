@@ -114,40 +114,62 @@
       "initial_latency": 4
     },
     "fp16.add": {
-      "latency": 2,
+      "latency": 6,
       "kind": "elastic",
       "phases": [
-        "align",
-        "add_round"
+        "decode",
+        "single_align",
+        "add",
+        "normalize",
+        "grs",
+        "round"
       ],
       "variant": "single_path",
       "stage_capacity": [
         1,
+        1,
+        1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 2
     },
     "fp16.mul": {
-      "latency": 3,
+      "latency": 7,
       "kind": "elastic",
       "phases": [
+        "decode",
         "compress_0",
         "compress_1",
-        "product_round"
+        "product",
+        "normalize",
+        "grs",
+        "round"
       ],
       "variant": "direct_dadda",
       "stage_capacity": [
         1,
         1,
+        1,
+        1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 3
     },
     "fp16.fma": {
-      "latency": 4,
+      "latency": 8,
       "kind": "elastic",
       "phases": [
-        "product_compress",
+        "decode",
+        "compress_0",
+        "compress_1",
         "align_compress",
         "add",
+        "normalize",
+        "grs",
         "round"
       ],
       "variant": "fused_compressor",
@@ -155,90 +177,125 @@
         1,
         1,
         1,
+        1,
+        1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 4
     },
     "e4m3fn.add": {
-      "latency": 2,
+      "latency": 4,
       "kind": "elastic",
       "phases": [
         "align",
-        "add_round"
+        "add_normalize",
+        "grs",
+        "round"
       ],
       "variant": "single_path",
       "stage_capacity": [
         1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 2
     },
     "e4m3fn.mul": {
-      "latency": 2,
+      "latency": 4,
       "kind": "elastic",
       "phases": [
         "compress_0",
-        "product_round"
+        "product_normalize",
+        "grs",
+        "round"
       ],
       "variant": "small_product",
       "stage_capacity": [
         1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 2
     },
     "e4m3fn.fma": {
-      "latency": 3,
+      "latency": 5,
       "kind": "elastic",
       "phases": [
         "product_compress",
         "align_compress",
-        "add_round"
+        "add_normalize",
+        "grs",
+        "round"
       ],
       "variant": "fused_small",
       "stage_capacity": [
         1,
         1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 3
     },
     "e5m2.add": {
-      "latency": 2,
+      "latency": 4,
       "kind": "elastic",
       "phases": [
         "align",
-        "add_round"
+        "add_normalize",
+        "grs",
+        "round"
       ],
       "variant": "single_path",
       "stage_capacity": [
         1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 2
     },
     "e5m2.mul": {
-      "latency": 2,
+      "latency": 4,
       "kind": "elastic",
       "phases": [
         "compress_0",
-        "product_round"
+        "product_normalize",
+        "grs",
+        "round"
       ],
       "variant": "small_product",
       "stage_capacity": [
         1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 2
     },
     "e5m2.fma": {
-      "latency": 3,
+      "latency": 5,
       "kind": "elastic",
       "phases": [
         "product_compress",
         "align_compress",
-        "add_round"
+        "add_normalize",
+        "grs",
+        "round"
       ],
       "variant": "fused_small",
       "stage_capacity": [
         1,
         1,
+        1,
+        1,
         1
-      ]
+      ],
+      "initial_latency": 3
     },
     "e2m1.add": {
       "latency": 1,
@@ -276,7 +333,7 @@
       ]
     },
     "fp32.div": {
-      "latency": 11,
+      "latency": 19,
       "kind": "iterative",
       "phases": [
         "decode",
@@ -288,17 +345,27 @@
         "iterate",
         "iterate",
         "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
         "correct",
+        "round_normalize",
+        "grs",
         "round"
       ],
-      "variant": "radix16_srt",
-      "iterations": 7,
-      "radix": 16,
+      "variant": "radix4_srt",
+      "iterations": 13,
+      "radix": 4,
       "capacity": 1,
-      "early_out": false
+      "early_out": false,
+      "initial_variant": "radix16_srt",
+      "initial_latency": 11
     },
     "fp16.div": {
-      "latency": 11,
+      "latency": 13,
       "kind": "iterative",
       "phases": [
         "decode",
@@ -311,6 +378,8 @@
         "iterate",
         "iterate",
         "correct",
+        "round_normalize",
+        "grs",
         "round"
       ],
       "variant": "radix4_srt",
@@ -320,7 +389,7 @@
       "early_out": false
     },
     "e4m3fn.div": {
-      "latency": 10,
+      "latency": 12,
       "kind": "iterative",
       "phases": [
         "decode",
@@ -332,16 +401,19 @@
         "iterate",
         "iterate",
         "correct",
+        "round_normalize",
+        "grs",
         "round"
       ],
       "variant": "radix2_nonrestoring",
       "iterations": 6,
       "radix": 2,
       "capacity": 1,
-      "early_out": false
+      "early_out": false,
+      "initial_latency": 10
     },
     "e5m2.div": {
-      "latency": 9,
+      "latency": 11,
       "kind": "iterative",
       "phases": [
         "decode",
@@ -352,13 +424,16 @@
         "iterate",
         "iterate",
         "correct",
+        "round_normalize",
+        "grs",
         "round"
       ],
       "variant": "radix2_nonrestoring",
       "iterations": 5,
       "radix": 2,
       "capacity": 1,
-      "early_out": false
+      "early_out": false,
+      "initial_latency": 9
     },
     "e2m1.div": {
       "latency": 1,
@@ -441,11 +516,12 @@
       ]
     },
     "int16.div": {
-      "latency": 12,
+      "latency": 13,
       "kind": "iterative",
       "phases": [
         "decode",
         "normalize",
+        "seed",
         "iterate",
         "iterate",
         "iterate",
@@ -461,7 +537,8 @@
       "iterations": 8,
       "radix": 4,
       "capacity": 1,
-      "early_out": false
+      "early_out": false,
+      "initial_latency": 12
     },
     "int32.add": {
       "latency": 1,
@@ -490,11 +567,12 @@
       ]
     },
     "int32.div": {
-      "latency": 20,
+      "latency": 21,
       "kind": "iterative",
       "phases": [
         "decode",
         "normalize",
+        "seed",
         "iterate",
         "iterate",
         "iterate",
@@ -518,7 +596,8 @@
       "iterations": 16,
       "radix": 4,
       "capacity": 1,
-      "early_out": false
+      "early_out": false,
+      "initial_latency": 20
     }
   },
   "cycle": {

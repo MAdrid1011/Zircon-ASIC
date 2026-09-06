@@ -112,11 +112,13 @@ class ArithmeticUnit:
         self._phase, self._pending = 0, None
 
     def describe(self) -> dict:
+        from .evidence import qualification
+        evidence = qualification(self.format_name,self.op,getattr(self,"signed",True)) if self.timing.matched else {"status":"unqualified","reason":"custom exploration timing"}
         return dict(format=self.format_name, operation=self.op, timing=asdict(self.timing),
                     latency=self.timing.latency, initiation_interval=self.timing.initiation_interval,
                     capacity=self.timing.capacity, contract_hash=contract_hash(),
                     cycle_profile="hardware-contract" if self.timing.matched else "exploration",
-                    qualification="unqualified", **self._parameters())
+                    qualification=evidence["status"], evidence=evidence, **self._parameters())
 
     def _parameters(self):
         return {}

@@ -5,10 +5,12 @@ import json
 import subprocess
 import sys
 import time
+import hashlib
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"src"))
 from zircon_asic import *
+from zircon_asic.evidence import implementation_hash
 
 
 def validate(name,op,shard=0,shards=1,backend="numba"):
@@ -33,7 +35,9 @@ def validate(name,op,shard=0,shards=1,backend="numba"):
             if np.any(bad):
                 i=int(np.flatnonzero(bad)[0]);raise AssertionError(dict(format=name,op=op,rounding=rm,a=int(a[i]),b=int(b[i]),c=int(c[i]),reference=int(ref[i]),bits=int(actual.bits[i]),flags=int(actual.flags[i])))
             count+=len(idx)
-    report=dict(format=name,operation=op,backend=backend,shard=shard,shards=shards,begin=start,end=end,cases=count,seconds=time.monotonic()-t,oracle="independent C++ exact 128-bit rational/encoding search",discrepancies=0)
+    report=dict(format=name,operation=op,backend=backend,shard=shard,shards=shards,begin=start,end=end,cases=count,seconds=time.monotonic()-t,
+                implementation_hash=implementation_hash(),contract_hash=contract_hash(),oracle_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+                oracle="independent C++ exact 128-bit rational/encoding search",discrepancies=0)
     dest=ROOT/"build/exhaustive";dest.mkdir(exist_ok=True)
     (dest/f"{name}_{op}_{backend}_{shard}-of-{shards}.json").write_text(json.dumps(report,indent=2)+"\n")
     print(report,flush=True)

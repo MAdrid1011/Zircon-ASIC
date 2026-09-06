@@ -4,9 +4,10 @@ import chisel3._
 import chisel3.util._
 
 object Adders {
-  def brentKung(a: UInt, b: UInt, w: Int): UInt = {
+  def brentKung(a: UInt, b: UInt, w: Int, cin: Bool = false.B): UInt = {
     val p0 = (0 until w).map(i => a(i) ^ b(i))
     var gp = (0 until w).map(i => (a(i) && b(i), p0(i))).toVector
+    gp = gp.updated(0,(gp(0)._1 || (p0(0) && cin),p0(0)))
     def combine(i: Int, j: Int): Unit = {
       val (g, p) = gp(i); val (h, q) = gp(j)
       gp = gp.updated(i, (g || (p && h), p && q))
@@ -21,7 +22,12 @@ object Adders {
       for (i <- stride+stride/2-1 until w by stride) combine(i, i-stride/2)
       stride /= 2
     }
-    Cat(gp.last._1, VecInit((0 until w).map(i => p0(i) ^ (if (i == 0) false.B else gp(i-1)._1))).asUInt)
+    Cat(gp.last._1, VecInit((0 until w).map(i => p0(i) ^ (if (i == 0) cin else gp(i-1)._1))).asUInt)
+  }
+  def signedAdd(a: SInt,b: SInt,w: Int,subtract: Boolean = false): SInt = {
+    val size = 1 << log2Ceil(w)
+    val aa = Wire(SInt(size.W)); val bb = Wire(SInt(size.W)); aa := a; bb := b
+    brentKung(aa.asUInt,if(subtract) ~bb.asUInt else bb.asUInt,size,subtract.B)(w-1,0).asSInt
   }
   def grouped(a: UInt, b: UInt, w: Int): UInt = {
     val p = (0 until w).map(i => a(i) ^ b(i))
@@ -129,25 +135,45 @@ class IntDiv(w: Int, signed: Boolean, s: Spec) extends IterativeModule(w, s) {
       divisor := Mux(nb,-io.in.bits.b,io.in.bits.b)
     }
   }
+  val correctedQ = Wire(UInt(w.W))
   if (w > 8) {
+    val high = Reg(UInt(w.W))
+    val positive = Reg(UInt((w+3).W)); val negativeDigits = Reg(UInt((w+3).W))
+    val triple = Reg(SInt((w+4).W)); val negTriple = Reg(SInt((w+4).W)); val negDivisor = Reg(SInt((w+2).W))
     when(phase === 1.U && !cancel) {
       val clz = PriorityEncoder(Reverse(b))
       val normD = (b << clz)(w-1,0)
       val normA = (a.pad(2*w) << clz)(2*w-1,0)
-      val high = normA(2*w-1,w)
-      val seed = (high << 1) >= normD
+      high := normA(2*w-1,w)
       divisor := normD; shift := clz; stream := normA(w-1,0)
-      rem := high.zext - Mux(seed,normD,0.U).zext
-      quotient := seed.asUInt.zext
     }
-    for (i <- 0 until s.iterations) when(phase === (i+2).U && !cancel) {
-      val x = (rem << 2) + stream(w-1,w-2).zext
+    when(phase === s.phases.indexOf("seed").U && !cancel) {
+      val d = divisor.zext
+      val seed = (high << 1) >= divisor
+      val difference = Adders.signedAdd(high.zext,d,w+5,true)
+      rem := Mux(seed,difference,high.zext)
+      positive := seed; negativeDigits := 0.U
+      val three = Adders.signedAdd(d,d << 1,w+4)
+      triple := three; negTriple := Adders.signedAdd(0.S,three,w+4,true)
+      negDivisor := -d
+    }
+    for (i <- 0 until s.iterations) when(phase === (i+s.phases.indexOf("iterate")).U && !cancel) {
+      val x = Cat(rem.asUInt,stream(w-1,w-2)).asSInt
       val twice = x << 1; val d = divisor.zext
-      val digit = Mux(twice >= 3.S*d,2.S,Mux(twice >= d,1.S,Mux(twice <= -3.S*d,(-2).S,Mux(twice <= -d,(-1).S,0.S))))
-      val multiple = Mux(digit === 2.S,d << 1,Mux(digit === 1.S,d,Mux(digit === (-1).S,-d,Mux(digit === (-2).S,-(d << 1),0.S))))
-      rem := x-multiple; quotient := (quotient << 2)+digit; stream := stream << 2
+      val digit = Mux(twice >= triple,2.S,Mux(twice >= d,1.S,Mux(twice <= negTriple,(-2).S,Mux(twice <= negDivisor,(-1).S,0.S))))
+      val minusOne = Adders.signedAdd(x,d,w+5,true)
+      val minusTwo = Adders.signedAdd(x,d << 1,w+5,true)
+      val plusOne = Adders.signedAdd(x,d,w+5)
+      val plusTwo = Adders.signedAdd(x,d << 1,w+5)
+      rem := Mux(digit === 2.S,minusTwo,Mux(digit === 1.S,minusOne,Mux(digit === (-1).S,plusOne,Mux(digit === (-2).S,plusTwo,x))))
+      positive := Cat(positive(w,0),Mux(digit >= 0.S,digit.asUInt(1,0),0.U(2.W)))
+      negativeDigits := Cat(negativeDigits(w,0),Mux(digit < 0.S,(-digit).asUInt(1,0),0.U(2.W)))
+      stream := stream << 2
     }
+    val qw = w+3; val size = 1 << log2Ceil(qw)
+    correctedQ := Adders.brentKung(positive.pad(size),(~negativeDigits).pad(size),size,!(rem < 0.S))(w-1,0)
   } else {
+    correctedQ := quotient.asUInt
     for (i <- 0 until 8) when(phase === (i+1).U && !cancel) {
       val shifted = (rem << 1) + stream(w-1).asUInt.zext
       val next = Mux(rem >= 0.S,shifted-divisor.zext,shifted+divisor.zext)
@@ -155,8 +181,7 @@ class IntDiv(w: Int, signed: Boolean, s: Spec) extends IterativeModule(w, s) {
     }
   }
   val correctionPhase = s.phases.indexOf("correct")
-  val correctedQ = if (w == 8) quotient else Mux(rem < 0.S,quotient-1.S,quotient)
-  val correctedR = Mux(rem < 0.S,rem+divisor.zext,rem).asUInt
+  val correctedR = Mux(rem < 0.S,if(w>8) Adders.signedAdd(rem,divisor.zext,w+5) else rem+divisor.zext,rem).asUInt
   val q = Reg(UInt(w.W)); val r = Reg(UInt(w.W))
   def finish(qmag: UInt,rmag: UInt): Unit = {
     out.bits := Mux(dz,Fill(w,1.U(1.W)),Mux(negative,-qmag,qmag))

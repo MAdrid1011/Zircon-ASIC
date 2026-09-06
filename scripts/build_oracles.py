@@ -28,7 +28,19 @@ def main():
     output = base / ("liboracle.dylib" if sys.platform == "darwin" else "liboracle.so")
     run("cc", "-dynamiclib" if sys.platform == "darwin" else "-shared", "-fPIC", "-O2",
         f"-I{source}/include", str(ROOT / "scripts/softfloat_shim.c"), str(build/"softfloat.a"), "-o", str(output))
-    (base / "versions.txt").write_text(f"SoftFloat {SF_REV}\nTestFloat {TF_REV} (reference generator pin)\n")
+    tf = base / "testfloat"
+    if not tf.exists(): run("git", "clone", "https://github.com/ucb-bar/berkeley-testfloat-3.git", str(tf))
+    run("git", "-C", str(tf), "checkout", "--detach", TF_REV)
+    tfbuild = base / "native-testfloat"
+    tfbuild.mkdir(parents=True, exist_ok=True)
+    for name in ("Makefile", "platform.h"):
+        shutil.copyfile(tf / "build/Linux-RISCV64-GCC" / name, tfbuild / name)
+    tfsource = tf / "source"
+    tfcompile = f'cc -c -DFLOAT16 -DFLOAT64 -DBFLOAT16 -DFLOAT128 -DFLOAT_ROUND_ODD -I. -I{tfsource}/subj-C -I{tfsource} -I{source}/include -O2 -o $@'
+    run("make", "-s", "-j8", "testfloat_gen", f"SOURCE_DIR={tfsource}",
+        f"SOFTFLOAT_DIR={sf}", f"SOFTFLOAT_LIB={build}/softfloat.a",
+        f"COMPILE_C={tfcompile}", f"COMPILE_SLOWFLOAT_C={tfcompile}", "LINK=cc -o $@", cwd=tfbuild)
+    (base / "versions.txt").write_text(f"SoftFloat {SF_REV}\nTestFloat {TF_REV}\n")
     print(output)
 
 

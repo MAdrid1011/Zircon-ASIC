@@ -26,7 +26,7 @@ Numba 内核不调用宿主浮点，也不启用 `fastmath`。FP32 FMA 的最大
 
 ## Chisel 数据通路
 
-`ElasticModule` 统一管理有效位和推进条件，但每级保存实际算术中间值。整数乘法器在部分积压缩层之间切分；浮点加法器在对齐、求和及舍入路径之间切分。FP32 的较深候选进一步把解码、规格化、GRS 窗口和编码分开，级名及完整延迟直接记录在共同契约中。
+`ElasticModule` 统一管理有效位和推进条件，但每级保存实际算术中间值。整数乘法器在部分积压缩层之间切分；浮点加法器在对齐、求和及舍入路径之间切分。FP32/FP16 的较深配置进一步把解码、规格化、GRS 窗口和编码分开，级名及完整延迟直接记录在共同契约中。
 
 INT32 加法采用 Brent–Kung 前缀，INT16 使用四位分组超前进位，INT8 使用普通加法。INT32/16 乘法使用 radix-4 Booth 编码和 Dadda 压缩，INT8 使用 Baugh–Wooley 部分积及 Dadda 压缩。无符号配置在生成时去除符号处理。
 
@@ -34,7 +34,7 @@ INT32 加法采用 Brent–Kung 前缀，INT16 使用四位分组超前进位，
 
 FP32 加法为近、远路径分流对齐：指数相差至多一且符号相反时采用固定移位，其余输入走带 sticky 的移位器；后续求和与舍入共享。该结构没有宣称采用超前零预测或达到已有高性能 FPU 的时序水平。
 
-FP32 除法以每拍两个 radix-4 SRT 步实现 radix-16；FP16 与 INT32/16 使用 radix-4 SRT；FP8 与 INT8 使用 radix-2 非恢复迭代。SRT 使用完整余数比较选择冗余商数字，末尾修正余数与商。当前完整比较和商更新路径仍需根据物理结果优化。FP4 除法在 Scala 内独立生成精确查找表。
+FP32 初始 radix-16 候选每拍执行两个 radix-4 SRT 步，物理测量未达到 1 GHz，因此当前默认改为每拍一个 radix-4 SRT 步。FP16 与 INT32/16 同样使用 radix-4 SRT；FP8 与 INT8 使用 radix-2 非恢复迭代。SRT 使用完整余数比较选择冗余商数字，末尾修正余数与商。FP32/FP16 和 INT32/16 的 SRT 分别累积正、负商数字，候选余数与商选择并行计算，避免选择后再经过加减链。INT32/16 将规格化与初始商选择分拍，当前总延迟分别为 21 和 13 拍。FP4 加、乘、FMA 使用以 1/2 为单位的小整数，FMA 保存完整乘积并仅在最后一次舍入；除法在 Scala 内独立生成精确查找表。
 
 ## 状态与阻塞
 
@@ -43,3 +43,18 @@ FP32 除法以每拍两个 radix-4 SRT 步实现 radix-16；FP16 与 INT32/16 �
 `stageValid` 显示弹性流水有效位，迭代单元则显示当前阶段的 one-hot 编码。`occupancy` 为在途笔数，`phase` 与 `iteration` 用于核对除法控制。复位与清空同时抑制两端握手并清除控制状态。
 
 `NetworkExample` 对应 `INT8Add → FIFO(3) → INT8Mul(*3) → DelayLine(2)`，验证组合后的外部握手、负载和全部节点占用。当前硬件 FIFO 接口以宽度至少五位的请求负载转发五位异常标志；示例使用八位负载。
+
+## 在其他 Chisel 工程中调用
+
+`hardware` 工程执行 `sbt publishLocal` 后，可用 `"org.zirconasic" %% "zircon-asic" % "0.1.0"` 引用。库的 JAR 在构建时复制 Python 包中的共同 JSON，调用者不需要安装 Python。
+
+```scala
+import chisel3._
+import zircon._
+
+val fma = Module(Arithmetic("fp32", "fma"))
+val integerDivision = Module(Arithmetic("int16", "div", signed = false))
+// io.in/io.out 使用统一的 Decoupled 请求和响应，io.flush 用于清空。
+```
+
+`Contract.bundled()` 读取 JAR 中的契约，`new Contract(path)` 可读取显式配置。生成器允许使用 `ZIRCON_CONTRACT` 指定候选配置；候选需重新完成数值、周期与时序验收。

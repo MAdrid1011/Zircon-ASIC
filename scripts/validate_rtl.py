@@ -12,6 +12,7 @@ import re
 import subprocess
 import sys
 import time
+import hashlib
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,7 +27,7 @@ def run(cmd, log, cwd=ROOT):
         raise RuntimeError(f"command failed; {log}\n{Path(log).read_text()[-6000:]}")
 
 
-def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, exhaustive=False):
+def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, exhaustive=False, vectors=None):
     unit = IntegerUnit(int(name[3:]),op,signed=signed) if name.startswith("int") else FloatingPointUnit(name,op)
     w = unit.width if name.startswith("int") else unit.format.width
     dest = ROOT / f"build/rtl/{name}_{op}{'_unsigned' if not signed else ''}"
@@ -45,9 +46,15 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
     text = (ROOT/"scripts/rtl_trace.cpp").read_text().replace("@TOP@",f"V{top}")
     if not harness.exists() or harness.read_text() != text: harness.write_text(text)
     exe = dest/"obj/trace"
-    if regenerate or not exe.exists() or harness.stat().st_mtime > exe.stat().st_mtime:
+    rtl_hash=hashlib.sha256(sv.read_bytes()).hexdigest()
+    harness_hash=hashlib.sha256(harness.read_bytes()).hexdigest()
+    build_id=dict(rtl_sha256=rtl_hash,harness_sha256=harness_hash,verilator=subprocess.check_output(["verilator","--version"],text=True).strip())
+    id_path=dest/"build-id.json"
+    if not exe.exists() or not id_path.exists() or json.loads(id_path.read_text()) != build_id:
         run(["verilator","--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,
              "--Mdir",str(dest/"obj"),"-CFLAGS","-std=c++17",str(sv),str(harness),"-o","trace"],dest/"compile.log")
+        if hashlib.sha256(sv.read_bytes()).hexdigest()!=rtl_hash:raise RuntimeError("RTL changed during compilation; rerun validation")
+        id_path.write_text(json.dumps(build_id,indent=2)+"\n")
     rng = np.random.default_rng(seed)
     reqs = []
     if exhaustive:
@@ -56,17 +63,20 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
         reqs = [(a,b,c,rm) for rm in (range(5) if not name.startswith("int") else [0])
                 for a in range(1 << w) for b in range(1 << w)
                 for c in (range(1 << w) if op == "fma" else [0])]
+    if vectors is not None:
+        reqs = vectors
+    finite_stream = exhaustive or vectors is not None
     rows, expected, events, accepted, previous_visible = [], [], [], {}, set()
     held, idx, k = None, 0, 0
     # Request payload is held by this driver until accepted, even across long stalls.
-    while k < cycles or (exhaustive and (idx < len(reqs) or unit._phase or any(x is not None for x in unit._slots))):
+    while k < cycles or (finite_stream and (idx < len(reqs) or unit._phase or any(x is not None for x in unit._slots))):
         rst = k in (93,444) if k < cycles else False
         flush = k in (177,901,4097) if k < cycles else False
         ready = bool(rng.random() > .25) and not (500 <= k%1500 < 545) if k < cycles else True
         if held is None:
-            if exhaustive and idx < len(reqs):
+            if finite_stream and idx < len(reqs):
                 a,b,c,rm = reqs[idx]; held = Request(a,b,c,Rounding(rm),idx); idx += 1
-            elif not exhaustive and k < cycles-2*unit.timing.latency and rng.random() > .15:
+            elif not finite_stream and k < cycles-2*unit.timing.latency and rng.random() > .15:
                 a,b,c = [int(x) for x in rng.integers(0,1 << w,3,dtype=np.uint64)]
                 held = Request(a,b,c,Rounding(int(rng.integers(0,5))),k)
         inp = Inputs(held,ready,rst,flush)
@@ -96,9 +106,9 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
             failure = dict(seed=seed,cycle=i,fields=[j for j in fields if py[j] != rtl[j]],python=py,rtl=rtl,stimulus=rows[i].strip())
             (dest/"failure.json").write_text(json.dumps(failure,indent=2))
             raise AssertionError(f"{name}.{op} signed={signed}: {failure}; traces in {dest}")
-    result = dict(format=name,operation=op,signed=signed,seed=seed,cycles=k,contract_hash=contract_hash(),
+    result = dict(format=name,operation=op,signed=signed,seed=seed,cycles=k,contract_hash=contract_hash(),**build_id,
                   statistics=unit.stats.report(),cycle_discrepancy=0,numerical_discrepancy=0,
-                  test="exhaustive" if exhaustive else "random-backpressure-reset-flush",physical_qualification=False)
+                  test="testfloat-backpressure-reset-flush" if vectors is not None else "exhaustive" if exhaustive else "random-backpressure-reset-flush",physical_qualification=False)
     (dest/"alignment.json").write_text(json.dumps(result,indent=2)+"\n")
     (dest/"events.json").write_text(json.dumps(events))
     print(f"PASS {name}.{op} {'signed' if signed else 'unsigned'}: {k} cycles, {unit.stats.delivered} delivered",flush=True)

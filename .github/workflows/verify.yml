@@ -12,6 +12,7 @@ jobs:
       - run: python scripts/build_oracles.py
       - run: python -m pytest -q --junitxml=build/pytest.xml
       - run: python scripts/exhaustive.py
+      - run: python scripts/testfloat_vectors.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -19,6 +20,7 @@ jobs:
           path: |
             build/pytest.xml
             build/exhaustive/*.json
+            build/testfloat/*.json
   rtl:
     runs-on: ubuntu-latest
     steps:
@@ -33,9 +35,12 @@ jobs:
       - uses: sbt/setup-sbt@v1
       - run: sudo apt-get update && sudo apt-get install -y verilator
       - run: python -m pip install '.[fast]'
+      - run: cd hardware && sbt 'runMain zircon.GenerateAll ../build/rtl'
       - run: python scripts/validate_rtl.py
-      - run: python scripts/validate_rtl.py --unsigned --unit int8.div --unit int16.mul --unit int32.div
+      - run: python scripts/validate_rtl.py --unsigned --unit int8.add --unit int8.mul --unit int8.div --unit int16.add --unit int16.mul --unit int16.div --unit int32.add --unit int32.mul --unit int32.div
       - run: python scripts/validate_network_rtl.py
+      - run: python scripts/build_oracles.py && python scripts/testfloat_vectors.py --rtl
+      - run: python scripts/exhaustive_rtl.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -46,3 +51,5 @@ jobs:
             build/rtl/**/failure.json
             build/rtl/**/generate.log
             build/rtl/**/compile.log
+            build/rtl/**/exhaustive-*.json
+            build/testfloat/*.json

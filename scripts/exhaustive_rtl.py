@@ -1,6 +1,6 @@
 """Sharded small-format RTL exhaustive checking with a streaming C++ driver."""
 from pathlib import Path
-import argparse,json,re,subprocess,sys,time
+import argparse,json,re,subprocess,sys,time,hashlib
 from validate_rtl import ROOT,run,validate
 sys.path.insert(0,str(ROOT/"src"))
 from zircon_asic import contract
@@ -23,7 +23,7 @@ def check(name,op,shard=0,shards=1):
             with ref.open("wb") as f:subprocess.run([str(ROOT/"build/small_oracle"),name,str(opid),str(a),str(b),str(rm)],stdout=f,check=True)
             subprocess.run([str(dest/"small_obj/check"),str(w),str(opid),str(rm),str(lat),str(a),str(b),str(ref)],check=True)
             count+=b-a
-    result=dict(format=name,operation=op,backend="verilator",shard=shard,shards=shards,begin=begin,end=end,cases=count,seconds=time.monotonic()-start,numerical_discrepancy=0,cycle_discrepancy=0)
+    result=dict(format=name,operation=op,backend="verilator",shard=shard,shards=shards,begin=begin,end=end,cases=count,seconds=time.monotonic()-start,numerical_discrepancy=0,cycle_discrepancy=0,rtl_sha256=hashlib.sha256(sv.read_bytes()).hexdigest())
     (dest/f"exhaustive-{shard}-of-{shards}.json").write_text(json.dumps(result,indent=2)+"\n")
     print(result,flush=True)
 

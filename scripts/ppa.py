@@ -7,20 +7,37 @@ import re
 import subprocess
 import sys
 import time
+import fcntl
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = Path(__file__).resolve().parents[1]
 IMAGE = "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386"
 
 
-def run(unit,corner="WC",target="finish"):
-    name,op = unit.split(".")
-    rtl = ROOT/f"build/rtl/{name}_{op}/Unit.sv"
+def run(unit,corner="TC",target="global_route"):
+    # ORFS writes shared stage files; two campaigns must never share a workdir.
+    lockdir=ROOT/"build/ppa/locks"
+    lockdir.mkdir(parents=True,exist_ok=True)
+    lockname=hashlib.sha256(f"{unit}:{corner}".encode()).hexdigest()+".lock"
+    with (lockdir/lockname).open("w") as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX)
+        return _run(unit,corner,target)
+
+
+def _run(unit,corner,target):
+    parts = unit.split(".")
+    name,op = parts[:2]
+    unsigned = len(parts) == 3 and parts[2] == "unsigned"
+    if len(parts) > 3 or (len(parts) == 3 and not unsigned):
+        raise ValueError("unit must be format.operation[.unsigned]")
+    directory = f"{name}_{op}" + ("_unsigned" if unsigned else "")
+    rtl = ROOT/f"build/rtl/{directory}/Unit.sv"
     if not rtl.exists(): raise FileNotFoundError(f"generate and validate {unit} before physical implementation")
     top = re.search(r"^module (\w+)\(",rtl.read_text(),re.M)[1]
+    manifest=json.loads((rtl.parent/"manifest.json").read_text())
     rtl_bytes = rtl.read_bytes()
     rtl_hash = hashlib.sha256(rtl_bytes).hexdigest()
-    out = ROOT/f"build/ppa/{name}_{op}_{corner}"/rtl_hash[:12]
+    out = ROOT/f"build/ppa/{directory}_{corner}"/rtl_hash[:12]
     out.mkdir(parents=True,exist_ok=True)
     snapshot = out/"Unit.sv"
     if not snapshot.exists(): snapshot.write_bytes(rtl_bytes)
@@ -38,6 +55,8 @@ export CORE_MARGIN = 2
 export PLACE_DENSITY_LB_ADDON = 0.20
 export TNS_END_PERCENT = 20
 export NUM_CORES = 2
+# FP4 division is an intentional 2048x9 constant ROM, mapped into gates.
+export SYNTH_MEMORY_MAX_BITS = 32768
 # Bundled Kepler binary uses unsupported instructions under macOS ARM emulation.
 # This flow performs timing/physical checks; post-resize formal LEC is separate.
 export LEC_CHECK = 0
@@ -53,18 +72,20 @@ set_input_delay 200 -clock core_clock [all_inputs -no_clocks]
 set_output_delay 200 -clock core_clock [all_outputs]
 set_clock_uncertainty 50 [get_clocks core_clock]
 """)
+    make_target = {"global_route": "grt"}.get(target, target)
     command = ["docker","run","--rm","--platform","linux/amd64","-v",f"{ROOT}:/workspace",IMAGE,
-               "bash","-lc",f"source /OpenROAD-flow-scripts/env.sh && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG={container}/config.mk RESULTS_DIR={container}/results REPORTS_DIR={container}/reports LOG_DIR={container}/logs OBJECTS_DIR={container}/objects {target}"]
+               "bash","-lc",f"source /OpenROAD-flow-scripts/env.sh && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG={container}/config.mk RESULTS_DIR={container}/results REPORTS_DIR={container}/reports LOG_DIR={container}/logs OBJECTS_DIR={container}/objects {make_target}"]
     start = time.monotonic()
     with (out/"flow.log").open("w") as log: result = subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
     metrics = {}
     for p in sorted((out/"logs").glob("*.json")):
         try: metrics[p.name] = json.loads(p.read_text())
         except json.JSONDecodeError: pass
-    report = dict(unit=unit,corner=corner,platform="ASAP7",voltage=0.63 if corner=="WC" else None,
-                  temperature_c=100 if corner=="WC" else None,clock_period_ps=1000,io_delay_ps=200,uncertainty_ps=50,
-                  image=IMAGE,rtl_sha256=rtl_hash,source_snapshot=True,
-                  target=target,post_resize_formal_lec=False,exit_code=result.returncode,elapsed_seconds=time.monotonic()-start,metrics=metrics)
+    report = dict(unit=unit,corner=corner,platform="ASAP7",voltage={"WC":0.63,"TC":0.70,"BC":0.77}[corner],
+                  temperature_c={"WC":100,"TC":0,"BC":25}[corner],clock_period_ps=1000,io_delay_ps=200,uncertainty_ps=50,
+                  image=IMAGE,rtl_sha256=rtl_hash,source_snapshot=True,latency=manifest["latency"],
+                  initiation_interval=1 if manifest["kind"]=="elastic" else manifest["latency"],
+                  target=target,synth_memory_max_bits=32768,post_resize_formal_lec=False,exit_code=result.returncode,elapsed_seconds=time.monotonic()-start,metrics=metrics)
     (out/"physical.json").write_text(json.dumps(report,indent=2)+"\n")
     if result.returncode: raise RuntimeError(f"{unit}: physical flow failed; inspect {out/'flow.log'}")
     print(f"Completed {unit} {corner} {target}: {out/'physical.json'}",flush=True)
@@ -73,8 +94,8 @@ set_clock_uncertainty 50 [get_clocks core_clock]
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("units",nargs="+")
-    p.add_argument("--corner",default="WC",choices=["BC","TC","WC"])
-    p.add_argument("--target",default="finish",choices=["synth","floorplan","place","cts","global_route","route","finish"])
+    p.add_argument("--corner",default="TC",choices=["BC","TC","WC"])
+    p.add_argument("--target",default="global_route",choices=["synth","floorplan","place","cts","global_route","route","finish"])
     p.add_argument("--jobs",type=int,default=1)
     a = p.parse_args()
     with ThreadPoolExecutor(max_workers=a.jobs) as pool:

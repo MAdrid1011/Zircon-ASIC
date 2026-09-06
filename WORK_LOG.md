@@ -1,11 +1,46 @@
 # Implementation log
 
-The accepted scope is a standalone Python arithmetic/cycle library and native
-Chisel implementations of FP32/FP16/E4M3FN/E5M2/E2M1 add/mul/FMA/div and
-INT8/16/32 add/mul/div. Exact numerical and cycle alignment are separate gates.
+Private repository https://github.com/MAdrid1011/Zircon-ASIC exists; main commit 8b6537a was pushed. No release/tag yet.
 
-Current work: establish the neutral contract, Python numerical/cycle kernels,
-Numba acceleration, Chisel datapaths, independent reference tests and RTL traces.
-ASAP7 1 GHz validation is required before any timing-qualified claim.
+Implemented: 29 arithmetic combinations plus 9 unsigned integer configs; integer-only Python scalar arithmetic; FP4 packed LUT; NumPy broadcasting and Numba fixed-limb kernels; explicit elastic/iterative state machines; FIFO/delay/source/sink network; preallocated Numba whole-network scheduler with state round-trip; native Chisel corresponding arithmetic and transport modules; common contract; Verilator cycle and independent exhaustive drivers; SoftFloat test-only pinned C ABI; independent Fraction and C++ 128-bit rational oracles; docs/CI/CLI.
 
-No numerical, alignment, or physical-design result is assumed from the design plan.
+Verified locally: 82 pytest tests pass, including SoftFloat 16/32 all modes, random edges, Numba equality and networks. Isolated venv installed base package with NumPy 2.5.2 and no Numba; compute and auto batch work. FP4 full binary/FMA all modes and FP8 full binary/FMA all modes pass independently in Numba and Verilator. Each FP8 FMA = 83,886,080 cases. Python FP8 all binary exhaustive also passed. All 29 default + all 9 unsigned integer RTL configs passed 12,000 random-backpressure/reset/flush cycles at an earlier contract; FP32 large tests 100,000 cycles passed. Composed network passed 20,000 cycles. Latest contract change makes old records stale; final rerun needed.
+
+Important numeric fix: IEEE after-rounding tininess uses destination precision with unbounded exponent BEFORE gradual-underflow grid; final smallest normal may still raise UF. Kept SoftFloat regression 0xaba0 * 0x1432 binary16. Implemented in all paths and independent oracles.
+
+Hardware PPA: Docker Desktop started; pinned OpenROAD image openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386 downloaded. AMD64 under ARM emulation. Kepler post-resize LEC binary crashes illegal-instruction; disabled explicitly in PPA script/report (not claimed passed). Yosys compatibility needs firtool --lowering-options=disallowLocalVariables,disallowPackedArrays and --default-layer-specialization=enable for assertions.
+
+Initial physical trials were WC SS/0.63V/100C, 1000ps clock, 200ps IO,50ps uncertainty. INT8Add routed pass setup +435.301ps/hold +33.2135ps,36.8728um2. Initial FP32 4-stage FMA and 11-cycle division fail badly (~-2.5ns); FP16 add 2-stage also fails at WC. Do NOT claim overall physical completion or optimality. More PPA runs ongoing.
+
+FP32 pipeline retiming now contract defaults add6/mul7/FMA8 (II1), with decode registers and normalization/GRS/round split. Helpers FloatLogic.normalize/prepare/finish. FMA product compression split in 2, addend fused before CPA, far-product sticky approximation with exact dominance bound. All new FP32 profiles passed 12k and latest20k random cycles. Algebraic simplification and Brent-Kung add/sub improved FP32Add WC placed slack from -890.8ps to -302.6ps. Changes after 8b6537a are Floating.scala and Integer.scala only. Last profile latency changes were already committed.
+
+PPA script now freezes RTL under build/ppa/name_op_CORNER/<sha12>/Unit.sv and records hash, avoiding stale/mutated inputs. Older runs directly in name_op_CORNER lack source_snapshot and are not auto-qualified. Current broad older baseline run uses old in-memory script and no hash subdir; use its metrics as exploration only. Scripts use 2 cores per physical run and 20% TNS repair to bound futile optimization.
+
+Pending user async preference: formal ASAP7 1GHz corner TC (recommended0.70V0C) vs WC(0.63V100C). Original plan did not specify corner. WC stress trials began by our choice. TC placed trials now launched; do not silently call WC failures TC successes without explaining PVT.
+
+Measured CPU on Apple M3 Pro: FP32 FMA batch NumPy/Numba warm ~71.7x versus pure-Python batch; FP16div170.6x, FP8mul219.5x; compiled16-node INT8Mul network3.37x including packing/results. build/benchmark.json stores exact timings.
+
+Outstanding: finish timing convergence/candidate comparisons (main unresolved requirement), final current-contract full numeric/RTL regression and physical provenance, directed wide RTL SoftFloat vectors (random RTL currently plus Python reference already covers directed edges), build actual TestFloat generator if needed (pin present but not used), final report/qualification logic, installation/wheel artifacts, update work log/docs, push final changes, optional private prerelease only when accurately scoped. No false all-complete claim.
+
+
+## 2026-09-06 16:33 Shanghai implementation checkpoint
+
+Latest work is still active; no final response yet. User has not replied to TC/WC preference. After sufficient time explicitly assumed TC 0.70V/0C; WC remains stress test. Qualification level is documented global-route estimated-RC STA; detailed route supplemental and explicitly labeled. Only nonnegative setup AND hold count. All numerical kernels and native Chisel exist; PPA remains active.
+
+Latest contract defaults: FP32/16 add6 mul7 FMA8. FP32 div now radix4 SRT13 iterations L19 (initial radix16 L11 failed). FP16 div L13. FP8 add4 mul4 FMA5 (from2/2/3 after timing failures); E4 div L12 E5div L11. INT16/32 div just changed to L13/L21 with an extra seed phase (was12/20). INT8 and all other integers unchanged. FP4 add/mul1 FMA2 div1 unchanged externally, but native dedicated small-integer datapath now implements add/mul/FMA instead of generic FP logic. Latest small FP4 full exhaustive passed.
+
+Floating optimizations: f.ew=eb+3; parallel exponent differences and constant shift6 for all FP adds, near/far split only FP32. Split normalize/GRS/round; FP8 shallower split avoids decode stage. FMA adds C before CPA, negative magnitude computed in parallel using ~a+~b+2. FP32 FMA only now precomputes exponent encodings with/without rounding carry and prefix increment to address final rounding critical path. This latest FP32FMA passed50k random cycles; PPA finish running.
+
+FP SRT: precompute positive/negative divisor thresholds, parallel candidate remainder BK adders, redundant positive/negative digit accumulation, prefix final quotient conversion; nonzero remainder can be checked without correction adder. Normalize phase now computes seed candidates in parallel. Latest FP32div global-route slack -4.5ps (improved from -325ps); detailed routing running. INT16/32 SRT now analogous speculative updates, separate seed stage; all signed/unsigned variants passed50k cycles after edits, PPA not yet on latest signed version.
+
+TestFloat actually built natively and used now: scripts/build_oracles.py builds both SoftFloat and testfloat_gen. scripts/testfloat_vectors.py uses deterministic level1 prefixes2048 perrm (not full TestFloat level1), 10240 cases perop, Python/Numba and RTL. All8 ops passed earlier; latest final refresh running. Tests added independent C++-vs-Fraction oracle audit and fullINT8/mathematical wider integer reference. 100 pytest tests passing. tests/conftest.py records package source hash in build/python-validation.json.
+
+New evidence.py hashes package sources/data excluding qualification.json; describe() returns evidence-based status only if contract+implementation hash match. collect_reports.py rewritten: current RTLsha+contract forcycle, fullsmallNumba+RTL exhaustive, TestFloatwide, Python100test evidence, frozenTCphysical. Generates reports/CONFIGURATIONS.md and packagedqualification.json. Needs final run once reports current. No default unverified qualification promotion.
+
+Verilator cache fixed with SHA of RTL+harness+toolversion (old executable reuse bug discovered/fixed). validate_network_rtl.py now holds requestuntilaccepted, checks exact trace length, savesfailure/hash. GenerateAll emitsall38 configs inoneJVM. hardware JAR now namedzircon-asic_2.13 and includes sharedcontract resource; Contract.bundled and Arithmetic factory added; publishLocal succeeded. Generate manifest now includesRTLsha. README/docs/examples updated, still need final status and measured performance summary.
+
+PPA orchestration fix: ORFS target is grt (publicscriptargglobal_route maps togrt). Added perunit/corner filelock. One duplicate concurrent FP32Div run was detected; both stopped, directory renamed build/ppa/fp32_div_TC/967f1850b7c8-conflicted, exit125 and invalidated reason. Do not use it forqualification. Old broadcampaign started beforelockfix; avoid overlap with itscurrentlyrunningunits. IntentionalFP4Div2048x9ROM hitORFS4096bitguard; script now explicitly allows32768bits. Need rerunFP4Div withnewscript, alreadyqueued individercampaign.
+
+Private repo alreadycreated+remoteorigin; onlyoldcheckpoint8b6537a pushed, its CI34019720022passedbothjobs. Many newchangesuncommitted; mustpushnewtestedcheckpoint andfinal. CI expanded allunsigned, GenerateAll,actualTestFloat,fullsmallRTLexhaustive. No subagents, no goals. DockerASAP7pinnedimage as script; LEC disabled due ARM illegalinstruction explicitlyreported.
+
+Active exec sessions (poll selectively): broadTCglobal_route82838 PID24480, original38configs jobs3 nowintegerpart; latestscalarFMA/FP4/FP8candidatephysical93486 PID49397 jobs1 (fp32FMAold833...done, fp16FMAdone, nowFP4thenFP8); dividerphysical64031 (validated4divs30k, nowppa5divs jobs1; fp32div0cf...done, fp16next); detailedFP32FMA+FP32Div80947 jobs1; finalPython+Numbaexhaustive+all38RTL+TestFloat+network session justlaunched. LastFP32div0cf hash -4.5GRT, FP32FMAnewfinishhash checkcurrent. FP32add7fa+26.7/mul8a883+5.5; FP16addef19+94.4/mul6d9+156.6/FMA6e849+6.9 allGRT. INT8add+470.7/mul+450.3/div+264, INT16add+461/mul+98.1, INT32add+388/mul+67.4. OldINT16div8049 -245 -> latestrewritten, awaitingphysical. InitialFP4/FP8failedtiming, newprofilesqueued. Need continue optimizing onlyactualfailingcriticalpaths; avoidchangingalreadyqualifiedhashesunnecessarily.
