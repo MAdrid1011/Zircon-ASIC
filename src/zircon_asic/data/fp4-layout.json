@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "offsets": {
+    "add": 0,
+    "mul": 1280,
+    "fma": 2560,
+    "div": 23040
+  },
+  "entry": "little-endian uint16: flags[12:8], bits[3:0]"
+}

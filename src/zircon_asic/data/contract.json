@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "interface_version": 1,
+  "profile": "balanced-v1",
+  "tag_width": 32,
+  "formats": {
+    "fp32": {
+      "width": 32,
+      "exponent": 8,
+      "fraction": 23,
+      "bias": 127,
+      "encoding": "ieee"
+    },
+    "fp16": {
+      "width": 16,
+      "exponent": 5,
+      "fraction": 10,
+      "bias": 15,
+      "encoding": "ieee"
+    },
+    "e4m3fn": {
+      "width": 8,
+      "exponent": 4,
+      "fraction": 3,
+      "bias": 7,
+      "encoding": "finite_nan"
+    },
+    "e5m2": {
+      "width": 8,
+      "exponent": 5,
+      "fraction": 2,
+      "bias": 15,
+      "encoding": "ieee"
+    },
+    "e2m1": {
+      "width": 4,
+      "exponent": 2,
+      "fraction": 1,
+      "bias": 1,
+      "encoding": "finite"
+    }
+  },
+  "units": {
+    "fp32.add": {
+      "latency": 6,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "near_far_align",
+        "add",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "near_far",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "initial_latency": 3
+    },
+    "fp32.mul": {
+      "latency": 7,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "compress_0",
+        "compress_1",
+        "product",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "booth_dadda",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "initial_latency": 3
+    },
+    "fp32.fma": {
+      "latency": 8,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "compress_0",
+        "compress_1",
+        "align_compress",
+        "add",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "fused_compressor",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "initial_latency": 4
+    },
+    "fp16.add": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "align",
+        "add_round"
+      ],
+      "variant": "single_path",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "fp16.mul": {
+      "latency": 3,
+      "kind": "elastic",
+      "phases": [
+        "compress_0",
+        "compress_1",
+        "product_round"
+      ],
+      "variant": "direct_dadda",
+      "stage_capacity": [
+        1,
+        1,
+        1
+      ]
+    },
+    "fp16.fma": {
+      "latency": 4,
+      "kind": "elastic",
+      "phases": [
+        "product_compress",
+        "align_compress",
+        "add",
+        "round"
+      ],
+      "variant": "fused_compressor",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "e4m3fn.add": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "align",
+        "add_round"
+      ],
+      "variant": "single_path",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "e4m3fn.mul": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "compress_0",
+        "product_round"
+      ],
+      "variant": "small_product",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "e4m3fn.fma": {
+      "latency": 3,
+      "kind": "elastic",
+      "phases": [
+        "product_compress",
+        "align_compress",
+        "add_round"
+      ],
+      "variant": "fused_small",
+      "stage_capacity": [
+        1,
+        1,
+        1
+      ]
+    },
+    "e5m2.add": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "align",
+        "add_round"
+      ],
+      "variant": "single_path",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "e5m2.mul": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "compress_0",
+        "product_round"
+      ],
+      "variant": "small_product",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "e5m2.fma": {
+      "latency": 3,
+      "kind": "elastic",
+      "phases": [
+        "product_compress",
+        "align_compress",
+        "add_round"
+      ],
+      "variant": "fused_small",
+      "stage_capacity": [
+        1,
+        1,
+        1
+      ]
+    },
+    "e2m1.add": {
+      "latency": 1,
+      "kind": "elastic",
+      "phases": [
+        "align_add_round"
+      ],
+      "variant": "exact_small_integer",
+      "stage_capacity": [
+        1
+      ]
+    },
+    "e2m1.mul": {
+      "latency": 1,
+      "kind": "elastic",
+      "phases": [
+        "product_round"
+      ],
+      "variant": "exact_small_integer",
+      "stage_capacity": [
+        1
+      ]
+    },
+    "e2m1.fma": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "product_compress",
+        "fused_align_add_round"
+      ],
+      "variant": "exact_small_integer",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "fp32.div": {
+      "latency": 11,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "round"
+      ],
+      "variant": "radix16_srt",
+      "iterations": 7,
+      "radix": 16,
+      "capacity": 1,
+      "early_out": false
+    },
+    "fp16.div": {
+      "latency": 11,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "round"
+      ],
+      "variant": "radix4_srt",
+      "iterations": 7,
+      "radix": 4,
+      "capacity": 1,
+      "early_out": false
+    },
+    "e4m3fn.div": {
+      "latency": 10,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "round"
+      ],
+      "variant": "radix2_nonrestoring",
+      "iterations": 6,
+      "radix": 2,
+      "capacity": 1,
+      "early_out": false
+    },
+    "e5m2.div": {
+      "latency": 9,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "round"
+      ],
+      "variant": "radix2_nonrestoring",
+      "iterations": 5,
+      "radix": 2,
+      "capacity": 1,
+      "early_out": false
+    },
+    "e2m1.div": {
+      "latency": 1,
+      "kind": "elastic",
+      "phases": [
+        "lookup"
+      ],
+      "variant": "exact_lookup",
+      "stage_capacity": [
+        1
+      ]
+    },
+    "int8.add": {
+      "latency": 1,
+      "kind": "elastic",
+      "phases": [
+        "integer_add"
+      ],
+      "variant": "ripple",
+      "stage_capacity": [
+        1
+      ]
+    },
+    "int8.mul": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "compress_0",
+        "carry_propagate"
+      ],
+      "variant": "baugh_wooley_dadda",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "int8.div": {
+      "latency": 10,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct"
+      ],
+      "variant": "radix2_nonrestoring",
+      "iterations": 8,
+      "radix": 2,
+      "capacity": 1,
+      "early_out": false
+    },
+    "int16.add": {
+      "latency": 1,
+      "kind": "elastic",
+      "phases": [
+        "integer_add"
+      ],
+      "variant": "group_cla",
+      "stage_capacity": [
+        1
+      ]
+    },
+    "int16.mul": {
+      "latency": 2,
+      "kind": "elastic",
+      "phases": [
+        "compress_0",
+        "carry_propagate"
+      ],
+      "variant": "booth_dadda",
+      "stage_capacity": [
+        1,
+        1
+      ]
+    },
+    "int16.div": {
+      "latency": 12,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "sign"
+      ],
+      "variant": "radix4_srt",
+      "iterations": 8,
+      "radix": 4,
+      "capacity": 1,
+      "early_out": false
+    },
+    "int32.add": {
+      "latency": 1,
+      "kind": "elastic",
+      "phases": [
+        "integer_add"
+      ],
+      "variant": "brent_kung",
+      "stage_capacity": [
+        1
+      ]
+    },
+    "int32.mul": {
+      "latency": 3,
+      "kind": "elastic",
+      "phases": [
+        "compress_0",
+        "compress_1",
+        "carry_propagate"
+      ],
+      "variant": "booth_dadda",
+      "stage_capacity": [
+        1,
+        1,
+        1
+      ]
+    },
+    "int32.div": {
+      "latency": 20,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "sign"
+      ],
+      "variant": "radix4_srt",
+      "iterations": 16,
+      "radix": 4,
+      "capacity": 1,
+      "early_out": false
+    }
+  },
+  "cycle": {
+    "order": [
+      "evaluate",
+      "handshake",
+      "commit"
+    ],
+    "latency_definition": "accept at k, deliver at k+L without backpressure",
+    "reset_flush": "suppress both handshakes and cancel all in-flight requests",
+    "elastic_ready": "ready[i] = !valid[i] || ready[i+1]; ready[L] = out_ready",
+    "elastic_update": "if ready[i]: valid[i] = upstream_valid; capture payload only when upstream_valid",
+    "iterative": "one request; fixed phases; output held after final phase; accept replacement on response delivery",
+    "output_stability": "payload and valid stable while blocked unless reset or flush",
+    "observations": [
+      "stage_valid",
+      "occupancy",
+      "phase",
+      "iteration"
+    ]
+  },
+  "numeric": {
+    "rounding": [
+      "RNE",
+      "RTZ",
+      "RDN",
+      "RUP",
+      "RMM"
+    ],
+    "flags": {
+      "NX": 1,
+      "UF": 2,
+      "OF": 4,
+      "DZ": 8,
+      "NV": 16
+    },
+    "tininess": "after rounding to destination precision with unbounded exponent range, before gradual-underflow rounding",
+    "nan": "canonical_quiet",
+    "finite_overflow": "exact magnitude greater than maximum finite saturates with OF|NX",
+    "integer_divzero": "quotient all ones, remainder dividend, DZ",
+    "integer_div_overflow": "wrapped minimum, remainder zero, OF"
+  },
+  "qualification": {
+    "default_status": "unqualified",
+    "required": [
+      "independent_numerics",
+      "cycle_lockstep",
+      "asap7_1ghz"
+    ]
+  }
+}

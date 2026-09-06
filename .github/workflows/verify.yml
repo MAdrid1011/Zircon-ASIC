@@ -1,0 +1,48 @@
+name: Verify
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install '.[fast,test]'
+      - run: python scripts/build_oracles.py
+      - run: python -m pytest -q --junitxml=build/pytest.xml
+      - run: python scripts/exhaustive.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: numerical-reports
+          path: |
+            build/pytest.xml
+            build/exhaustive/*.json
+  rtl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: sbt/setup-sbt@v1
+      - run: sudo apt-get update && sudo apt-get install -y verilator
+      - run: python -m pip install '.[fast]'
+      - run: python scripts/validate_rtl.py
+      - run: python scripts/validate_rtl.py --unsigned --unit int8.div --unit int16.mul --unit int32.div
+      - run: python scripts/validate_network_rtl.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rtl-reports
+          path: |
+            build/alignment-summary.json
+            build/rtl/**/alignment.json
+            build/rtl/**/failure.json
+            build/rtl/**/generate.log
+            build/rtl/**/compile.log
