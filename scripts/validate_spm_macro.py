@@ -1,6 +1,6 @@
 """Test the exact Chisel SRAM adapter against pinned official macro models."""
 from pathlib import Path
-import hashlib,json
+import hashlib,json,shutil
 from validate_spm import ROOT
 from validate_rtl import run,verilator_configuration
 
@@ -40,6 +40,7 @@ int main(int argc,char** argv) {
     (dest/'test.cpp').write_text(cpp)
     ver,flags=verilator_configuration()
     sources=[dest/'Bank.sv',*sorted((ROOT/'build/ihp/verilog').glob('*.v'))]
+    shutil.rmtree(dest/'obj',ignore_errors=True)
     run(['verilator',*flags,'--cc','--exe','--build','-j','4','--assert','--timing','-DFUNCTIONAL','-Wno-fatal',
          '--top-module','SRAMBank','--Mdir',str(dest/'obj'),'-CFLAGS','-std=c++17',*map(str,sources),str(dest/'test.cpp'),'-o','test'],dest/'compile.log')
     run([str(dest/'obj/test')],dest/'run.log')

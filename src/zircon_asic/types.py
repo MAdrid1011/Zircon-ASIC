@@ -26,7 +26,7 @@ class Flags(IntFlag):
 @dataclass(frozen=True, slots=True)
 class Request:
     a: int
-    b: int
+    b: int = 0
     c: int = 0
     rounding: Rounding = Rounding.RNE
     tag: int = 0

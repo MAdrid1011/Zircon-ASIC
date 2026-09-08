@@ -2,7 +2,9 @@ recursive-include docs *.md
 include LICENSE THIRD_PARTY_NOTICES.md CONTRIBUTING.md SECURITY.md
 recursive-include licenses *.txt
 recursive-include examples *.py
+recursive-include tests *.py
 recursive-include scripts *.py *.cpp *.tcl
+include scripts/sollya.Dockerfile
 include hardware/build.sbt
 recursive-include hardware/src *.scala
 include hardware/project/build.properties

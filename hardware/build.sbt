@@ -1,5 +1,5 @@
 ThisBuild / scalaVersion := "2.13.18"
-ThisBuild / version := "0.2.0"
+ThisBuild / version := "0.3.0"
 ThisBuild / organization := "org.zirconasic"
 name := "zircon-asic"
 licenses += ("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0"))
@@ -11,6 +11,8 @@ Compile / resourceGenerators += Def.task {
   IO.copyFile(source, target)
   val spm = (Compile / resourceManaged).value / "zircon-spm.json"
   IO.copyFile(baseDirectory.value.getParentFile / "src" / "zircon_asic" / "data" / "spm.json", spm)
+  val sfu = (Compile / resourceManaged).value / "zircon-sfu.json"
+  IO.copyFile(baseDirectory.value.getParentFile / "src" / "zircon_asic" / "data" / "sfu.json", sfu)
   val noticeNames = Seq("LICENSE", "THIRD_PARTY_NOTICES.md") ++
     (baseDirectory.value.getParentFile / "licenses" ** "*.txt").get.map(f => "licenses/" + f.getName)
   val notices = noticeNames.map { name =>
@@ -18,7 +20,7 @@ Compile / resourceGenerators += Def.task {
     IO.copyFile(baseDirectory.value.getParentFile / name, output)
     output
   }
-  Seq(target, spm) ++ notices
+  Seq(target, spm, sfu) ++ notices
 }.taskValue
 
 val chiselVersion = "7.15.0"

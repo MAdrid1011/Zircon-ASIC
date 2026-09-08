@@ -13,9 +13,11 @@
 | `Floating.scala` | `FpAdd`、`FpMul`、`FpFma`、浮点公共逻辑 | [浮点加乘与 FMA](floating.md) |
 | `FloatDiv.scala` | `FpDiv`、`Fp4Div` | [浮点除法与 FP4](division-and-fp4.md) |
 | `SmallFloating.scala` | `Fp4Arithmetic` | [浮点除法与 FP4](division-and-fp4.md) |
+| `Unary.scala` | `FpExp`、`FpRcp`、`FpSqrt`、`FpRsqrt`、定点乘法与资源加载 | [exp](exp.md)、[rcp](rcp.md)、[sqrt](sqrt.md)、[rsqrt](rsqrt.md) |
 | `Transport.scala` | `DelayLine`、`StreamFIFO`、`NetworkExample` | [传输与组合](transport.md) |
 | `Generate.scala` | `Generate`、`GenerateAll` | [集成与生成](integration.md) |
 | `SPM.scala` | `SPMConfig`、`SPM`、`SRAMBank`、IHP 宏适配器 | [普通 SPM](spm.md) |
 | `SPMExample.scala` | `SPMExample`、`GenerateSPMExample` | [普通 SPM](spm.md) |
+| `UnarySPMExample.scala` | `UnarySPMExample`、`GenerateUnarySPMExample` | [非线性与 SPM 组合](../../examples/nonlinear_spm.py) |
 
 格式编码、异常标志和周期定义属于 [共同契约](../contract.md)；Python 仿真器的对象模型与 Numba 执行方式属于 [模拟器与 Chisel 结构](../implementation.md)。

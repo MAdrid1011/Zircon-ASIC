@@ -213,7 +213,7 @@ class FpAdd(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
     val reverseDiff = Adders.signedAdd(b.exp,a.exp,f.ew,true)
     val aLarge = a.exp >= b.exp
     val distance = Mux(aLarge,diff,reverseDiff).asUInt
-    val near = if(f.name == "fp32") a.sign =/= b.sign && diff >= (-1).S && diff <= 1.S && !a.zero && !b.zero else false.B
+    val near = if(f.name == "fp32" || (f.name == "bf16" && s.variant == "near_far")) a.sign =/= b.sign && diff >= (-1).S && diff <= 1.S && !a.zero && !b.zero else false.B
     val nearA = Mux(diff >= 0.S,a.sig << 6,a.sig << 5)
     val nearB = Mux(diff <= 0.S,b.sig << 6,b.sig << 5)
     val shiftedA = (a.sig << 6).pad(k); val shiftedB = (b.sig << 6).pad(k)
@@ -228,6 +228,10 @@ class FpAdd(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
     val first = stage(aligned,1)
     val summed = stage(FloatLogic.add(first,f,k),2)
     io.out.bits := pipedRound(summed,k,3)
+  } else if(f.name == "bf16" && s.latency == 3) {
+    val first = stage(aligned,0)
+    val normalized = stage(FloatLogic.normalize(FloatLogic.add(first,f,k),f,k),1)
+    io.out.bits := stage(FloatLogic.finish(FloatLogic.prepare(normalized,f,k),f),2)
   } else if(s.phases.contains("grs")) {
     val first = stage(aligned,0)
     io.out.bits := pipedRound(FloatLogic.add(first,f,k),k,1)
@@ -244,10 +248,16 @@ class FpMul(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
   val b = if(s.phases.contains("decode")) stage(db,0) else db
   val meta = if(s.phases.contains("decode")) stage(dm,0) else dm
   val k = 2*f.p+6
-  var rows = if (f.p >= 16) Compressors.booth(a.sig,b.sig,f.p,false) else Compressors.baugh(a.sig,b.sig,f.p,false)
+  var rows = if (f.name == "bf16" && s.variant == "native") {
+    // Deep pipelines expose four exact 2x8 products to the synthesis mapper.
+    // Their compression and final carry sum occupy separate computation stages.
+    if(s.latency == 7) (0 until 4).map(i => ((a.sig(2*i+1,2*i)*b.sig).pad(16) << (2*i))(15,0))
+    else Seq(a.sig*b.sig,0.U((2*f.p).W))
+  } else if (f.p >= 16 || (f.name == "bf16" && s.variant == "booth_dadda")) Compressors.booth(a.sig,b.sig,f.p,false)
+    else Compressors.baugh(a.sig,b.sig,f.p,false)
   var exp = a.exp+b.exp; var sign = a.sign ^ b.sign; var m = meta
   val targets = Compressors.targets(rows.size)
-  val cuts = if(s.phases.contains("decode")) 2 else if(s.phases.contains("grs")) 1 else s.latency-1
+  val cuts = if(s.phases.contains("decode")) 2 else if(s.phases.contains("grs") || f.name == "bf16") 1 else s.latency-1
   val offset = if(s.phases.contains("decode")) 1 else 0
   for (i <- 0 until cuts) {
     for (t <- targets.slice(targets.size*i/cuts,targets.size*(i+1)/cuts)) rows = Compressors.reduce(rows,2*f.p,t)
@@ -256,7 +266,10 @@ class FpMul(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
   }
   val mag = Wire(new Magnitude(f,k))
   mag.mag := rows.reduce(_ + _); mag.exp := exp; mag.sign := sign; mag.meta := m
-  io.out.bits := (if(s.phases.contains("decode")) pipedRound(stage(mag,3),k,4)
+  io.out.bits := (if(f.name == "bf16" && s.latency == 3) {
+    val normalized = stage(FloatLogic.normalize(mag,f,k),1)
+    stage(FloatLogic.finish(FloatLogic.prepare(normalized,f,k),f),2)
+  } else if(s.phases.contains("decode")) pipedRound(stage(mag,3),k,4)
     else pipedRound(mag,k,if(s.phases.contains("grs")) 1 else s.latency-1))
 }
 
@@ -325,7 +338,42 @@ class FpFma(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
     mag.mag := Mux(sum < 0.S,negated,sum.asUInt)
     mag.sign := Mux(sum === 0.S,zeroSign,productSign ^ (sum < 0.S))
     mag.exp := stage(aligned.exp,fusedStage); mag.meta := stage(mm,fusedStage)
-    val beforeRound = if(deep) stage(mag,4) else if(s.latency == 4) stage(mag,2) else mag
-    io.out.bits := pipedRound(beforeRound,k,if(deep) 5 else if(s.phases.contains("grs")) 2 else s.latency-1)
+    if(f.name == "bf16" && s.latency == 4) {
+      val normalized = stage(FloatLogic.normalize(mag,f,k),2)
+      io.out.bits := stage(FloatLogic.finish(FloatLogic.prepare(normalized,f,k),f),3)
+    } else {
+      val beforeRound = if(deep) stage(mag,4) else if(s.latency == 4) stage(mag,2) else mag
+      io.out.bits := pipedRound(beforeRound,k,if(deep) 5 else if(s.phases.contains("grs")) 2 else s.latency-1)
+    }
+  }
+}
+
+/** Exact product followed by alignment/addition, with a single final rounding. */
+class BFloatProductFma(f: Format,s: Spec) extends FloatingElasticModule(f,s) {
+  require(f.name == "bf16" && Set(4,5,8).contains(s.latency))
+  val deep = s.latency == 8
+  val da = FloatLogic.decode(io.in.bits.a,f); val db = FloatLogic.decode(io.in.bits.b,f)
+  val dc = FloatLogic.decode(io.in.bits.c,f)
+  val dm = FloatLogic.special(da,db,dc,io.in.bits,f,"fma")
+  val a = if(deep) stage(da,0) else da; val b = if(deep) stage(db,0) else db
+  var c = if(deep) stage(dc,0) else dc; var meta = if(deep) stage(dm,0) else dm
+  var exp = a.exp+b.exp; var sign = a.sign ^ b.sign
+  var rows = Compressors.baugh(a.sig,b.sig,f.p,false)
+  for(t <- Compressors.targets(rows.size)) rows = Compressors.reduce(rows,2*f.p,t)
+  if(deep) {
+    rows = stage(VecInit(rows),1).toSeq
+    exp = stage(exp,1); sign = stage(sign,1); c = stage(c,1); meta = stage(meta,1)
+  }
+  val ps = if(deep) 2 else 0
+  val product = stage(rows.reduce(_ + _),ps)
+  exp = stage(exp,ps); sign = stage(sign,ps); c = stage(c,ps); meta = stage(meta,ps)
+  val k = 3*f.p+8
+  val aligned = stage(FloatLogic.align(product,exp,sign,c.sig,c.exp,c.sign,meta,f,k),ps+1)
+  val magnitude = FloatLogic.add(aligned,f,k)
+  if(deep) io.out.bits := pipedRound(stage(magnitude,4),k,5)
+  else if(s.latency == 5) io.out.bits := pipedRound(magnitude,k,2)
+  else {
+    val normalized = stage(FloatLogic.normalize(magnitude,f,k),2)
+    io.out.bits := stage(FloatLogic.finish(FloatLogic.prepare(normalized,f,k),f),3)
   }
 }

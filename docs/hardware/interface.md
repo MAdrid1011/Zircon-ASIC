@@ -6,6 +6,8 @@
 
 `Request(w)` 的字段为 `a`、`b`、`c`、`rounding` 和 `tag`。`a/b/c` 的宽度均为模块格式宽度 `w`；二元操作忽略 `c`。`rounding` 为三位编码，合法范围为 0 到 4；模块在 `io.in.fire` 时断言该范围。`tag` 固定为 32 位，计算和传输模块均原样返回它。
 
+exp、rcp、sqrt、rsqrt 只使用 `a`。集成时仍须连接 `b/c`，通常置零；其值不参与数值分类。exp 要求 `rounding=0`，其余一元算子支持 0～4。所有特殊输入经过完整流水，与普通输入的延迟相同。
+
 `Response(w)` 的字段为 `bits`、`flags`、`tag` 和 `remainder`。`flags` 为五位异常标志，位定义见 [共同契约](../contract.md)。只有整数除法使用 `remainder`；浮点结果将其置零。`io.in` 与 `io.out` 都是 Chisel `Decoupled` 接口，握手条件分别为 `io.in.valid && io.in.ready` 和 `io.out.valid && io.out.ready`。
 
 `UnitIO` 还提供同步 `flush` 以及四个观察端口：
@@ -25,9 +27,11 @@
 
 `ElasticModule` 用每级一个 `valid` 寄存器实现深度等于共同契约 `latency` 的流水线。第 `i` 级的推进条件为：该级为空，或下一等级允许推进；末级的下一等级由 `io.out.ready` 决定。每级只在自身允许推进且上游有效时更新 payload 寄存器。
 
-该规则允许流水线中的空洞向前移动，也允许末级交付旧结果的同一拍接收新请求。无背压时，第 `k` 拍接收的请求于第 `k+latency` 拍交付；所有当前弹性算术单元的启动间隔为 1。下游背压会逐级传递至 `io.in.ready`，但被阻塞的输出保持稳定。
+该规则允许数据向下游推进、空槽向上游移动，也允许末级交付旧结果的同一拍接收新请求。无背压时，第 `k` 拍接收的请求于第 `k+latency` 拍交付；所有当前弹性算术单元的启动间隔为 1。下游背压通过 ready 组合逻辑在同一拍向上游传播，被阻塞的输出保持稳定。
 
 `stage(next, index)` 为实际中间数据创建寄存器，数据有效性由对应 `valid(index)` 决定。各运算模块只在共同契约规定的阶段调用该函数；因此改变流水切分必须同时更新契约和 Python 周期模型。
+
+一元模块的 `UnaryElastic` 还提供 `ready_topology="suffix_tree"`：先并行计算从各级到末级是否全部有效，再形成 `advance(i) = out_ready || !all_valid(i..last)`。它与递推式的逻辑相同，用于缩短长流水的组合控制路径。超过 16 级时，`occupancy` 由接收／交付事件维护的寄存计数器给出，并用断言核对其与级有效位计数相等；对外观察值和周期语义保持一致。
 
 ## IterativeModule
 

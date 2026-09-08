@@ -4,9 +4,10 @@ from bisect import bisect_left
 from functools import lru_cache
 
 
-SPECS = {"e2m1":(4,2,1,1,"finite"),"e4m3fn":(8,4,3,7,"finite_nan"),"e5m2":(8,5,2,15,"ieee")}
+SPECS = {"e2m1":(4,2,1,1,"finite"),"e4m3fn":(8,4,3,7,"finite_nan"),"e5m2":(8,5,2,15,"ieee"),"bf16":(16,8,7,127,"ieee")}
 
 
+@lru_cache(maxsize=100000)
 def decode(name,bits):
     w,eb,fb,bias,kind = SPECS[name]
     sign = bool(bits & (1 << (w-1)))
@@ -37,10 +38,8 @@ def choose(lo,hi,value,rm,sign,even):
 
 def unbounded_round(value,fb,rm,sign):
     if value == 0: return value
-    exponent = 0
-    scaled = value
-    while scaled >= 2: scaled /= 2; exponent += 1
-    while scaled < 1: scaled *= 2; exponent -= 1
+    exponent = value.numerator.bit_length()-value.denominator.bit_length()
+    if value < Fraction(2)**exponent: exponent -= 1
     grid = Fraction(2)**(exponent-fb)
     q = value//grid
     return (q+choose(q*grid,(q+1)*grid,value,rm,sign,q%2 == 0))*grid

@@ -14,24 +14,27 @@ ROOT = Path(__file__).resolve().parents[1]
 IMAGE = "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386"
 
 
-def run(unit,corner="TC",target="global_route",setup_margin=0,hold_margin=0):
+def run(unit,corner="TC",target="global_route",setup_margin=0,hold_margin=0,rtl_directory=None):
     # ORFS writes shared stage files; two campaigns must never share a workdir.
     lockdir=ROOT/"build/ppa/locks"
     lockdir.mkdir(parents=True,exist_ok=True)
-    lockname=hashlib.sha256(f"{unit}:{corner}".encode()).hexdigest()+".lock"
+    directory=unit.replace('.', '_')
+    source=Path(rtl_directory)/'Unit.sv' if rtl_directory else ROOT/f'build/rtl/{directory}/Unit.sv'
+    identity=hashlib.sha256(source.read_bytes()).hexdigest()
+    lockname=hashlib.sha256(f"{unit}:{corner}:{identity}:{setup_margin}:{hold_margin}".encode()).hexdigest()+".lock"
     with (lockdir/lockname).open("w") as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
-        return _run(unit,corner,target,setup_margin,hold_margin)
+        return _run(unit,corner,target,setup_margin,hold_margin,rtl_directory)
 
 
-def _run(unit,corner,target,setup_margin,hold_margin):
+def _run(unit,corner,target,setup_margin,hold_margin,rtl_directory=None):
     parts = unit.split(".")
     name,op = parts[:2]
     unsigned = len(parts) == 3 and parts[2] == "unsigned"
     if len(parts) > 3 or (len(parts) == 3 and not unsigned):
         raise ValueError("unit must be format.operation[.unsigned]")
     directory = f"{name}_{op}" + ("_unsigned" if unsigned else "")
-    rtl = ROOT/f"build/rtl/{directory}/Unit.sv"
+    rtl = Path(rtl_directory)/'Unit.sv' if rtl_directory else ROOT/f"build/rtl/{directory}/Unit.sv"
     if not rtl.exists(): raise FileNotFoundError(f"generate and validate {unit} before physical implementation")
     top = re.search(r"^module (\w+)\(",rtl.read_text(),re.M)[1]
     manifest=json.loads((rtl.parent/"manifest.json").read_text())
@@ -78,6 +81,17 @@ set_clock_uncertainty 50 [get_clocks core_clock]
     for filename,content in [("config.mk",config),("constraint.sdc",constraints)]:
         path=out/filename
         if not path.exists() or path.read_text()!=content: path.write_text(content)
+    configuration_hash=hashlib.sha256((config+constraints+IMAGE).encode()).hexdigest()
+    prior=out/'physical.json'
+    targets=['synth','floorplan','place','cts','global_route','route','finish']
+    if prior.exists():
+        completed=json.loads(prior.read_text())
+        if (completed.get('exit_code')==0 and completed.get('rtl_sha256')==rtl_hash
+            and completed.get('configuration_sha256')==configuration_hash
+            and completed.get('target') in targets
+            and targets.index(completed['target'])>=targets.index(target)):
+            print(f"Reused {unit} {corner} {completed['target']}: {prior}",flush=True)
+            return
     make_target = {"global_route": "grt"}.get(target, target)
     command = ["docker","run","--rm","--platform","linux/amd64","-v",f"{ROOT}:/workspace",IMAGE,
                "bash","-lc",f"source /OpenROAD-flow-scripts/env.sh && cd /OpenROAD-flow-scripts/flow && make DESIGN_CONFIG={container}/config.mk RESULTS_DIR={container}/results REPORTS_DIR={container}/reports LOG_DIR={container}/logs OBJECTS_DIR={container}/objects {make_target}"]
@@ -90,7 +104,7 @@ set_clock_uncertainty 50 [get_clocks core_clock]
     report = dict(unit=unit,corner=corner,platform="ASAP7",voltage={"WC":0.63,"TC":0.70,"BC":0.77}[corner],
                   temperature_c={"WC":100,"TC":0,"BC":25}[corner],clock_period_ps=1000,io_delay_ps=200,uncertainty_ps=50,
                   image=IMAGE,rtl_sha256=rtl_hash,source_snapshot=True,latency=manifest["latency"],
-                  configuration_sha256=hashlib.sha256((config+constraints+IMAGE).encode()).hexdigest(),
+                  configuration_sha256=configuration_hash,
                   initiation_interval=1 if manifest["kind"]=="elastic" else manifest["latency"],
                   target=target,setup_repair_margin_ps=setup_margin,hold_repair_margin_ps=hold_margin,synth_memory_max_bits=32768,post_resize_formal_lec=False,exit_code=result.returncode,elapsed_seconds=time.monotonic()-start,metrics=metrics)
     (out/"physical.json").write_text(json.dumps(report,indent=2)+"\n")

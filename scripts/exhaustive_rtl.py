@@ -1,6 +1,6 @@
 """Sharded small-format RTL exhaustive checking with a streaming C++ driver."""
 from pathlib import Path
-import argparse,json,re,subprocess,sys,time,hashlib
+import argparse,json,re,subprocess,sys,time,hashlib,shutil
 from validate_rtl import ROOT,run,validate,verilator_configuration
 from exhaustive import build_small_oracle
 sys.path.insert(0,str(ROOT/"src"))
@@ -15,6 +15,9 @@ def check(name,op,shard=0,shards=1):
     top=re.search(r"^module (\w+)\(",sv.read_text(),re.M)[1]
     cpp=dest/"small_rtl.cpp";cpp.write_text((ROOT/"scripts/small_rtl.cpp").read_text().replace("@TOP@",f"V{top}"))
     version,compatibility_flags=verilator_configuration()
+    # Verilator makefiles record their runtime include directory, so an
+    # installed compiler update requires a fresh object tree.
+    shutil.rmtree(dest/"small_obj",ignore_errors=True)
     run(["verilator",*compatibility_flags,"--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,"--Mdir",str(dest/"small_obj"),"-CFLAGS","-std=c++17 -O3",str(sv),str(cpp),"-o","check"],dest/"small_compile.log")
     w=4 if name=="e2m1" else 8;lat=contract()["units"][f"{name}.{op}"]["latency"]
     total=1<<(w*(3 if op=="fma" else 2));begin,end=total*shard//shards,total*(shard+1)//shards

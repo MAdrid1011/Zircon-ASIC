@@ -23,7 +23,7 @@ class ArithmeticUnit:
     def compute(self, request: Request) -> Response:
         raise NotImplementedError
 
-    def compute_batch(self, a, b, c=0, *, rounding=Rounding.RNE, tags=0, backend="auto") -> BatchResponse:
+    def compute_batch(self, a, b=0, c=0, *, rounding=Rounding.RNE, tags=0, backend="auto") -> BatchResponse:
         from .batch import compute_batch
         return compute_batch(self, a, b, c, rounding=rounding, tags=tags, backend=backend)
 
@@ -51,6 +51,9 @@ class ArithmeticUnit:
 
     def eval(self, inputs: Inputs = Inputs()) -> Outputs:
         """Observe before the edge. Repeated evaluations do not advance state."""
+        if inputs.request is not None and getattr(self, "arity", 2) == 1:
+            from .unary import validate_request
+            validate_request(self.format, self.op, inputs.request)
         output = self._observe(inputs)
         self._pending = (inputs, output)
         return output
@@ -127,13 +130,28 @@ class ArithmeticUnit:
 class FloatingPointUnit(ArithmeticUnit):
     def __init__(self, format: str | FloatFormat, op: str, **kwargs):
         self.format = FORMATS[format] if isinstance(format, str) else format
+        self.arity = 1 if op in ("exp", "rcp", "sqrt", "rsqrt") else 3 if op == "fma" else 2
+        if self.arity == 1 and self.format.name not in ("fp32", "fp16", "bf16"):
+            raise ValueError("unary functions support fp32, fp16 and bf16")
         super().__init__(self.format.name, op, **kwargs)
 
     def compute(self, request: Request) -> Response:
+        if self.arity == 1:
+            from .unary import unary_compute
+            return unary_compute(self.format, self.op, request, getattr(self,"_sfu_configuration",None))
         if self.format.name == "e2m1":
             from .lookup import fp4_compute
             return fp4_compute(self.op,request)
         return float_compute(self.format, self.op, request)
+
+    def _parameters(self):
+        result = dict(arity=self.arity)
+        if self.arity == 1:
+            from .unary import resources_hash
+            result.update(accuracy="faithful" if self.op == "exp" else "correctly-rounded",
+                          rounding_modes=["RNE"] if self.op == "exp" else [r.name for r in Rounding],
+                          resources_sha256=resources_hash(), implementation=self.timing.variant)
+        return result
 
 
 class IntegerUnit(ArithmeticUnit):
@@ -158,6 +176,14 @@ class FpFma(FloatingPointUnit):
     def __init__(self, format="fp32", **kwargs): super().__init__(format, "fma", **kwargs)
 class FpDiv(FloatingPointUnit):
     def __init__(self, format="fp32", **kwargs): super().__init__(format, "div", **kwargs)
+class FpExp(FloatingPointUnit):
+    def __init__(self, format="fp32", **kwargs): super().__init__(format, "exp", **kwargs)
+class FpRcp(FloatingPointUnit):
+    def __init__(self, format="fp32", **kwargs): super().__init__(format, "rcp", **kwargs)
+class FpSqrt(FloatingPointUnit):
+    def __init__(self, format="fp32", **kwargs): super().__init__(format, "sqrt", **kwargs)
+class FpRsqrt(FloatingPointUnit):
+    def __init__(self, format="fp32", **kwargs): super().__init__(format, "rsqrt", **kwargs)
 class IntAdd(IntegerUnit):
     def __init__(self, width=32, **kwargs): super().__init__(width, "add", **kwargs)
 class IntMul(IntegerUnit):
@@ -171,11 +197,15 @@ def _convenience(name, base, arg):
     return type(name, (base,), {"__init__": __init__, "__module__": __name__, "__doc__": f"{name} with the shared balanced-v1 timing contract."})
 
 
-for _prefix, _fmt in [("FP32", "fp32"), ("FP16", "fp16"), ("FP8E4M3FN", "e4m3fn"), ("FP8E5M2", "e5m2"), ("FP4", "e2m1")]:
+for _prefix, _fmt in [("FP32", "fp32"), ("FP16", "fp16"), ("BF16", "bf16"), ("FP8E4M3FN", "e4m3fn"), ("FP8E5M2", "e5m2"), ("FP4", "e2m1")]:
     for _suffix, _base in [("Add", FpAdd), ("Mul", FpMul), ("Fma", FpFma), ("Div", FpDiv)]:
         globals()[_prefix+_suffix] = _convenience(_prefix+_suffix, _base, _fmt)
 for _width in (8, 16, 32):
     for _suffix, _base in [("Add", IntAdd), ("Mul", IntMul), ("Div", IntDiv)]:
         globals()[f"INT{_width}{_suffix}"] = _convenience(f"INT{_width}{_suffix}", _base, _width)
 
-__all__ = [n for n in globals() if n.startswith(("FP", "INT", "Fp", "Int"))] + ["ArithmeticUnit", "FloatingPointUnit"]
+for _prefix, _fmt in [("FP32", "fp32"), ("FP16", "fp16"), ("BF16", "bf16")]:
+    for _suffix, _base in [("Exp", FpExp), ("Rcp", FpRcp), ("Sqrt", FpSqrt), ("Rsqrt", FpRsqrt)]:
+        globals()[_prefix+_suffix] = _convenience(_prefix+_suffix, _base, _fmt)
+
+__all__ = [n for n in globals() if n.startswith(("FP", "BF16", "INT", "Fp", "Int"))] + ["ArithmeticUnit", "FloatingPointUnit"]

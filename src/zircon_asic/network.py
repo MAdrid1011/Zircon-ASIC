@@ -158,6 +158,21 @@ class Network:
         return order
 
     def step(self, *, ready=True, reset=False, flush=False):
+        pending={name:u._pending for name,u in self.units.items()}
+        try:
+            order,outputs=self._evaluate(ready=ready,reset=reset,flush=flush)
+        except Exception:
+            for name,value in pending.items():self.units[name]._pending=value
+            raise
+        for name in order:
+            self.units[name].tick()
+        for key,o in outputs.items():
+            if key in self.sources and o.accepted:self.sources[key].position+=1
+            if key in self.sinks and o.delivered:self.sinks[key].received.append((self.cycle,o.response))
+        self.cycle+=1
+        return outputs
+
+    def _evaluate(self, *, ready=True, reset=False, flush=False):
         from .spm import SPM, MemoryRequest, MemoryResponse, MemoryStatus
         order = self._order()
         outgoing = {self._key(e.source,e.source_port):e for e in self.connections}
@@ -208,13 +223,7 @@ class Network:
                 for p in range(u.ports):
                     key=self._key(name,p)
                     if outputs[key].accepted: u._check_read(requests[key])
-        for name in order:
-            self.units[name].tick()
-        for key,o in outputs.items():
-            if key in self.sources and o.accepted: self.sources[key].position += 1
-            if key in self.sinks and o.delivered: self.sinks[key].received.append((self.cycle,o.response))
-        self.cycle += 1
-        return outputs
+        return order,outputs
 
     def run(self, cycles, *, ready=True, reset=None, flush=None, backend="python", trace=False):
         if backend not in ("python","numba"): raise ValueError("network backend must be python or numba")

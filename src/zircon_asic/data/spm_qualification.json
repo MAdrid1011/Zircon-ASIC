@@ -1,56 +1,7 @@
 {
-  "implementation_hash": "1c537cf05ccba1d8ebf7ff0d253bad440523718e05e4c36bbfea12acc5496844",
+  "implementation_hash": "f5cb35c3fade88e8b154aa8319b2973b6d4afd2ee7afb954759ed70e48179d79",
   "contract_hash": "28cef9e4972927dcf072ae9eb96b81d737adadb532ec65d6eaedd6aeddd5244b",
   "configurations": {
-    "1536:16:16:3": {
-      "status": "cycle-verified",
-      "configuration": {
-        "capacity_bytes": 1536,
-        "data_width": 16,
-        "banks": 16,
-        "ports": 3,
-        "ihp": false
-      },
-      "cycle_alignment": true,
-      "functional_tests": true,
-      "performance": true,
-      "network_alignment": true,
-      "physical": null,
-      "rtl_sha256": "e45a5dacbe077838cc8d5aef05ba45fad8208098dd2841ac8391c30f1321463a",
-      "alignment_source": "build/rtl/spm-1536-16-16-3/alignment.json",
-      "runs": [
-        {
-          "seed": 751,
-          "cycles": 21547,
-          "random_cycles": 20000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 752,
-          "cycles": 21547,
-          "random_cycles": 20000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 753,
-          "cycles": 21547,
-          "random_cycles": 20000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 754,
-          "cycles": 21547,
-          "random_cycles": 20000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 755,
-          "cycles": 21547,
-          "random_cycles": 20000,
-          "discrepancy_cycles": 0
-        }
-      ]
-    },
     "16384:32:4:4": {
       "status": "dual-verified",
       "configuration": {
@@ -382,32 +333,32 @@
       "runs": [
         {
           "seed": 751,
-          "cycles": 108203,
-          "random_cycles": 100000,
+          "cycles": 28203,
+          "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 752,
-          "cycles": 108203,
-          "random_cycles": 100000,
+          "cycles": 28203,
+          "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 753,
-          "cycles": 108203,
-          "random_cycles": 100000,
+          "cycles": 28203,
+          "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 754,
-          "cycles": 108203,
-          "random_cycles": 100000,
+          "cycles": 28203,
+          "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 755,
-          "cycles": 108203,
-          "random_cycles": 100000,
+          "cycles": 28203,
+          "random_cycles": 20000,
           "discrepancy_cycles": 0
         }
       ]
@@ -789,80 +740,31 @@
       "runs": [
         {
           "seed": 751,
-          "cycles": 102059,
-          "random_cycles": 100000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 752,
-          "cycles": 102059,
-          "random_cycles": 100000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 753,
-          "cycles": 102059,
-          "random_cycles": 100000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 754,
-          "cycles": 102059,
-          "random_cycles": 100000,
-          "discrepancy_cycles": 0
-        },
-        {
-          "seed": 755,
-          "cycles": 102059,
-          "random_cycles": 100000,
-          "discrepancy_cycles": 0
-        }
-      ]
-    },
-    "64:8:4:8": {
-      "status": "cycle-verified",
-      "configuration": {
-        "capacity_bytes": 64,
-        "data_width": 8,
-        "banks": 4,
-        "ports": 8,
-        "ihp": false
-      },
-      "cycle_alignment": true,
-      "functional_tests": true,
-      "performance": true,
-      "network_alignment": true,
-      "physical": null,
-      "rtl_sha256": "64460d5021d137322870864a8ca5a038b68b9d6f67018c0a73e5d23100f213ca",
-      "alignment_source": "build/rtl/spm-64-8-4-8/alignment.json",
-      "runs": [
-        {
-          "seed": 751,
-          "cycles": 20139,
+          "cycles": 22059,
           "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 752,
-          "cycles": 20139,
+          "cycles": 22059,
           "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 753,
-          "cycles": 20139,
+          "cycles": 22059,
           "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 754,
-          "cycles": 20139,
+          "cycles": 22059,
           "random_cycles": 20000,
           "discrepancy_cycles": 0
         },
         {
           "seed": 755,
-          "cycles": 20139,
+          "cycles": 22059,
           "random_cycles": 20000,
           "discrepancy_cycles": 0
         }

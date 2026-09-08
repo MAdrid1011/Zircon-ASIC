@@ -2,13 +2,15 @@
 import numpy as np
 from numba import njit
 from .fast import _float_one, _int_one
+from .unary import OPERATIONS
+from .fast_unary import kernel_resources
 from .network import FIFO
 from .types import Response, Outputs, Flags
 
 
 @njit(cache=True)
 def _run(cfg, downstream, upstream, operands, source, lengths, position, sink,
-         valid, data, phase, heads, counts, stats, ready_pattern, resets, flushes, tracing):
+         valid, data, phase, heads, counts, stats, ready_pattern, resets, flushes, tracing, sfu):
     cycles, nodes = ready_pattern.shape
     trace = np.zeros((cycles if tracing else 0,nodes,10),np.uint64)
     events = np.zeros((cycles*int(np.sum(sink)),6),np.uint64)
@@ -53,6 +55,16 @@ def _run(cfg, downstream, upstream, operands, source, lengths, position, sink,
                 if inv[j]:
                     for field in range(5): req[j,field] = source[j,position[j],field]
         for j in range(nodes):
+            if inv[j] and cfg[j,9] >= 4:
+                width = cfg[j,3]
+                for field in range(3):
+                    if req[j,field] >= np.uint64(1) << np.uint64(width):
+                        raise ValueError("unary operand exceeds format width")
+                if req[j,3] > 4 or (cfg[j,9] == 4 and req[j,3] != 0):
+                    raise ValueError("unsupported unary rounding mode")
+                if req[j,4] >= np.uint64(1) << np.uint64(32):
+                    raise ValueError("tag must fit 32 unsigned bits")
+        for j in range(nodes):
             kind,lat,cap = cfg[j,0],cfg[j,1],cfg[j,2]
             occupied,stagebits = 0,np.uint64(0)
             for i in range(cap):
@@ -87,7 +99,7 @@ def _run(cfg, downstream, upstream, operands, source, lengths, position, sink,
                 if width == -1:
                     bits,flags,rem = req[j,0],np.int64(req[j,1]),req[j,2]
                 elif eb:
-                    bits,flags = _float_one(req[j,0],req[j,1],req[j,2],np.int64(req[j,3]),op,width,eb,fb,bias,encoding,x,y,z)
+                    bits,flags = _float_one(req[j,0],req[j,1],req[j,2],np.int64(req[j,3]),op,width,eb,fb,bias,encoding,x,y,z,sfu)
                 else:
                     bits,flags,rem = _int_one(req[j,0],req[j,1],op,width,signed != 0)
                 if upstream[j] < 0: position[j] += 1
@@ -117,11 +129,11 @@ def _run(cfg, downstream, upstream, operands, source, lengths, position, sink,
     return trace,events[:nevents]
 
 
-def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False):
+def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_raw_trace=False,_compile_only=False):
     from .spm import SPM
     if any(isinstance(u,SPM) for u in net.units.values()) or any(e.mapping is not None for e in net.connections):
         from .fast_mixed import run_network as mixed
-        return mixed(net,cycles,ready=ready,reset=reset,flush=flush,trace=trace)
+        return mixed(net,cycles,ready=ready,reset=reset,flush=flush,trace=trace,_raw_trace=_raw_trace,_compile_only=_compile_only)
     names = net._order(); n = len(names); lookup = {name:i for i,name in enumerate(names)}
     cfg = np.zeros((n,10),np.int64)
     upstream,downstream = np.full(n,-1,np.int64),np.full(n,-1,np.int64)
@@ -147,7 +159,7 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False):
             f = u.format
             cfg[j,3:9] = f.width,f.exponent,f.fraction,f.bias,{"ieee":0,"finite_nan":1,"finite":2}[f.encoding],0
         else: cfg[j,3],cfg[j,8] = u.width,u.signed
-        if not getattr(u,"transport",False): cfg[j,9] = {"add":0,"mul":1,"fma":2,"div":3}[u.op]
+        if not getattr(u,"transport",False): cfg[j,9] = OPERATIONS[u.op]
         slots = list(u._queue) if kind == 2 else u._slots
         for i,r in enumerate(slots):
             if r is not None: valid[j,i] = True; data[j,i] = r.bits,r.flags,r.tag,r.remainder
@@ -156,7 +168,11 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False):
         stats[j] = [getattr(u.stats,f) for f in statfields]
         if name in net.sources:
             s = net.sources[name]; lengths[j] = len(s.requests); position[j] = s.position
-            for i,r in enumerate(s.requests): source[j,i] = r.a,r.b,r.c,r.rounding,r.tag
+            for i,r in enumerate(s.requests):
+                if getattr(u,"arity",2)==1:
+                    from .unary import validate_request
+                    validate_request(u.format,u.op,r)
+                source[j,i] = r.a,r.b,r.c,r.rounding,r.tag
     if isinstance(ready,dict): pattern = np.broadcast_to([ready.get(name,True) for name in names],(cycles,n)).copy()
     else:
         pattern = np.asarray(ready,dtype=np.bool_)
@@ -166,7 +182,13 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False):
     flushes = np.zeros(cycles,np.bool_) if flush is None else np.asarray(flush,dtype=np.bool_)
     if resets.shape != (cycles,) or flushes.shape != (cycles,): raise ValueError("reset/flush must have one entry per cycle")
     sink = np.array([name in net.sinks for name in names],np.bool_)
-    traces,events = _run(cfg,downstream,upstream,operands,source,lengths,position,sink,valid,data,phase,heads,counts,stats,pattern,resets,flushes,trace)
+    arguments=(cfg,downstream,upstream,operands,source,lengths,position,sink,valid,data,phase,heads,counts,stats,pattern,resets,flushes,trace,kernel_resources(net.units.values()))
+    if _compile_only:
+        from numba import typeof
+        import time
+        start=time.perf_counter();_run.compile(tuple(typeof(v) for v in arguments))
+        return time.perf_counter()-start
+    traces,events = _run(*arguments)
     for row in events:
         cycle,j,bits,flags,tag,rem = map(int,row)
         net.sinks[names[j]].received.append((net.cycle+cycle,Response(bits,Flags(flags),tag,rem)))
@@ -185,6 +207,7 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False):
         if name in net.sources: net.sources[name].position = int(position[j])
     net.cycle += cycles
     if not trace: return {name:s.received for name,s in net.sinks.items()}
+    if _raw_trace:return names,traces
     result = []
     for row in traces:
         outputs = {}

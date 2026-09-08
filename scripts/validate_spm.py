@@ -1,6 +1,6 @@
 """Persisted, held-valid SPM stimulus and cycle-by-cycle RTL differential check."""
 from pathlib import Path
-import argparse, hashlib, json, sys
+import argparse, hashlib, json, shutil, sys
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
@@ -50,6 +50,8 @@ def validate(capacity=4096,width=32,banks=1,ports=1,ihp=False,cycles=20000,seeds
                   sources={str(p):hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in sources})
     bid=dest/'build-id.json';exe=dest/'obj/trace'
     if not exe.exists() or not bid.exists() or json.loads(bid.read_text())!=build_id:
+        # Verilator generated makefiles embed the runtime include directory.
+        shutil.rmtree(dest/'obj',ignore_errors=True)
         run(['verilator',*flags,'--cc','--exe','--build','-j','4','--assert','--timing','-DFUNCTIONAL','-Wno-fatal','--top-module','SPM',
              '--Mdir',str(dest/'obj'),'-CFLAGS','-std=c++17',*sources,str(dest/'trace.cpp'),'-o','trace'],dest/'compile.log')
         bid.write_text(json.dumps(build_id,indent=2))

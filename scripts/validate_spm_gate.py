@@ -1,6 +1,6 @@
 """Replay registered RTL stimulus against the routed netlist and real macro model."""
 from pathlib import Path
-import argparse,hashlib,json,subprocess,sys,re
+import argparse,hashlib,json,shutil,subprocess,sys,re
 from ppa import IMAGE
 from validate_spm import ROOT,harness
 from validate_rtl import run,verilator_configuration
@@ -37,6 +37,7 @@ def validate(directory,seed=751):
     (dest/'trace.cpp').write_text(cpp)
     ver,flags=verilator_configuration()
     sources=[physical/'results/6_final.v',dest/'sg13g2_stdcell_functional.v',*sorted((ROOT/'build/ihp/verilog').glob('*.v'))]
+    shutil.rmtree(dest/'obj',ignore_errors=True)
     run(['verilator',*flags,'--cc','--exe','--build','-j','4','--assert','--timing','-DFUNCTIONAL','-Wno-fatal','--top-module',meta.get('top','SPM'),
          '--Mdir',str(dest/'obj'),'-CFLAGS','-std=c++17',*map(str,sources),str(dest/'trace.cpp'),'-o','trace'],dest/'compile.log')
     stimulus=rtl/f'seed-{seed}.stim';expected=(rtl/f'seed-{seed}.python').read_text().splitlines()

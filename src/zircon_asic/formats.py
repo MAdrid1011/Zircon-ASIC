@@ -66,6 +66,7 @@ class FloatFormat:
 FORMATS = {name: FloatFormat(name=name, **spec) for name, spec in contract()["formats"].items()}
 FP32 = FORMATS["fp32"]
 FP16 = FORMATS["fp16"]
+BF16 = FORMATS["bf16"]
 E4M3FN = FORMATS["e4m3fn"]
 E5M2 = FORMATS["e5m2"]
 E2M1 = FORMATS["e2m1"]

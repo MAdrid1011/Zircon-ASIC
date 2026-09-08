@@ -2,6 +2,7 @@
 import sys
 import hashlib
 import json
+import shutil
 from pathlib import Path
 import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
@@ -15,6 +16,8 @@ def main():
     run(["sbt",f"runMain zircon.GenerateNetwork {out}"],out/"generate.log",ROOT/"hardware")
     harness=out/"trace.cpp";harness.write_text((ROOT/"scripts/rtl_trace.cpp").read_text().replace("@TOP@","VNetworkExample"))
     version,compatibility_flags=verilator_configuration()
+    # Generated makefiles bind the installed Verilator runtime path.
+    shutil.rmtree(out/"obj",ignore_errors=True)
     run(["verilator",*compatibility_flags,"--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module","NetworkExample","--Mdir",str(out/"obj"),"-CFLAGS","-std=c++17",str(out/"Unit.sv"),str(harness),"-o","trace"],out/"compile.log")
     net=Network().add("a",INT8Add()).add("fifo",FIFO(3)).add("b",INT8Mul()).add("d",DelayLine(2))
     net.connect("a","fifo").connect("fifo","b",b=3).connect("b","d").sink("d")

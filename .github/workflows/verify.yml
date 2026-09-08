@@ -8,12 +8,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install '.[fast,test]'
+      - run: python -m pip install '.[fast,test,verify]'
       - run: python scripts/check_docs.py
       - run: python scripts/build_oracles.py
       - run: python -m pytest -q --junitxml=build/pytest.xml
       - run: python scripts/exhaustive.py
       - run: python scripts/testfloat_vectors.py
+      - run: python scripts/validate_sfu.py --count 100000
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -22,6 +23,7 @@ jobs:
             build/pytest.xml
             build/exhaustive/*.json
             build/testfloat/*.json
+            build/sfu/numeric/*/numeric.json
   rtl:
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +50,7 @@ jobs:
       - run: python scripts/validate_spm.py --ihp --capacity 16384 --banks 4 --ports 4
       - run: python scripts/validate_spm.py --capacity 240 --width 64 --banks 2 --ports 3
       - run: python scripts/validate_spm_network.py
+      - run: python scripts/validate_sfu_network.py
       - run: python scripts/build_oracles.py && python scripts/testfloat_vectors.py --rtl
       - run: python scripts/exhaustive_rtl.py
       - uses: actions/upload-artifact@v4
@@ -64,6 +67,7 @@ jobs:
             build/rtl/**/stimulus.txt
             build/rtl/**/python.trace
             build/rtl/**/rtl.trace
+            build/rtl/**/numba.trace
             build/rtl/**/seed-*.stim
             build/rtl/**/seed-*.python
             build/rtl/**/seed-*.rtl

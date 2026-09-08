@@ -4,25 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zircon-asic"
-version = "0.2.0"
-description = "Bit-exact arithmetic and cycle-aligned Python/Chisel scratchpad building blocks"
+version = "0.3.0"
+description = "Cycle-aligned Python/Chisel arithmetic, nonlinear and scratchpad building blocks"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = "Apache-2.0"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "licenses/*.txt"]
 requires-python = ">=3.11"
 dependencies = ["numpy>=1.26"]
 
 [project.optional-dependencies]
 fast = ["numba>=0.59"]
 test = ["pytest>=7.4", "hypothesis>=6", "cocotb>=2.0", "build>=1"]
+verify = ["gmpy2==2.3.1"]
 
 [project.scripts]
 zircon = "zircon_asic.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools]
-license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "licenses/*.txt"]
 
 [tool.setuptools.package-data]
 zircon_asic = ["data/*.json", "data/*.bin", "py.typed"]

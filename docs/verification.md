@@ -10,6 +10,36 @@
 
 每种 FP8 的每个二元算子包含 `256×256×5=327680` 个用例；每个 FMA 包含 `256³×5=83886080` 个用例。FP4 分别为 1280 与 20480。分片报告记录 `[begin,end)`、分片编号和总数，只有覆盖完整范围的集合才能视为全输入验收。
 
+## BF16 回归
+
+`scripts/validate_bf16.py --rtl` 使用 `tests/rational_reference.py` 的独立整数有理数参考，覆盖五种舍入方式。每个操作在每种舍入方式下遍历 65,536 个按仿射置换生成的输入编码，并加入 20,000 组随机输入和特殊值、抵消、边界指数及除法商余定向用例。最终向量数分别为 add 435,465、mul 435,465、FMA 662,265、div 517,385；Python、Numba 和 RTL 的结果位、五个标志位和余数均逐项比较。
+
+`scripts/bf16_alignment.py` 对每个 BF16 单元运行五个 20,000 拍随机背压、reset、flush 种子和一个 100,000 拍种子。BF16 乘法还对直接 Dadda、Booth-Dadda 与原生乘法三种 8×8 有效数核心穷举 65,536 个输入对。四个最终配置均通过 ASAP7 RVT 的 TC 0.70 V / 0 °C、1 GHz 详细布线与提取 RC 检查；路由审计检查 setup、hold、时钟约束、未约束端点和 DRC。
+
+## 非线性算子回归
+
+`scripts/validate_sfu.py` 使用 MPFR 4.2.2 的有向上下界建立独立参考。参考从 128 bit 开始增加精度，直到目标舍入结果可确定；RMM 显式处理中点与远离零规则，rsqrt 直接使用 `rec_sqrt`。FP16、BF16 各穷举全部 65,536 个输入，exp 检查 RNE，其余三个算子分别检查五种模式，共 2,097,152 组输入／舍入组合。FP32 每算子至少一百万个分层输入，额外覆盖表段边界、类别阈值、完全平方数和近舍入中点。
+
+`scripts/certify_sfu.py` 重新生成 exp 系数和误差证据，检查逐级量化、定点截断、分段连接与类别阈值。FP32 rcp 穷举 8,388,608 个规格化有效数，sqrt、rsqrt 各检查 16,777,216 个有效数／指数奇偶组合，验证固定校正距离及精确性信息。低精度表逐项核对整数商余、平方比较与余量位。
+
+`scripts/replay_sfu.py` 将数值向量送入 RTL，比较编码和异常，并检查每笔请求的完整延迟与 II=1。`scripts/sfu_alignment.py` 为每个配置保存五个固定种子各 20,000 拍以及一组 100,000 拍的 Python／Numba／RTL 轨迹。`scripts/validate_sfu_network.py` 检查三种格式的 SPM → exp → SPM 和 SPM → rsqrt → mul → SPM，覆盖最终存储内容和中途后端切换。
+
+数值生成器需要开发依赖 `gmpy2`，系数生成使用 `scripts/sollya.Dockerfile` 固定的 Sollya 8.0；它们均不属于模拟器运行依赖。
+
+```bash
+python -m pip install '.[fast,test,verify]'
+docker build --platform linux/amd64 -f scripts/sollya.Dockerfile -t zircon-asic-sollya:8.0 .
+python scripts/validate_sfu.py
+python scripts/certify_sfu.py
+python scripts/replay_sfu.py --unit fp32.exp --unit fp32.rcp --unit fp32.sqrt --unit fp32.rsqrt
+python scripts/replay_sfu.py
+python scripts/sfu_alignment.py
+python scripts/validate_sfu_network.py
+python scripts/benchmark_sfu.py
+```
+
+`scripts/sfu_candidates.py` 组织数值筛选、综合、全局布线和详细布线候选。`scripts/check_sfu_physical.py` 审核提取 RC 后的 setup、hold、时钟、约束与路由结果；`scripts/replay_asap7.py` 使用对应 Liberty 的功能模型回放数值与周期向量，记录布线网表和 RTL 的轨迹等价结果。`scripts/collect_reports.py` 同时生成配置清单、非线性算子报告和机器可读证据。
+
 ## 周期回归
 
 `scripts/validate_rtl.py` 在每次运行前持久化全部输入和期望行为。驱动器在低电平设置端口并观察，再提交上升沿，符合共同契约的拍边界。逐拍比较 `in_ready`、`out_valid`、`stageValid`、`occupancy`、`phase`、`iteration`，在输出有效时比较全部响应字段，包括阻塞拍。
@@ -56,7 +86,7 @@
 
 `python scripts/collect_reports.py` 将测试、穷举、逐周期、性能和物理记录汇总为 `reports/validation.json`，同时生成配置表和包内 `qualification.json`。完整 Python 回归记录实际源内容的 SHA-256；RTL 记录绑定生成内容的 SHA-256。验证状态按实现、契约和 RTL 摘要匹配；更换实现或自定义时序后重新建立相应验证记录。
 
-`describe()` 区分 `unqualified`、`cycle-verified` 与 `dual-verified`，并给出每项门槛及物理评估级别。硬件生成的 manifest 默认保持未合格，使用其中的 RTL 哈希与发布配置表关联验收证据。
+`describe()` 返回配置对应的验证状态、验收门槛和物理评估级别。硬件生成的 manifest 使用 RTL 哈希与发布配置表关联验收证据。
 
 ## 仿真器交叉核对与版本兼容
 

@@ -19,7 +19,8 @@ case class Format(name: String, width: Int, eb: Int, fb: Int, bias: Int, encodin
     case _ => BigInt(0)
   }
 }
-case class Spec(name: String, op: String, latency: Int, kind: String, phases: Seq[String], variant: String) {
+case class Spec(name: String, op: String, latency: Int, kind: String, phases: Seq[String], variant: String,
+                unaryResources: Option[ujson.Value] = None) {
   val iterations = phases.count(_ == "iterate")
 }
 class Contract private (val json: ujson.Value) {
@@ -27,7 +28,8 @@ class Contract private (val json: ujson.Value) {
   require(json("schema_version").num == 1 && json("interface_version").num == 1)
   def spec(name: String, op: String): Spec = {
     val v = json("units")(s"$name.$op")
-    Spec(name, op, v("latency").num.toInt, v("kind").str, v("phases").arr.map(_.str).toSeq, v("variant").str)
+    Spec(name, op, v("latency").num.toInt, v("kind").str, v("phases").arr.map(_.str).toSeq, v("variant").str,
+      json.obj.get("sfu_overrides").flatMap(v => v.obj.get(s"$name.$op").orElse(v.obj.get(name))))
   }
   def format(name: String): Format = {
     val v = json("formats")(name)

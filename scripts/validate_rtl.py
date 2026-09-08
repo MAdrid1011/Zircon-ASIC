@@ -31,25 +31,35 @@ def verilator_configuration():
     return version,flags
 
 
-def run(cmd, log, cwd=ROOT):
+def run(cmd, log, cwd=ROOT, env=None):
     with open(log, "w") as f:
-        process = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, cwd=cwd)
+        process = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, cwd=cwd, env=env)
     if process.returncode:
         raise RuntimeError(f"command failed; {log}\n{Path(log).read_text()[-6000:]}")
 
 
-def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, exhaustive=False, vectors=None):
-    unit = IntegerUnit(int(name[3:]),op,signed=signed) if name.startswith("int") else FloatingPointUnit(name,op)
+def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, exhaustive=False, vectors=None, contract_path=None, destination=None, use_existing=False):
+    shared = json.loads(Path(contract_path).read_text()) if contract_path else contract()
+    options = {}
+    if contract_path:
+        item=shared['units'][f'{name}.{op}']
+        options['timing']=Timing(item['latency'],item['kind'],tuple(item['phases']),item['variant'],matched=False)
+    unit = IntegerUnit(int(name[3:]),op,signed=signed,**options) if name.startswith("int") else FloatingPointUnit(name,op,**options)
+    if op in ('exp','rcp','sqrt','rsqrt'):
+        overrides=shared.get('sfu_overrides',{})
+        unit._sfu_configuration = overrides.get(f'{name}.{op}',overrides.get(name))
     w = unit.width if name.startswith("int") else unit.format.width
-    dest = ROOT / f"build/rtl/{name}_{op}{'_unsigned' if not signed else ''}"
+    dest = Path(destination) if destination else ROOT / f"build/rtl/{name}_{op}{'_unsigned' if not signed else ''}"
     dest.mkdir(parents=True, exist_ok=True)
-    sources = list((ROOT/"hardware/src").rglob("*.scala")) + [ROOT/"src/zircon_asic/data/contract.json"]
+    sources = list((ROOT/"hardware/src").rglob("*.scala")) + [Path(contract_path) if contract_path else ROOT/"src/zircon_asic/data/contract.json",ROOT/'src/zircon_asic/data/sfu.json']
     sv = dest/"Unit.sv"
-    regenerate |= not sv.exists() or max(p.stat().st_mtime for p in sources) > sv.stat().st_mtime
+    if use_existing and not sv.exists():raise FileNotFoundError(sv)
+    regenerate |= not use_existing and (not sv.exists() or max(p.stat().st_mtime for p in sources) > sv.stat().st_mtime)
     if regenerate:
-        run(["sbt", f"runMain zircon.Generate {name} {op} {dest} {'signed' if signed else 'unsigned'}"],dest/"generate.log",ROOT/"hardware")
+        env=dict(os.environ,ZIRCON_CONTRACT=str(Path(contract_path).resolve())) if contract_path else None
+        run(["sbt", f"runMain zircon.Generate {name} {op} {dest} {'signed' if signed else 'unsigned'}"],dest/"generate.log",ROOT/"hardware",env=env)
     manifest = json.loads((dest/"manifest.json").read_text())
-    assert manifest["contract"] == contract()
+    assert manifest["contract"] == shared
     assert manifest["latency"] == unit.timing.latency
     assert manifest["phases"] == list(unit.timing.phases)
     top = re.search(r"^module (\w+)\(",sv.read_text(),re.M)[1]
@@ -63,6 +73,10 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
     build_id=dict(rtl_sha256=rtl_hash,harness_sha256=harness_hash,verilator=version,compatibility_flags=compatibility_flags)
     id_path=dest/"build-id.json"
     if not exe.exists() or not id_path.exists() or json.loads(id_path.read_text()) != build_id:
+        # Verilator makefiles embed absolute paths to its runtime headers.  A
+        # toolchain update therefore requires a clean generated build tree;
+        # the RTL, harness and stimulus remain in the candidate directory.
+        shutil.rmtree(dest/"obj",ignore_errors=True)
         run(["verilator",*compatibility_flags,"--cc","--exe","--build","-j","4","--assert","-Wno-fatal","--top-module",top,
              "--Mdir",str(dest/"obj"),"-CFLAGS","-std=c++17",str(sv),str(harness),"-o","trace"],dest/"compile.log")
         if hashlib.sha256(sv.read_bytes()).hexdigest()!=rtl_hash:raise RuntimeError("RTL changed during compilation; rerun validation")
@@ -90,7 +104,7 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
                 a,b,c,rm = reqs[idx]; held = Request(a,b,c,Rounding(rm),idx); idx += 1
             elif not finite_stream and k < cycles-2*unit.timing.latency and rng.random() > .15:
                 a,b,c = [int(x) for x in rng.integers(0,1 << w,3,dtype=np.uint64)]
-                held = Request(a,b,c,Rounding(int(rng.integers(0,5))),k)
+                held = Request(a,b,c,Rounding(0 if op == 'exp' else int(rng.integers(0,5))),k)
         inp = Inputs(held,ready,rst,flush)
         o = unit.step(inp)
         if o.accepted: accepted[held.tag] = k
@@ -109,6 +123,32 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
         k += 1
     (dest/"stimulus.txt").write_text("".join(rows))
     (dest/"python.trace").write_text("\n".join(" ".join(map(str,x)) for x in expected)+"\n")
+    numba_evidence = {}
+    if name == 'bf16' or op in ('exp','rcp','sqrt','rsqrt'):
+        from zircon_asic.fast_mixed import run_network
+        from zircon_asic.evidence import implementation_hash
+        compiled_unit=FloatingPointUnit(name,op,**options)
+        overrides=shared.get('sfu_overrides',{})
+        compiled_unit._sfu_configuration = overrides.get(f'{name}.{op}',overrides.get(name))
+        network=Network().add('unit',compiled_unit).sink('unit')
+        stimulus=np.asarray([list(map(int,r.split())) for r in rows],np.uint64)
+        inputs=np.ascontiguousarray(stimulus[:,2:8,None].transpose(0,2,1))
+        got=run_network(network,k,ready=stimulus[:,8].astype(bool),reset=stimulus[:,0].astype(bool),
+                        flush=stimulus[:,1].astype(bool),trace=True,_stimulus=inputs)
+        compiled_trace=[]
+        for i,row in enumerate(got):
+            o=row['unit'];r=o.response or Response(0)
+            actual=[int(o.in_ready),int(o.out_valid),r.bits,int(r.flags),r.tag,r.remainder,
+                    sum(int(v)<<j for j,v in enumerate(o.stage_valid)),o.occupancy,
+                    (o.stage_valid.index(True)+1 if any(o.stage_valid) else 0) if unit.timing.kind=='iterative' else 0,o.iteration]
+            compiled_trace.append(actual)
+            if actual != expected[i]:
+                failure=dict(seed=seed,cycle=i,python=expected[i],numba=actual,stimulus=rows[i].strip())
+                (dest/'numba-failure.json').write_text(json.dumps(failure,indent=2)+'\n')
+                raise AssertionError(failure)
+        assert compiled_unit.stats==unit.stats
+        (dest/'numba.trace').write_text('\n'.join(' '.join(map(str,r)) for r in compiled_trace)+'\n')
+        numba_evidence=dict(numba_cycle_discrepancy=0,implementation_hash=implementation_hash())
     run([str(exe),str(dest/"stimulus.txt"),str(dest/"rtl.trace")],dest/"run.log")
     actual = [[int(v) for v in line.split()] for line in (dest/"rtl.trace").read_text().splitlines()]
     assert len(actual) == len(expected)
@@ -123,7 +163,8 @@ def validate(name, op, signed=True, cycles=12000, seed=751, regenerate=False, ex
             for filename in ["Unit.sv","manifest.json","build-id.json","failure.json","stimulus.txt","python.trace","rtl.trace"]:
                 if (dest/filename).exists():shutil.copyfile(dest/filename,archive/filename)
             raise AssertionError(f"{name}.{op} signed={signed}: {failure}; traces in {dest}")
-    result = dict(format=name,operation=op,signed=signed,seed=seed,cycles=k,contract_hash=contract_hash(),**build_id,
+    shared_hash=hashlib.sha256(json.dumps(shared,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    result = dict(format=name,operation=op,signed=signed,seed=seed,cycles=k,contract_hash=shared_hash,**build_id,**numba_evidence,
                   statistics=unit.stats.report(),cycle_discrepancy=0,numerical_discrepancy=0,
                   test="testfloat-backpressure-reset-flush" if vectors is not None else "exhaustive" if exhaustive else "random-backpressure-reset-flush",physical_qualification=False)
     (dest/"alignment.json").write_text(json.dumps(result,indent=2)+"\n")

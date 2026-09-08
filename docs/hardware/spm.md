@@ -108,4 +108,4 @@ python scripts/ppa_spm.py --banks 4 --ports 4
 
 对两个物理流程各自输出的目录，分别运行 `check_spm_physical.py <目录>` 和 `validate_spm_gate.py <目录>`。前者检查布线后两角时序与路由结果，后者回放综合网表；物理验证状态由这两项检查共同确定。完整命令、摘要与轨迹由 [SPM 验证记录](../../reports/SPM.md) 索引。
 
-最后运行 `scripts/collect_spm_reports.py` 汇总当前摘要匹配的证据，运行 `scripts/package_spm.py` 生成本地证据包。Python 使用 `python -m build` 构建 wheel 与 sdist；Chisel 使用 `cd hardware && sbt package` 构建 JAR。构建产物版本为 `0.2.0`。
+最后运行 `scripts/collect_spm_reports.py` 汇总当前摘要匹配的证据，运行 `scripts/package_spm.py` 生成本地证据包。Python 使用 `python -m build` 构建 wheel 与 sdist；Chisel 使用 `cd hardware && sbt package` 构建 JAR。构建产物版本为 `0.3.0`。

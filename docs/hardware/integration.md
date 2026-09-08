@@ -8,9 +8,11 @@
 
 | 输入类别 | `add` | `mul` | `fma` | `div` |
 |---|---|---|---|---|
-| `fp32`、`fp16`、`e4m3fn`、`e5m2` | `FpAdd` | `FpMul` | `FpFma` | `FpDiv` |
+| `fp32`、`fp16`、`bf16`、`e4m3fn`、`e5m2` | `FpAdd` | `FpMul` | `FpFma` | `FpDiv` |
 | `e2m1` | `Fp4Arithmetic` | `Fp4Arithmetic` | `Fp4Arithmetic` | `Fp4Div` |
 | `int8`、`int16`、`int32` | `IntAdd` | `IntMul` | 不适用 | `IntDiv` |
+
+`fp32`、`fp16`、`bf16` 还支持 `exp`、`rcp`、`rsqrt`、`sqrt`，分别生成 `FpExp`、`FpRcp`、`FpRsqrt`、`FpSqrt`。这些一元模块保留同一请求 Bundle，只使用 `a`，未使用的 `b/c` 应由集成方连接到确定值。
 
 整数模块把 `signed` 传给构造器；浮点模块忽略该参数。工厂返回 `ArithmeticModule`，所以调用方可统一访问 `io.in`、`io.out`、`io.flush` 和观察端口。
 
@@ -21,6 +23,8 @@
 `spec(name, op)` 返回 `Spec`：模块名、操作、延迟、控制类型、阶段序列和实现变体。`iterations` 由阶段中 `iterate` 的数量计算，避免在 RTL 与 Python 中维护两份独立迭代次数。
 
 默认的 `Contract.bundled()` 从 Chisel JAR 中读取 `/zircon-contract.json`。构建脚本把 Python 包内的 `src/zircon_asic/data/contract.json` 复制为该资源；因此正常发布的 Python 与 Chisel 包携带同一规范。候选配置可用 `new Contract(path)` 或 `ZIRCON_CONTRACT` 传入，但其验证状态必须重新建立。
+
+非线性算子的表、系数、阈值和逐级定点参数打包为 `/zircon-sfu.json`，与 Python 包中的 `data/sfu.json` 字节相同。每项契约通过 SHA-256 绑定该资源，硬件从对应实现配置读取参数。
 
 ## 生成 RTL
 
@@ -49,7 +53,7 @@ sbt publishLocal
 调用项目可引用：
 
 ```scala
-libraryDependencies += "org.zirconasic" %% "zircon-asic" % "0.2.0"
+libraryDependencies += "org.zirconasic" %% "zircon-asic" % "0.3.0"
 ```
 
 库使用 Scala 2.13.18、Chisel 7.15.0。`build.sbt` 已将共同契约打包为资源；使用方不需要安装 Python。生成的各个独立 `Unit.sv` 可能拥有相同的顶层模块名，因此不要直接把多个文件拼接到同一编译单元。对于多模块设计，应在自己的 Chisel 顶层内实例化 `Arithmetic`，再一次性生成 RTL。

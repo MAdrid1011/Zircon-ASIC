@@ -71,6 +71,12 @@ class FpDiv(f: Format,s: Spec) extends IterativeModule(f.width,s) {
     val correctedQ = if (radixBits == 1) q.asUInt else
       Adders.brentKung(qp.pad(sumWidth),(~qn).pad(sumWidth),sumWidth,!(rem < 0.S))(qw-1,0)
     val remainderNonzero = Mux(rem < 0.S,rem =/= negativeD,rem =/= 0.S)
+    if(f.name == "bf16") when(!meta.special && bb.sig.orR) {
+      val correctedR = Mux(rem < 0.S,rem+d,rem)
+      assert(correctedR >= 0.S && correctedR < d, "BF16 remainder is not canonical")
+      assert((correctedQ*bb.sig +& correctedR.asUInt) === (aa.sig << fractionalBits),
+        "BF16 quotient/remainder identity failed")
+    }
     mag.mag := (correctedQ << 1) | remainderNonzero.asUInt
     mag.exp := exp-1.S; mag.sign := sign; mag.meta := meta
   }

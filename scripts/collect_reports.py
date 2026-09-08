@@ -8,6 +8,7 @@ sys.path.insert(0,str(ROOT/"src"))
 from zircon_asic import contract,contract_hash
 from zircon_asic.evidence import implementation_hash
 from report_paths import portable
+from collect_sfu_reports import evidence as sfu_evidence, gate_evidence as sfu_gate, OPERATIONS as UNARY
 
 
 def read(path):
@@ -27,8 +28,28 @@ def complete_exhaustive(records, name, op, backend, sha=None):
     return cursor==end
 
 
+def bf16_evidence(op,sha,current,implementation):
+    directory=ROOT/f'build/rtl/bf16_{op}'
+    path=directory/'bf16-numerical.json';campaign=directory/'bf16-campaign.json'
+    numeric=read(path) if path.exists() else {}
+    runs=read(campaign) if campaign.exists() else []
+    corepath=ROOT/'build/bf16/cores/validation.json';core=read(corepath) if corepath.exists() else {}
+    numerical=(numeric.get('contract_hash')==current and numeric.get('implementation_hash')==implementation
+       and numeric.get('rtl_sha256')==sha and numeric.get('encodings_per_operand_per_rounding')==65536
+       and numeric.get('random_per_rounding',0)>=20000 and numeric.get('rounding_modes')==5
+       and all(numeric.get(k)==0 for k in ('python_discrepancies','numba_discrepancies','rtl_discrepancies'))
+       and numeric.get('oracle_sha256')==hashlib.sha256((ROOT/'tests/rational_reference.py').read_bytes()).hexdigest())
+    if op=='mul':numerical &= (core.get('pairs')==65536 and core.get('discrepancies')==0
+       and core.get('compressor_sha256')==hashlib.sha256((ROOT/'hardware/src/main/scala/zircon/Integer.scala').read_bytes()).hexdigest())
+    valid=[r for r in runs if r.get('contract_hash')==current and r.get('implementation_hash')==implementation
+       and r.get('rtl_sha256')==sha and r.get('cycle_discrepancy')==0 and r.get('numba_cycle_discrepancy')==0]
+    cycle=all(any(r.get('seed')==s and r.get('cycles',0)>=20000 for r in valid) for s in (751,11509,2026,65537,104729))
+    cycle &= any(r.get('cycles',0)>=100000 for r in valid)
+    return numerical,cycle,dict(numerical=numeric,campaign=runs,cores=core)
+
+
 def main():
-    current=contract_hash();implementation=implementation_hash();records={};physical=[]
+    current=contract_hash();implementation=implementation_hash();records={};physical=[];bf16={};unary={}
     for p in (ROOT/"build/ppa").rglob("physical.json"):
         d=read(p);record={k:v for k,v in d.items() if k!="metrics"}
         metrics=d.get("metrics",{})
@@ -43,6 +64,14 @@ def main():
             area_um2=m.get(prefix+"__design__instance__area__stdcell"),
             setup_slack_ps=m.get(prefix+"__timing__setup__ws"),hold_slack_ps=m.get(prefix+"__timing__hold__ws"))
         record["timing_pass"]=d.get("exit_code")==0 and level!="placement-only" and all(record.get(k) is not None and record[k]>=0 for k in ("setup_slack_ps","hold_slack_ps"))
+        if d.get('unit','').split('.')[-1] in UNARY:
+            passed,evidence=sfu_gate(p);record.update(evidence)
+            record['timing_pass'] &= (level=='detailed-route' and passed)
+        elif d.get('unit','').startswith('bf16.'):
+            audit_path=p.parent/'bf16-checks.json';audit=read(audit_path) if audit_path.exists() else {}
+            record['physical_checks']=audit
+            record['timing_pass'] &= (level=='detailed-route' and audit.get('passed') is True
+                and audit.get('rtl_sha256')==d.get('rtl_sha256') and audit.get('configuration_sha256')==d.get('configuration_sha256'))
         if record.get("area_um2") is not None and record.get("latency") is not None:
             record["area_latency_um2_ns"]=record["area_um2"]*record["latency"]
         physical.append(record)
@@ -72,19 +101,28 @@ def main():
             measured=sorted(ppa,key=lambda d:(d["timing_pass"],d["evaluation_level"]=="detailed-route"),reverse=True)
             selected=measured[0] if measured else None
             numeric=bool(python_pass)
-            if name in ("e2m1","e4m3fn","e5m2"):
+            if op in UNARY:
+                verified,aligned,unary[key]=sfu_evidence(name,op,sha)
+                numeric &= verified
+            elif name in ("e2m1","e4m3fn","e5m2"):
                 numeric &= complete_exhaustive(exhaustive,name,op,"numba") and complete_exhaustive(exhaustive,name,op,"verilator",sha)
             elif name in ("fp16","fp32"):
                 numeric &= any(t.get("format")==name and t.get("operation")==op and t.get("rtl_sha256")==sha
                                and t.get("numerical_discrepancy")==0 and t.get("cycle_discrepancy")==0 for t in testfloat)
             cycle=bool(matches);timing=bool(selected and selected["timing_pass"])
+            if op in UNARY:cycle &= aligned
+            elif name=='bf16':
+                verified,aligned,bf16[op]=bf16_evidence(op,sha,current,implementation)
+                numeric &= verified;cycle &= aligned
             status="dual-verified" if numeric and cycle and timing else "cycle-verified" if numeric and cycle else "unqualified"
             records[record_key]=dict(status=status,qualified=status=="dual-verified",numerics="passed" if numeric else "not_currently_verified",
                 cycle_alignment="passed" if cycle else "not_currently_verified",asap7_1ghz="passed" if timing else "not_qualified",
                 latency=spec["latency"],initiation_interval=1 if spec["kind"]=="elastic" else spec["latency"],
                 rtl_sha256=sha,physical=selected)
     report=dict(contract_hash=current,implementation_hash=implementation,units=records,python=python,
-                alignment=alignments,testfloat=testfloat,exhaustive=exhaustive,physical=physical)
+                alignment=alignments,testfloat=testfloat,exhaustive=exhaustive,physical=physical,bf16=bf16,unary=unary)
+    bf16_benchmark=ROOT/'build/bf16/benchmark.json'
+    if bf16_benchmark.exists():report['bf16_benchmark']=read(bf16_benchmark)
     benchmark=ROOT/"build/benchmark.json"
     if benchmark.exists():report["benchmark"]=read(benchmark)
     dest=ROOT/"reports";dest.mkdir(exist_ok=True)
@@ -102,6 +140,8 @@ def main():
     lines += ["", "候选测量保存在 `validation.json` 的 `physical` 字段。结构选择在正确性、时序和吞吐约束下比较面积×延迟；差异不足 5% 时优先较小面积。", ""]
     (dest/"CONFIGURATIONS.md").write_text("\n".join(lines))
     print(f"Wrote {dest}: {sum(r['qualified'] for r in records.values())}/{len(records)} dual-verified configurations")
+    from collect_sfu_reports import main as collect_sfu
+    collect_sfu()
 
 
 if __name__=="__main__":main()

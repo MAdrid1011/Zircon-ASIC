@@ -10,6 +10,9 @@ object Generate {
   val name = args(0); val op = args(1); val out = Path.of(args(2)).toAbsolutePath
   val signed = args.length < 4 || args(3) != "unsigned"
   val contract = sys.env.get("ZIRCON_CONTRACT").map(p => new Contract(Path.of(p))).getOrElse(Contract.bundled())
+  generate(name,op,out,signed,contract)
+ }
+ def generate(name: String,op: String,out: Path,signed: Boolean,contract: Contract): Unit = {
   val s = contract.spec(name,op)
   def module(): RawModule = Arithmetic(name,op,signed,contract)
   Files.createDirectories(out)
@@ -18,6 +21,16 @@ object Generate {
   val hash = java.security.MessageDigest.getInstance("SHA-256").digest(sv.getBytes(java.nio.charset.StandardCharsets.UTF_8)).map(b => f"${b & 255}%02x").mkString
   Files.writeString(out.resolve("manifest.json"),ujson.write(ujson.Obj("format"->name,"operation"->op,"signed"->signed,"latency"->s.latency,"kind"->s.kind,"variant"->s.variant,"phases"->ujson.Arr.from(s.phases),"contract"->contract.json,"rtl_sha256"->hash,"qualification"->"unqualified"),indent=2))
 }
+}
+
+object GenerateUnaryCandidates {
+ def main(args: Array[String]): Unit = {
+  val index=ujson.read(Files.readString(Path.of(args(0))))
+  for(v <- index.arr) {
+    val out=Path.of(v("directory").str).toAbsolutePath
+    Generate.generate(v("format").str,v("operation").str,out,true,new Contract(out.resolve("contract.json")))
+  }
+ }
 }
 
 object GenerateAll {

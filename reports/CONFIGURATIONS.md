@@ -1,6 +1,6 @@
 # 实测配置清单
 
-共同契约 SHA-256：`5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320`。
+共同契约 SHA-256：`9208c9d6f1f231938419555263f2c0417528b0fa3d7e65db46976f49dc985ffa`。
 
 典型角 TC，ASAP7 RVT，0.70 V，0 °C，1 GHz；IO 预算 200 ps，时钟不确定度 50 ps。
 
@@ -46,5 +46,21 @@
 | int32.mul.unsigned | 3 / 1 | passed | passed | 921.85 | 47.09 / 4.25 | global-route-estimated-RC | dual-verified |
 | int32.div | 21 / 21 | passed | passed | 766.296 | 57.38 / 3.27 | global-route-estimated-RC | dual-verified |
 | int32.div.unsigned | 21 / 21 | passed | passed | 706.372 | 64.05 / 2.95 | global-route-estimated-RC | dual-verified |
+| bf16.add | 6 / 1 | passed | passed | 409.625 | 191.33 / 1.29 | detailed-route | dual-verified |
+| bf16.mul | 4 / 1 | passed | passed | 292.912 | 78.83 / 1.01 | detailed-route | dual-verified |
+| bf16.fma | 8 / 1 | passed | passed | 673.596 | 67.73 / 0.73 | detailed-route | dual-verified |
+| bf16.div | 16 / 16 | passed | passed | 350.532 | 154.03 / 1.17 | detailed-route | dual-verified |
+| fp32.exp | 17 / 1 | passed | passed | 2898.8 | 70.83 / 5.19 | detailed-route | dual-verified |
+| fp32.rcp | 20 / 1 | passed | passed | 2140.99 | 42.97 / 1.01 | detailed-route | dual-verified |
+| fp32.sqrt | 20 / 1 | passed | passed | 2165.23 | 54.54 / 0.78 | detailed-route | dual-verified |
+| fp32.rsqrt | 34 / 1 | passed | passed | 8263.71 | 38.37 / 0.71 | detailed-route | dual-verified |
+| fp16.exp | 10 / 1 | passed | passed | 996.178 | 34.12 / 1.18 | detailed-route | dual-verified |
+| fp16.rcp | 5 / 1 | passed | passed | 411.666 | 276.80 / 1.28 | detailed-route | dual-verified |
+| fp16.sqrt | 5 / 1 | passed | passed | 530.304 | 237.14 / 0.68 | detailed-route | dual-verified |
+| fp16.rsqrt | 5 / 1 | passed | passed | 512.691 | 168.59 / 1.02 | detailed-route | dual-verified |
+| bf16.exp | 10 / 1 | passed | passed | 911.512 | 37.51 / 0.93 | detailed-route | dual-verified |
+| bf16.rcp | 5 / 1 | passed | passed | 290.404 | 183.09 / 1.12 | detailed-route | dual-verified |
+| bf16.sqrt | 5 / 1 | passed | passed | 300.581 | 258.09 / 0.67 | detailed-route | dual-verified |
+| bf16.rsqrt | 5 / 1 | passed | passed | 309.898 | 181.96 / 1.35 | detailed-route | dual-verified |
 
 候选测量保存在 `validation.json` 的 `physical` 字段。结构选择在正确性、时序和吞吐约束下比较面积×延迟；差异不足 5% 时优先较小面积。

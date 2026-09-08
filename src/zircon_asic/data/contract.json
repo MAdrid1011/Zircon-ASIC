@@ -38,6 +38,13 @@
       "fraction": 1,
       "bias": 1,
       "encoding": "finite"
+    },
+    "bf16": {
+      "width": 16,
+      "exponent": 8,
+      "fraction": 7,
+      "bias": 127,
+      "encoding": "ieee"
     }
   },
   "units": {
@@ -598,6 +605,609 @@
       "capacity": 1,
       "early_out": false,
       "initial_latency": 20
+    },
+    "bf16.add": {
+      "latency": 6,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "align",
+        "add",
+        "round_normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "single_path",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "bf16.mul": {
+      "latency": 4,
+      "kind": "elastic",
+      "phases": [
+        "compress",
+        "product_normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "direct_dadda",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "bf16.fma": {
+      "latency": 8,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "compress",
+        "product_compress",
+        "align_compress",
+        "add",
+        "round_normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "fused_compressor",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    },
+    "bf16.div": {
+      "latency": 16,
+      "kind": "iterative",
+      "phases": [
+        "decode",
+        "normalize",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "iterate",
+        "correct",
+        "round_normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "radix2_nonrestoring",
+      "iterations": 10,
+      "radix": 2,
+      "capacity": 1,
+      "early_out": false,
+      "stage_capacity": [
+        1
+      ]
+    },
+    "fp32.exp": {
+      "latency": 17,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "constant_product_compress_0",
+        "constant_product",
+        "range_shift",
+        "range_reduce",
+        "lookup",
+        "horner_0_compress_0",
+        "horner_0",
+        "horner_1_compress_0",
+        "horner_1",
+        "horner_2_compress_0",
+        "horner_2",
+        "table_product_compress_0",
+        "table_product",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "table_polynomial",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "faithful",
+      "rounding": [
+        "RNE"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp32.rcp": {
+      "latency": 20,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "divisor",
+        "root_0",
+        "root_1",
+        "root_2",
+        "root_3",
+        "root_4",
+        "root_5",
+        "root_6",
+        "root_7",
+        "root_8",
+        "root_9",
+        "root_10",
+        "root_11",
+        "root_12",
+        "root_13",
+        "root_correct",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "reciprocal_digits",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp32.sqrt": {
+      "latency": 20,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "radicand",
+        "root_0",
+        "root_1",
+        "root_2",
+        "root_3",
+        "root_4",
+        "root_5",
+        "root_6",
+        "root_7",
+        "root_8",
+        "root_9",
+        "root_10",
+        "root_11",
+        "root_12",
+        "root_13",
+        "root_correct",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "nonrestoring",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp32.rsqrt": {
+      "latency": 34,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "seed",
+        "square_0_compress_0",
+        "square_0_compress_1",
+        "square_0",
+        "my_0_compress_0",
+        "my_0_compress_1",
+        "my_0",
+        "update_0_compress_0",
+        "update_0_compress_1",
+        "update_0",
+        "square_1_compress_0",
+        "square_1_compress_1",
+        "square_1",
+        "my_1_compress_0",
+        "my_1_compress_1",
+        "my_1",
+        "update_1_compress_0",
+        "update_1_compress_1",
+        "update_1",
+        "candidate",
+        "candidate_square_compress_0",
+        "candidate_square_compress_1",
+        "candidate_square",
+        "residual_compress_0",
+        "residual_compress_1",
+        "residual",
+        "delta_compress_0",
+        "delta_compress_1",
+        "delta",
+        "correct",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "newton_residual",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp16.exp": {
+      "latency": 10,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "constant_product",
+        "range_reduce",
+        "lookup",
+        "horner_0",
+        "horner_1",
+        "table_product",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "table_polynomial",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "faithful",
+      "rounding": [
+        "RNE"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp16.rcp": {
+      "latency": 5,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "lookup",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "normalized_table",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp16.sqrt": {
+      "latency": 5,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "lookup",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "normalized_table",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "fp16.rsqrt": {
+      "latency": 5,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "lookup",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "normalized_table",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "bf16.exp": {
+      "latency": 10,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "constant_product",
+        "range_reduce",
+        "lookup",
+        "horner_0",
+        "horner_1",
+        "table_product",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "table_polynomial",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "faithful",
+      "rounding": [
+        "RNE"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "bf16.rcp": {
+      "latency": 5,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "lookup",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "normalized_table",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "bf16.sqrt": {
+      "latency": 5,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "lookup",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "normalized_table",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
+    },
+    "bf16.rsqrt": {
+      "latency": 5,
+      "kind": "elastic",
+      "phases": [
+        "decode",
+        "lookup",
+        "normalize",
+        "grs",
+        "round"
+      ],
+      "variant": "normalized_table",
+      "stage_capacity": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "arity": 1,
+      "accuracy": "correctly-rounded",
+      "rounding": [
+        "RNE",
+        "RTZ",
+        "RDN",
+        "RUP",
+        "RMM"
+      ],
+      "resources": "sfu.json",
+      "resources_sha256": "3797473232beb0d9cc02baf841ccb6cbb796a06da8cfd44ac7dba761cfbbf05a"
     }
   },
   "cycle": {

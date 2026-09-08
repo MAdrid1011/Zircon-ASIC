@@ -3,6 +3,8 @@ import numpy as np
 from numba import njit
 from numba.typed import List
 from .fast import _float_one, _int_one
+from .unary import OPERATIONS
+from .fast_unary import kernel_resources
 from .fast_spm import access
 from .spm import SPM, MemoryRequest, MemoryResponse, MemoryStatus
 from .types import Response, Flags, Outputs
@@ -11,7 +13,7 @@ from .network import FIFO, Field
 
 @njit(cache=True)
 def _run(cfg, owners, ends, upstream, downstream, mapping, constants, source, lengths, position, sinks,
-         valid, data, phase, heads, counts, stats, extra, rr, memories, initialized, ready, resets, flushes, tracing, stimulus):
+         valid, data, phase, heads, counts, stats, extra, rr, memories, initialized, ready, resets, flushes, tracing, stimulus, sfu):
     cycles,n=ready.shape
     trace=np.zeros((cycles if tracing else 0,n,10),np.uint64)
     events=np.zeros((cycles*int(np.sum(sinks)),6),np.uint64);nevents=0
@@ -78,6 +80,16 @@ def _run(cfg, owners, ends, upstream, downstream, mapping, constants, source, le
                     for i in range(lat-1,-1,-1):can=not valid[j,i] or can
                     ir[j]=can
                 ir[j] &= not cancel
+        for j in range(n):
+            if inv[j] and cfg[j,9] >= 4:
+                width = cfg[j,3]
+                for field in range(3):
+                    if req[j,field] >= np.uint64(1) << np.uint64(width):
+                        raise ValueError("unary operand exceeds format width")
+                if req[j,3] > 4 or (cfg[j,9] == 4 and req[j,3] != 0):
+                    raise ValueError("unsupported unary rounding mode")
+                if req[j,4] >= np.uint64(1) << np.uint64(32):
+                    raise ValueError("tag must fit 32 unsigned bits")
         # Preflight reads before any memory mutation in this cycle.
         for j in range(n):
             if cfg[j,0]==3 and inv[j] and ir[j] and req[j,1]==0:
@@ -138,7 +150,7 @@ def _run(cfg, owners, ends, upstream, downstream, mapping, constants, source, le
             if accept:
                 width,eb,fb,bias,encoding,signed,op=cfg[j,3:10]
                 if width==-1:bits,flags,rem=req[j,0],np.int64(req[j,1]),req[j,2]
-                elif eb:bits,flags=_float_one(req[j,0],req[j,1],req[j,2],np.int64(req[j,3]),op,width,eb,fb,bias,encoding,x,y,z)
+                elif eb:bits,flags=_float_one(req[j,0],req[j,1],req[j,2],np.int64(req[j,3]),op,width,eb,fb,bias,encoding,x,y,z,sfu)
                 else:bits,flags,rem=_int_one(req[j,0],req[j,1],op,width,signed!=0)
             if kind==0:
                 can=ore[j]
@@ -161,7 +173,7 @@ def _run(cfg, owners, ends, upstream, downstream, mapping, constants, source, le
     return trace,events[:nevents]
 
 
-def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimulus=None):
+def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimulus=None,_raw_trace=False,_compile_only=False):
     names=net._order();keys=[];units=[];owners=[];ends=[]
     for name in names:
         owners.append(len(keys));u=net.units[name]
@@ -203,7 +215,7 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimu
                 elif hasattr(u,'format'):
                     f=u.format;cfg[j,3:9]=f.width,f.exponent,f.fraction,f.bias,{'ieee':0,'finite_nan':1,'finite':2}[f.encoding],0
                 else:cfg[j,3],cfg[j,8]=u.width,u.signed
-                if not getattr(u,'transport',False):cfg[j,9]={'add':0,'mul':1,'fma':2,'div':3}[u.op]
+                if not getattr(u,'transport',False):cfg[j,9]=OPERATIONS[u.op]
                 slots=list(u._queue) if kind==2 else u._slots
                 for i,r in enumerate(slots):
                     if r is not None:valid[j,i]=True;data[j,i]=r.bits,int(r.flags),r.tag,r.remainder
@@ -214,7 +226,11 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimu
                 for i,r in enumerate(pending):
                     if isinstance(u,SPM):
                         u._validate(r);source[j,i]=r.address,r.write,r.data,(1<<u.word_bytes)-1 if r.mask is None else r.mask,r.tag
-                    else:source[j,i]=r.a,r.b,r.c,r.rounding,r.tag
+                    else:
+                        if getattr(u,"arity",2)==1:
+                            from .unary import validate_request
+                            validate_request(u.format,u.op,r)
+                        source[j,i]=r.a,r.b,r.c,r.rounding,r.tag
     for e in net.connections:
         a,b=lookup[net._key(e.source,e.source_port)],lookup[net._key(e.destination,e.destination_port)]
         up[b]=a;down[a]=b
@@ -226,7 +242,7 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimu
             fields=['address','write','data','mask','tag'] if cfg[b,0]==3 else ['a','b','c','rounding','tag']
             constants[b,3]=(1<<(cfg[b,3]//8))-1 if cfg[b,0]==3 else 0
             response={'bits':0,'status':1,'tag':2,'write':3} if cfg[a,0]==3 else {'bits':0,'flags':1,'tag':2,'remainder':3}
-            if fields[0] not in e.mapping or (cfg[b,0]!=3 and 'b' not in e.mapping):raise ValueError('missing required request mapping field')
+            if fields[0] not in e.mapping:raise ValueError('missing required request mapping field')
             for f,v in e.mapping.items():
                 i=fields.index(f)
                 if isinstance(v,Field):mapping[b,i]=response[v.name]
@@ -240,9 +256,15 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimu
     flushes=np.zeros(cycles,np.bool_) if flush is None else np.asarray(flush,np.bool_)
     if resets.shape!=(cycles,) or flushes.shape!=(cycles,):raise ValueError('reset/flush must have one entry per cycle')
     sink=np.array([k in net.sinks for k in keys],np.bool_)
-    traces,events=_run(cfg,np.array(owners),np.array(ends),up,down,mapping,constants,source,lengths,position,sink,
+    arguments=(cfg,np.array(owners),np.array(ends),up,down,mapping,constants,source,lengths,position,sink,
         valid,data,phase,heads,counts,stats,extra,rr,memories,initialized,pattern,resets,flushes,trace,
-        np.empty((0,0,0),np.uint64) if _stimulus is None else _stimulus)
+        np.empty((0,0,0),np.uint64) if _stimulus is None else _stimulus, kernel_resources(net.units.values()))
+    if _compile_only:
+        from numba import typeof
+        import time
+        start=time.perf_counter();_run.compile(tuple(typeof(v) for v in arguments))
+        return time.perf_counter()-start
+    traces,events=_run(*arguments)
     def response(j,row):
         b,f,t,r=map(int,row)
         return MemoryResponse(b,t,bool(r),MemoryStatus(f)) if cfg[j,0]==3 else Response(b,Flags(f),t,r)
@@ -274,6 +296,7 @@ def run_network(net,cycles,*,ready=True,reset=None,flush=None,trace=False,_stimu
         u.cycle+=cycles
     net.cycle+=cycles
     if not trace:return {k:s.received for k,s in net.sinks.items()}
+    if _raw_trace:return keys,traces
     result=[]
     for row in traces:
         outputs={}

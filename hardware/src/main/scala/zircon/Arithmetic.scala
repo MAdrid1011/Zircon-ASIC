@@ -18,8 +18,12 @@ object Arithmetic {
       } else op match {
         case "add" => new FpAdd(f,s)
         case "mul" => new FpMul(f,s)
-        case "fma" => new FpFma(f,s)
+        case "fma" => if(name == "bf16" && s.variant == "unrounded_product") new BFloatProductFma(f,s) else new FpFma(f,s)
         case "div" => new FpDiv(f,s)
+        case "exp" => new FpExp(f,s)
+        case "rcp" => new FpRcp(f,s)
+        case "sqrt" => new FpSqrt(f,s)
+        case "rsqrt" => new FpRsqrt(f,s)
       }
     }
   }

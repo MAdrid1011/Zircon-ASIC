@@ -1,6 +1,6 @@
 {
-  "contract_hash": "5665fcf966d1484782a42f648864ee18044bb5620b63da9ea196492f092c4320",
-  "implementation_hash": "5daf84cebf75cee7485c3be876565f6537aa8683762844790b28d69323a05139",
+  "contract_hash": "9208c9d6f1f231938419555263f2c0417528b0fa3d7e65db46976f49dc985ffa",
+  "implementation_hash": "4b76ba0c5a9284c0e75278f3ee90bb012fe19ea7c0dc9c7b77e3f8fefd05503e",
   "units": {
     "fp32.add": {
       "status": "dual-verified",
@@ -1389,6 +1389,1850 @@
         "hold_slack_ps": 2.95071,
         "timing_pass": true,
         "area_latency_um2_ns": 14833.812
+      }
+    },
+    "bf16.add": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 6,
+      "initiation_interval": 1,
+      "rtl_sha256": "960a033aa3141b7c19ef1e3cde723c9c17b4d921fcc920101dafbc23170088ab",
+      "physical": {
+        "unit": "bf16.add",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "960a033aa3141b7c19ef1e3cde723c9c17b4d921fcc920101dafbc23170088ab",
+        "source_snapshot": true,
+        "latency": 6,
+        "configuration_sha256": "557c960c3940025f162457e55fd6f79bb08ee1d461c066736037eeb41946b04d",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 153.5353386250208,
+        "source": "build/ppa/bf16_add_TC/960a033aa314/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 409.625,
+        "setup_slack_ps": 191.329,
+        "hold_slack_ps": 1.29198,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "960a033aa3141b7c19ef1e3cde723c9c17b4d921fcc920101dafbc23170088ab",
+          "configuration_sha256": "557c960c3940025f162457e55fd6f79bb08ee1d461c066736037eeb41946b04d",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            191.329391,
+            1.29198
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "78071e3755abab194721a1310c54618e0805fd375bf6399b61d4a7d436e8b3a2",
+            "6_final.spef": "db8de90f41783b6b8fba4a0b4472418ac0ea52cffbc66be53f5b2887adda0fb0",
+            "6_final.sdc": "ea58dc72061de698751ef7d3e636193d7cd3c1b35acc097d9ac0668b047d7b57",
+            "6_final.v": "230f2721572ccc414df59e2140bc0efee9d95a156c21ec0cd6477ca2faf74425"
+          },
+          "passed": true
+        },
+        "area_latency_um2_ns": 2457.75
+      }
+    },
+    "bf16.mul": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 4,
+      "initiation_interval": 1,
+      "rtl_sha256": "8438fc1cc73794f5d1b2c5fc5ebd94900ac275968f7220474548c38424f680d7",
+      "physical": {
+        "unit": "bf16.mul",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "8438fc1cc73794f5d1b2c5fc5ebd94900ac275968f7220474548c38424f680d7",
+        "source_snapshot": true,
+        "latency": 4,
+        "configuration_sha256": "2c8c360d145ce8c78f877549d8b292c66bd1570a3271c7fb4bf2bca1bec7ac8d",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 123.07675483397907,
+        "source": "build/ppa/bf16_mul_TC/8438fc1cc737/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 292.912,
+        "setup_slack_ps": 78.8348,
+        "hold_slack_ps": 1.00565,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "8438fc1cc73794f5d1b2c5fc5ebd94900ac275968f7220474548c38424f680d7",
+          "configuration_sha256": "2c8c360d145ce8c78f877549d8b292c66bd1570a3271c7fb4bf2bca1bec7ac8d",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            78.834831,
+            1.005654
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "29a23558dba43b4f59330add8cb59f976450da887a84b747576415bff9822df9",
+            "6_final.spef": "7c73cea8a9d1db21d5b0b1048a0f8c1ba6353e6f9c5ecd6ce1d92aa5616a7b52",
+            "6_final.sdc": "c7a408360b68cdbb0552a2f204d7e391d5267b2238211ee6e79e3c720f0eec71",
+            "6_final.v": "624657388488fafa39c4e1e51c2222dd044956c6bfdd1f97bd9265c15dc376cf"
+          },
+          "passed": true
+        },
+        "area_latency_um2_ns": 1171.648
+      }
+    },
+    "bf16.fma": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 8,
+      "initiation_interval": 1,
+      "rtl_sha256": "c08ec2d6b576268094914db4d0f4d9ddfd1ec65890f5d375bb5f38c336278040",
+      "physical": {
+        "unit": "bf16.fma",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "c08ec2d6b576268094914db4d0f4d9ddfd1ec65890f5d375bb5f38c336278040",
+        "source_snapshot": true,
+        "latency": 8,
+        "configuration_sha256": "5327093421db1cf5782a27809a7728338510d0a4ed792c9556a3232314fdb6a8",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 206.2003121249727,
+        "source": "build/ppa/bf16_fma_TC/c08ec2d6b576/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 673.596,
+        "setup_slack_ps": 67.7262,
+        "hold_slack_ps": 0.731776,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "c08ec2d6b576268094914db4d0f4d9ddfd1ec65890f5d375bb5f38c336278040",
+          "configuration_sha256": "5327093421db1cf5782a27809a7728338510d0a4ed792c9556a3232314fdb6a8",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            67.726158,
+            0.731776
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "ce7ca2e5e562878819c0ec55f9fd2fde27fef0f922877fcf1136c13b601833ff",
+            "6_final.spef": "63e1ebd9d688952ce16d810b3494dfce878ff5b978b797770cbdfe0ab578363a",
+            "6_final.sdc": "3757f495a5f9f888ff7461bd0a30fd285b221a8952d4d2cfb2da32a3c535afe1",
+            "6_final.v": "fdb73e6b54de03ae590e17f17e969b74848224ac06f80b3f2bd7f2a972b510c4"
+          },
+          "passed": true
+        },
+        "area_latency_um2_ns": 5388.768
+      }
+    },
+    "bf16.div": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 16,
+      "initiation_interval": 16,
+      "rtl_sha256": "0e99104c4a901dba6d4b8d4e5d8601d54e14002628e2d0faf86d75957d750cb0",
+      "physical": {
+        "unit": "bf16.div",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "0e99104c4a901dba6d4b8d4e5d8601d54e14002628e2d0faf86d75957d750cb0",
+        "source_snapshot": true,
+        "latency": 16,
+        "configuration_sha256": "c06029ac4fb66cc151790963fa109ba4fe8c5e6b12f04153e97c0a44d2552385",
+        "initiation_interval": 16,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 128.6002045830246,
+        "source": "build/ppa/bf16_div_TC/0e99104c4a90/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 350.532,
+        "setup_slack_ps": 154.026,
+        "hold_slack_ps": 1.16683,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "0e99104c4a901dba6d4b8d4e5d8601d54e14002628e2d0faf86d75957d750cb0",
+          "configuration_sha256": "c06029ac4fb66cc151790963fa109ba4fe8c5e6b12f04153e97c0a44d2552385",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            154.026352,
+            1.166831
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "295b8f5087dd0c61925980b6559a21d17032bb5a960233fe18a2e69b69571fcf",
+            "6_final.spef": "a6a95bfdd5e897ed69f0aa7cd8373c124cbf6c10755834fb45677a5fe79ab7be",
+            "6_final.sdc": "189dcc3e5ab379fba52560e76aa294e4b401d501766e1fdeb1ec739bb9c76859",
+            "6_final.v": "e7bdc10bad3763bbb92036f509244f779091961b2c4f31f95026b17d09dfb019"
+          },
+          "passed": true
+        },
+        "area_latency_um2_ns": 5608.512
+      }
+    },
+    "fp32.exp": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 17,
+      "initiation_interval": 1,
+      "rtl_sha256": "e9be5e953b200df359f9fc114bbd7d8a1bbf6a383fa288da1eb96c5aa17b30de",
+      "physical": {
+        "unit": "fp32.exp",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "e9be5e953b200df359f9fc114bbd7d8a1bbf6a383fa288da1eb96c5aa17b30de",
+        "source_snapshot": true,
+        "latency": 17,
+        "configuration_sha256": "5146402c6e06911ccc80a90d921b83f171f20f2e53a16867b5e7990fbe317f7a",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 30,
+        "hold_repair_margin_ps": 10,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 1079.5172537089675,
+        "source": "build/ppa/fp32_exp_TC/e9be5e953b20_sm30_hm10/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 2898.8,
+        "setup_slack_ps": 70.833,
+        "hold_slack_ps": 5.18649,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "e9be5e953b200df359f9fc114bbd7d8a1bbf6a383fa288da1eb96c5aa17b30de",
+          "configuration_sha256": "5146402c6e06911ccc80a90d921b83f171f20f2e53a16867b5e7990fbe317f7a",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            70.833008,
+            5.18649
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "9c495ddde681e0ba13a18fd136c1335756ed5643d22ebee4e8cdca2cef5f4029",
+            "6_final.spef": "5917af5d5c77a2d5b97675e9bc60da2940519c1bafb2128e006d69c8298848a8",
+            "6_final.sdc": "197340f6c26497b3e69f674a8403bd03d3bf03d62655d787c21865e7bc9d5123",
+            "6_final.v": "60e62afb50ed36780f5f9ade52924f2d589073b145440c0de060c88744503cf4"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "e9be5e953b200df359f9fc114bbd7d8a1bbf6a383fa288da1eb96c5aa17b30de",
+          "netlist_sha256": "60e62afb50ed36780f5f9ade52924f2d589073b145440c0de060c88744503cf4",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "62f08f936d4c236fe54412cfbac3c4a0be7431939358044894bcecd7741b4611",
+              "gate_trace_sha256": "34ef321cabdf83ea0e38851aac60d1b0397e9be1c6a898766435ed803ed4d29c"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "26ca6764789ad589a9dcf8aef0d5f93126a311089540a680ed1bbb5ec04a0f11",
+              "gate_trace_sha256": "3aca9ae485acadaa42354ffdf8a548b41fc5beb1478305bfe868de6c71f7f056"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "b06877139ea54c1bc2c407fb5244d40070eb14bef2aea7f202512afe20d76f65",
+              "gate_trace_sha256": "2c8fc8d0278fa1e406f292af2233d768e75d000a7f7970ef5b52101f0168e406"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "317b978780c3eb7329e6b71aa7db8a4f52c5d86168306ec30e46fa4183c495a4",
+              "gate_trace_sha256": "28780190e3ed5f08b3b1eb936085cc48d713655953b7f23c867e13e9967b3fa2"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "d87305c19ac8bfb3acc1dfd1525ec5f7afc1c1fa3fe2248ae3ff94b65296373e",
+              "gate_trace_sha256": "f4eeb6c76ba8f6a4eb5e7957b192434309d006cc550d02b86ae48ac954cdd5de"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "5c3ac765508ce093a45d5b69ce5faa17eea4cc9eb3ac24f63c42cf077a4c261b",
+              "gate_trace_sha256": "1d13b68fffa70863717cbc8a3e82952543dfb802fa01b3f5e70f8c37a2f64272"
+            }
+          ],
+          "numerical": {
+            "cases": 1050932,
+            "vectors_sha256": "5612f6f9d94bb6d591ba49d06850df0493029d8c8fe7fd0f10d9626331c021b7",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 49279.600000000006
+      }
+    },
+    "fp32.rcp": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 20,
+      "initiation_interval": 1,
+      "rtl_sha256": "0e87d2e223d1cc4b20b2d2963036d49f9ec13840650d1959c8d99b6b8aa6be11",
+      "physical": {
+        "unit": "fp32.rcp",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "0e87d2e223d1cc4b20b2d2963036d49f9ec13840650d1959c8d99b6b8aa6be11",
+        "source_snapshot": true,
+        "latency": 20,
+        "configuration_sha256": "eed45c6524ae4038285e50165621e523450db5803de593aca48ff0d4ecb9e289",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 458.22986187500646,
+        "source": "build/ppa/fp32_rcp_TC/0e87d2e223d1/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 2140.99,
+        "setup_slack_ps": 42.9681,
+        "hold_slack_ps": 1.01098,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "0e87d2e223d1cc4b20b2d2963036d49f9ec13840650d1959c8d99b6b8aa6be11",
+          "configuration_sha256": "eed45c6524ae4038285e50165621e523450db5803de593aca48ff0d4ecb9e289",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            42.968075,
+            1.010983
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "14c6b2d4c91c3565688b33e4c3660441726c125d8c67aa27ef208871e580303f",
+            "6_final.spef": "24600f67be398d9091b30407217d5f4966ef028cf0e51455b70c48778c8b14e9",
+            "6_final.sdc": "51ba3b6b7ad1ce45d821981ca0cfb13416277d251832f12808d57c5240b04333",
+            "6_final.v": "0176335b87e1d9a5cc3bed5621af1d18876d05fafa759c6277de51cf7b6c4d2d"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "0e87d2e223d1cc4b20b2d2963036d49f9ec13840650d1959c8d99b6b8aa6be11",
+          "netlist_sha256": "0176335b87e1d9a5cc3bed5621af1d18876d05fafa759c6277de51cf7b6c4d2d",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1fb480cef940d7c93cfee3f2342f3032ab05bc937f207e2c731ac5ddc9a315ee",
+              "gate_trace_sha256": "a0cbb83aac632f77ac98901407b028bce6d5f7e72dfd00cf3704325c6a0d7e93"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "b94bcaf6a78ecdadf470115189a71e7dc2bcf10b507d3c188ce3d32b3a9111f7",
+              "gate_trace_sha256": "0b4697073566b1c3a885c3a7d5a199e00be24fbbff0e29989dc778165a57f2a1"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "fdaa9960b3b14152c66a67dfd53ee7a4a74fddfa6ca4e11ded60ff481cde90ff",
+              "gate_trace_sha256": "aff068198c2f8c996832ce20787cf30f537e9d2c1f1c7a800de8b432ee1c8023"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "5f92bdf56b0f3d44278bdddb267ced09067480654611e5dd34882a0663238a6e",
+              "gate_trace_sha256": "5618eefd2dbf56f887e40acb41ee5e38f76bb0f837bd7360a89da41ede5d12f8"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "eb409d4fb75e14ec1b202001988ab4bfd036a2bc0e98b53fea4e1eee868afa58",
+              "gate_trace_sha256": "45a8a7a9d0b48b5a5419a5fea0da34b86e19b0837bf5fe11a1f2f23b7889562e"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "b0b8e22342792a8275d47aea9b79e1cf286863119e6a10f947252b67ac1462cf",
+              "gate_trace_sha256": "6433ade814f0f41bb4f4234fde20ef27e7214b706b0aabcf1f5b0bc4b576d9eb"
+            }
+          ],
+          "numerical": {
+            "cases": 5281060,
+            "vectors_sha256": "a30dfcdd6c7e0f4bc5f77d77083729c3a327622a5ecdf521f8c272dd715f7c0f",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 42819.799999999996
+      }
+    },
+    "fp32.sqrt": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 20,
+      "initiation_interval": 1,
+      "rtl_sha256": "acb5f97596c51d9d27eeb78f1daf93f6d096c857374826f615d88cb54002e8a5",
+      "physical": {
+        "unit": "fp32.sqrt",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "acb5f97596c51d9d27eeb78f1daf93f6d096c857374826f615d88cb54002e8a5",
+        "source_snapshot": true,
+        "latency": 20,
+        "configuration_sha256": "4d9aeab585c4ca6fd4ed76c77df0d674f0c650c96b53adcf87f1a05eddf9fd00",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 483.9796840000199,
+        "source": "build/ppa/fp32_sqrt_TC/acb5f97596c5/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 2165.23,
+        "setup_slack_ps": 54.5426,
+        "hold_slack_ps": 0.775463,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "acb5f97596c51d9d27eeb78f1daf93f6d096c857374826f615d88cb54002e8a5",
+          "configuration_sha256": "4d9aeab585c4ca6fd4ed76c77df0d674f0c650c96b53adcf87f1a05eddf9fd00",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            54.542591,
+            0.775463
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "8e478b4f5289b7ac721d659cb79a964dfc3bde5cca50166e1c8c6a388a335a62",
+            "6_final.spef": "b724277261d3ca38425ec6a94331b97d21fd96c33a1a94fc5509f938141eac75",
+            "6_final.sdc": "41c50fb4b64832d3b9d9df193ee5b39671118828eeebfd0e5b641e06f58e0f67",
+            "6_final.v": "ab0f1ea1d59ea8badf87221f326a32b61010aad94cfe8acfcbce49e6e300f4d2"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "acb5f97596c51d9d27eeb78f1daf93f6d096c857374826f615d88cb54002e8a5",
+          "netlist_sha256": "ab0f1ea1d59ea8badf87221f326a32b61010aad94cfe8acfcbce49e6e300f4d2",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1fb480cef940d7c93cfee3f2342f3032ab05bc937f207e2c731ac5ddc9a315ee",
+              "gate_trace_sha256": "40419604db3f3cd129df92e87e109de65bb57ac549e19ba875dd34f074d98713"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "b94bcaf6a78ecdadf470115189a71e7dc2bcf10b507d3c188ce3d32b3a9111f7",
+              "gate_trace_sha256": "d04b6f5ac37f8cc98b99c91684ec8c1f6c48c5ab2434e3dab3d18ee750c97c45"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "fdaa9960b3b14152c66a67dfd53ee7a4a74fddfa6ca4e11ded60ff481cde90ff",
+              "gate_trace_sha256": "e381718f3e9d3a6fdc4bc5b9f250a73e6f66fb03b60b9342b6220338ca8daeeb"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "5f92bdf56b0f3d44278bdddb267ced09067480654611e5dd34882a0663238a6e",
+              "gate_trace_sha256": "bd00fe2ec5f404dd3e4d59ff8d76b97301fda21ccc9af90a8dd9900bb1f3ff0b"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "eb409d4fb75e14ec1b202001988ab4bfd036a2bc0e98b53fea4e1eee868afa58",
+              "gate_trace_sha256": "4fdaf50a4b9229236964b297e504cd73458575cbf4a9efb1b4a1717f69639a4b"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "b0b8e22342792a8275d47aea9b79e1cf286863119e6a10f947252b67ac1462cf",
+              "gate_trace_sha256": "594e3eb19fb5e8c9685d70e69a1302f97bb4aaa578e2e47808e8d3a7266176b7"
+            }
+          ],
+          "numerical": {
+            "cases": 5276310,
+            "vectors_sha256": "ce90bd29b931a679039f599c146d5530020f26b51459c371e2dbb61e08a4bbb3",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 43304.6
+      }
+    },
+    "fp32.rsqrt": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 34,
+      "initiation_interval": 1,
+      "rtl_sha256": "42d1ec836e512bce078ee71caf306bc46c181840162bc41c54503b93980f7f0e",
+      "physical": {
+        "unit": "fp32.rsqrt",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "42d1ec836e512bce078ee71caf306bc46c181840162bc41c54503b93980f7f0e",
+        "source_snapshot": true,
+        "latency": 34,
+        "configuration_sha256": "8e37747cf355f7d023286f3e2442918747d0e10fb1eb3b03ccad995631b5b29f",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 30,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 1697.459491082991,
+        "source": "build/ppa/fp32_rsqrt_TC/42d1ec836e51_sm30/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 8263.71,
+        "setup_slack_ps": 38.3658,
+        "hold_slack_ps": 0.70971,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "42d1ec836e512bce078ee71caf306bc46c181840162bc41c54503b93980f7f0e",
+          "configuration_sha256": "8e37747cf355f7d023286f3e2442918747d0e10fb1eb3b03ccad995631b5b29f",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            38.365757,
+            0.70971
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "1c2284648e85da90f7a82d46e185065836f032c6966b22ce594900c80cebdf5d",
+            "6_final.spef": "e4d3dbbef94a0f7e3622e768e30df461b3ac1723e5358bf6ffb8648bd2f3ea93",
+            "6_final.sdc": "b4cdd8a78c92344a473cfe9a6a7657a84c9f0d192eca546711bf3d7c82f3024a",
+            "6_final.v": "19109c452c6fae0af9dfcae768af652f2897a162959ef1cb5906c26289317b46"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "42d1ec836e512bce078ee71caf306bc46c181840162bc41c54503b93980f7f0e",
+          "netlist_sha256": "19109c452c6fae0af9dfcae768af652f2897a162959ef1cb5906c26289317b46",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "7388f5484ae034c02480a2bf3fca0589855f318bc716598c873caaad6f93d4c6",
+              "gate_trace_sha256": "8a160a1b0c7290590f49cc072dbfc95773b11b22cdd0e92060471064a29968f9"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "436baf2323c86dba987e2952ad636728c8d4ae2da0ef775fd14ebd3694807fcd",
+              "gate_trace_sha256": "9e9b73297241308ac748a1532e6bc39ed8c022f4af67b3a1cd97cd2ee436254a"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "ec3b712c61fa9eea6b81b69312cf8833a91f8b58d2398c7b0fe8d26e3ca325d7",
+              "gate_trace_sha256": "4eab30fd1837bdb537f6683639f40b49fcfd319025be8b4164c7d715cc8cb51c"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "04970e635ce0bb5dcb6525e8d00a6c975fdac44e4937cada2dc45809a2991c6e",
+              "gate_trace_sha256": "25d1c3ccc0a39a404382100566c60628bf085ff6c993ab3addca4dbfb95bf2c7"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "20cb49b3fc2ffbd1890294eb456d9c0c304c29ff2452e3283a26cb6f1c7f9031",
+              "gate_trace_sha256": "7f6865a49f65fffecea70d4b230d1b465a0be6b68cc880b48825a404a1396334"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "e9b16eb0cb988be919815dece01d6dcf59828464ef3e67ac2c133655e28428b6",
+              "gate_trace_sha256": "88b374c7c45ddcb44d385be6b7975b0f12b09641199e5631bdb864222fec2e9f"
+            }
+          ],
+          "numerical": {
+            "cases": 5276120,
+            "vectors_sha256": "e7e65ebc252b578b04eca9827c2a0b37d6c3ac744409914f2428e0ab00db6695",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 280966.13999999996
+      }
+    },
+    "fp16.exp": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 10,
+      "initiation_interval": 1,
+      "rtl_sha256": "1c2e0a79a89b3fa7928e3fb892c3cf8434701329995b1b967c676ab8b9a3cde3",
+      "physical": {
+        "unit": "fp16.exp",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "1c2e0a79a89b3fa7928e3fb892c3cf8434701329995b1b967c676ab8b9a3cde3",
+        "source_snapshot": true,
+        "latency": 10,
+        "configuration_sha256": "14ccec084354d3456d434f364c2ae3c0fcd1a735616ac34e6b8218d958596688",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 30,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 271.1413834999548,
+        "source": "build/ppa/fp16_exp_TC/1c2e0a79a89b_sm30/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 996.178,
+        "setup_slack_ps": 34.1203,
+        "hold_slack_ps": 1.18142,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "1c2e0a79a89b3fa7928e3fb892c3cf8434701329995b1b967c676ab8b9a3cde3",
+          "configuration_sha256": "14ccec084354d3456d434f364c2ae3c0fcd1a735616ac34e6b8218d958596688",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            34.120262,
+            1.181416
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "9ddb5a209ff6e1be296f0255567d4bdbd80b30ec6b347656ff7d45e878173691",
+            "6_final.spef": "5d9b10d452734254ade78351f3abfd97d170651dfba4f764f758c69c6e6912ea",
+            "6_final.sdc": "263edfb7efdca88fc758693f917929be919ed3eb15e632f051d4c43df3078b74",
+            "6_final.v": "99696269eb97c9b4b190b836aefa2127fd7990ad405c4661dc0229fb741a90cd"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "1c2e0a79a89b3fa7928e3fb892c3cf8434701329995b1b967c676ab8b9a3cde3",
+          "netlist_sha256": "99696269eb97c9b4b190b836aefa2127fd7990ad405c4661dc0229fb741a90cd",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "96c98e8361f932ae654169305ba35aca260f215b83de28c64d327fe883c85deb",
+              "gate_trace_sha256": "16689836a347f5f45051508f04b1201fece38caadfc53cc8f8254dfc9ca65ea1"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1c658fdf4f20161cb936b27e93af4b9f06670ed1984265b8c581cf8dfea10c3c",
+              "gate_trace_sha256": "dd46cbd891ab7469303651d43e887caa43a1daedb394fea4d74effd301e510b0"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "f0ffd489b4c527f0e16c670f192bdb1ce5038e40c407e2135a33322e3d0c773d",
+              "gate_trace_sha256": "aea1a42596de799afd581f3ee453817305e6a45c34943676e3c73027e04c5512"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "52e477f7bcab6c3e21f073b00509ae7cfb591783191445b6a0887e5aa9cac338",
+              "gate_trace_sha256": "9c46057ade4784d6b77e42a4f354bf8fb33c30df2c8ba72d557daf14417ff8db"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "807fbaeb75873d6f068f3da16fdee9a8d0c29e66bb4b693fc6714783aab0aea8",
+              "gate_trace_sha256": "b23177861fbb4fcb64404802481aefc5ddb98655e1737090eda0af97199fee43"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "29bceb4d9534d25c3f2a411876af584e08da86e9fa372f7e2ec411891d881e05",
+              "gate_trace_sha256": "daf17e3dc1b338da3aa8301cdacd3c4dffd0687dc97da35dfb29b96f52c4fb96"
+            }
+          ],
+          "numerical": {
+            "cases": 65536,
+            "vectors_sha256": "53f132efacda47622e208bff2ef49803701fe91957cdc047e51b8443f9585db4",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 9961.78
+      }
+    },
+    "fp16.rcp": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 5,
+      "initiation_interval": 1,
+      "rtl_sha256": "444a9fd67e031b568aba6c542b461afb7ab69a920fe4254388d28efcd0a98039",
+      "physical": {
+        "unit": "fp16.rcp",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "444a9fd67e031b568aba6c542b461afb7ab69a920fe4254388d28efcd0a98039",
+        "source_snapshot": true,
+        "latency": 5,
+        "configuration_sha256": "d7c8d0f4be61e5d594ac260d9a83f2a68c35611b08bc778a9c01454c70d63404",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 573.0097432500334,
+        "source": "build/ppa/fp16_rcp_TC/444a9fd67e03/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 411.666,
+        "setup_slack_ps": 276.798,
+        "hold_slack_ps": 1.27795,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "444a9fd67e031b568aba6c542b461afb7ab69a920fe4254388d28efcd0a98039",
+          "configuration_sha256": "d7c8d0f4be61e5d594ac260d9a83f2a68c35611b08bc778a9c01454c70d63404",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            276.797699,
+            1.27795
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "592437582f3b7a55b939f61a10e2f4c793fa742aed3177a284b315fd8714e81c",
+            "6_final.spef": "604415f7ac7f93cb1c3c9cc27d8f15b35e68dace45a714c572679722df81066e",
+            "6_final.sdc": "592a71e0cbaf07f19fda4aa6323ed638215015fa6dd900aa1212b59141a2f828",
+            "6_final.v": "671bf0fb66c9ce042c8c2c498cf43b4cfddc87806c3ad08d300e791e84187bb0"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "444a9fd67e031b568aba6c542b461afb7ab69a920fe4254388d28efcd0a98039",
+          "netlist_sha256": "671bf0fb66c9ce042c8c2c498cf43b4cfddc87806c3ad08d300e791e84187bb0",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "3b581066c0be064511614b57b3c23987ea2ce4435f185944b00e3f912774edda",
+              "gate_trace_sha256": "58e07bd3a33aea9a12608df98b4a377bb4049bfed1196ef97dc5b25717275fe7"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1261d589cad62e5c23708696960089e4626bf32435c6cb295831e4b7eceda341",
+              "gate_trace_sha256": "c5c9cdce7d6d15b5a87418626144ffb3661dea3d93fd75ea28d20755e90daf3d"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c70b22b581b2a8de3fca001340d6befd741742cf5b7f91d73d5bbfb5053ff237",
+              "gate_trace_sha256": "93917df74a01fce3a26c0792c696557b926aa7853fa12c9c8d999b1998f8ec8c"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "51538eb4a6f451cb1243a119a28e352f1ee5b0fc5ebfb2769612711d3826ec89",
+              "gate_trace_sha256": "8d388c4b7c27dddfd05c96d5d03a0b1a974f17726e04f5569caa9dfbb9fa9bc7"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c785c58ffdd6636581e266f4845666b263ccdba8cf3c9e17451c313e52c57f57",
+              "gate_trace_sha256": "d7020d1bd9daa2072e9e37bd145ffa2ba1f50af8d39c63fd2e95599576811516"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "41584750e13f5dd460e3783dc0153dd567b48fd5a74e77511cd72ed963dcc1bf",
+              "gate_trace_sha256": "0e3fb91862bc3ae38b8d6f198e3e9a1b1cecbd5741241adc95b459db958af7ae"
+            }
+          ],
+          "numerical": {
+            "cases": 327680,
+            "vectors_sha256": "6f87a9abe5480811778b7939ec55489cf6b75cdc4b55e249e4345158afa21f75",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 2058.33
+      }
+    },
+    "fp16.sqrt": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 5,
+      "initiation_interval": 1,
+      "rtl_sha256": "8dd627f372d3a14ad749b249c8204a92862474a054dc398aee7802007133b6aa",
+      "physical": {
+        "unit": "fp16.sqrt",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "8dd627f372d3a14ad749b249c8204a92862474a054dc398aee7802007133b6aa",
+        "source_snapshot": true,
+        "latency": 5,
+        "configuration_sha256": "f1146baa7a67fd6cf2e59dba96c55c434409105884f591775e9d9e1e3a64e6d8",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 315.38640395901166,
+        "source": "build/ppa/fp16_sqrt_TC/8dd627f372d3/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 530.304,
+        "setup_slack_ps": 237.141,
+        "hold_slack_ps": 0.681316,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "8dd627f372d3a14ad749b249c8204a92862474a054dc398aee7802007133b6aa",
+          "configuration_sha256": "f1146baa7a67fd6cf2e59dba96c55c434409105884f591775e9d9e1e3a64e6d8",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            237.140533,
+            0.681316
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "2127dcbdeb04063a820d71f16c1262088b73d519c28e6861a1e5cb36367ca302",
+            "6_final.spef": "1952960a0293df521c6b1871264555e74d955e1925138659060742626de85921",
+            "6_final.sdc": "f5fcf02b0e89fb55f1b8773ea9ace3f97e4e889d0c1bf341916d1e9ee1dda4d7",
+            "6_final.v": "ca0e1d130089c547802e775dea7149df39345bfc5f50f16ce9ffcd069bf896dd"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "8dd627f372d3a14ad749b249c8204a92862474a054dc398aee7802007133b6aa",
+          "netlist_sha256": "ca0e1d130089c547802e775dea7149df39345bfc5f50f16ce9ffcd069bf896dd",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "3b581066c0be064511614b57b3c23987ea2ce4435f185944b00e3f912774edda",
+              "gate_trace_sha256": "9917d42aa5d81064931b970f5a1fa9e523c3438e380d4db95f0b8b51ac965843"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1261d589cad62e5c23708696960089e4626bf32435c6cb295831e4b7eceda341",
+              "gate_trace_sha256": "1d17ad7f8616d8027d45935b5923c7a168bcf14ac5efc67db438df876482579a"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c70b22b581b2a8de3fca001340d6befd741742cf5b7f91d73d5bbfb5053ff237",
+              "gate_trace_sha256": "c5edba28a73aaf9525eb749427cf57d089abe80880b32567fb1367ec2073745d"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "51538eb4a6f451cb1243a119a28e352f1ee5b0fc5ebfb2769612711d3826ec89",
+              "gate_trace_sha256": "83078413602059acbeeea8756636b2e4fa8053baabfd1a1fbf9394afda27c04b"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c785c58ffdd6636581e266f4845666b263ccdba8cf3c9e17451c313e52c57f57",
+              "gate_trace_sha256": "c88d20ad94e0e3724659a64f5f248338a77a4d20fd3344da90180b63ba93b918"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "41584750e13f5dd460e3783dc0153dd567b48fd5a74e77511cd72ed963dcc1bf",
+              "gate_trace_sha256": "72e4287b46e02537b08846f62afcf8aa07f660053cbfd4056370f9fd90639ab4"
+            }
+          ],
+          "numerical": {
+            "cases": 327680,
+            "vectors_sha256": "d53786c9f861728740e1ade37a3afc5db67802936637a846335baebf8cb16c0b",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 2651.52
+      }
+    },
+    "fp16.rsqrt": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 5,
+      "initiation_interval": 1,
+      "rtl_sha256": "50c21ded3f6ec564ebbcd5bc2bc2e15cab7b3e3b7a73b2ce3d1fa2f7ca110ecb",
+      "physical": {
+        "unit": "fp16.rsqrt",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "50c21ded3f6ec564ebbcd5bc2bc2e15cab7b3e3b7a73b2ce3d1fa2f7ca110ecb",
+        "source_snapshot": true,
+        "latency": 5,
+        "configuration_sha256": "f177671dc5dc4ee5356bf4f6082d4ea70abaca924b1876f88635c2b94bfeb1f6",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 297.87862870801473,
+        "source": "build/ppa/fp16_rsqrt_TC/50c21ded3f6e/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 512.691,
+        "setup_slack_ps": 168.594,
+        "hold_slack_ps": 1.02315,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "50c21ded3f6ec564ebbcd5bc2bc2e15cab7b3e3b7a73b2ce3d1fa2f7ca110ecb",
+          "configuration_sha256": "f177671dc5dc4ee5356bf4f6082d4ea70abaca924b1876f88635c2b94bfeb1f6",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            168.593811,
+            1.023154
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "dfa0a2f453623d22b15f52704e6aec68182eeea769726d892444f9e9274b450a",
+            "6_final.spef": "94b004295275161b63b147f1e4eff893496a112010fb1f2d31f433dbcab6ea5f",
+            "6_final.sdc": "b91e7b56fa70c9517f7cb46e974e60d333c0082c481e3bd94be90c113c32716c",
+            "6_final.v": "fd1cb9ea3b73d0aa50f811e645d6ed1f490ccf796b21e2936cc8680a2fbec397"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "50c21ded3f6ec564ebbcd5bc2bc2e15cab7b3e3b7a73b2ce3d1fa2f7ca110ecb",
+          "netlist_sha256": "fd1cb9ea3b73d0aa50f811e645d6ed1f490ccf796b21e2936cc8680a2fbec397",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "3b581066c0be064511614b57b3c23987ea2ce4435f185944b00e3f912774edda",
+              "gate_trace_sha256": "d85e8311c6f0d5b2d8dbd73c4a27e8747bcdca8c532d6b7846b692352b575417"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1261d589cad62e5c23708696960089e4626bf32435c6cb295831e4b7eceda341",
+              "gate_trace_sha256": "172ebf42a7e6cba9275f1aee5a8cffff6f466cfb66d80fabab3a323041f27fdd"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c70b22b581b2a8de3fca001340d6befd741742cf5b7f91d73d5bbfb5053ff237",
+              "gate_trace_sha256": "331316b3ae2ac56c57b83701095c1adff6e30adec5cd18c90f8a7586110a8451"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "51538eb4a6f451cb1243a119a28e352f1ee5b0fc5ebfb2769612711d3826ec89",
+              "gate_trace_sha256": "badd4be4eb1f63efe360355d5a75c9e900fb8f62813b07888d75ecab9bfc4411"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c785c58ffdd6636581e266f4845666b263ccdba8cf3c9e17451c313e52c57f57",
+              "gate_trace_sha256": "3b89edba11b5f3e8018d7f00011c69fe816eb273b7ed6e51e3f7b09d32cd7a51"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "41584750e13f5dd460e3783dc0153dd567b48fd5a74e77511cd72ed963dcc1bf",
+              "gate_trace_sha256": "8dc2590199d4a0b86e2f6579f572bb741da1f03bb5b137b8bfd26a90d925a034"
+            }
+          ],
+          "numerical": {
+            "cases": 327680,
+            "vectors_sha256": "9757e1bff5f27b9941a63c40cf76495b9dd52dfe188dd5b29bf011630b6c2e33",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 2563.455
+      }
+    },
+    "bf16.exp": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 10,
+      "initiation_interval": 1,
+      "rtl_sha256": "821fbea4da70639d76c7fd6d6b5636109d7b2863681ee44f1958bd1aafd07f2c",
+      "physical": {
+        "unit": "bf16.exp",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "821fbea4da70639d76c7fd6d6b5636109d7b2863681ee44f1958bd1aafd07f2c",
+        "source_snapshot": true,
+        "latency": 10,
+        "configuration_sha256": "ea79ab773c4a3b5a2c44749b44989c902db57b0fc43a549dc04e69ff5d1eb8b7",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 30,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 234.55794137500925,
+        "source": "build/ppa/bf16_exp_TC/821fbea4da70_sm30/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 911.512,
+        "setup_slack_ps": 37.5114,
+        "hold_slack_ps": 0.926453,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "821fbea4da70639d76c7fd6d6b5636109d7b2863681ee44f1958bd1aafd07f2c",
+          "configuration_sha256": "ea79ab773c4a3b5a2c44749b44989c902db57b0fc43a549dc04e69ff5d1eb8b7",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            37.51144,
+            0.926453
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "6b44b0a80535f9255b363bb280e60ce3145c6aa814101b79c1bd2709222e4a1f",
+            "6_final.spef": "bb7833c85f534a09290a0f0b4ad4543862f861983c625a44c40acdd9c53e5aa1",
+            "6_final.sdc": "263edfb7efdca88fc758693f917929be919ed3eb15e632f051d4c43df3078b74",
+            "6_final.v": "ca98f42858a8a8b4feac497641d083f2562d2a74cf5e446d637d34416e863336"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "821fbea4da70639d76c7fd6d6b5636109d7b2863681ee44f1958bd1aafd07f2c",
+          "netlist_sha256": "ca98f42858a8a8b4feac497641d083f2562d2a74cf5e446d637d34416e863336",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "96c98e8361f932ae654169305ba35aca260f215b83de28c64d327fe883c85deb",
+              "gate_trace_sha256": "f5d3a96a187a2cd3e1293800447844e028e242903dd7cb5fd34a460b02140aeb"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1c658fdf4f20161cb936b27e93af4b9f06670ed1984265b8c581cf8dfea10c3c",
+              "gate_trace_sha256": "1a9e0eb4eac13a8f5a50dff061a5825cea8d72880788a74a394b6844d602ce40"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "f0ffd489b4c527f0e16c670f192bdb1ce5038e40c407e2135a33322e3d0c773d",
+              "gate_trace_sha256": "56b353c4ec7df7c12ec7d7cc1a2fef6ca59afce027db7859849c1a7e4c967efa"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "52e477f7bcab6c3e21f073b00509ae7cfb591783191445b6a0887e5aa9cac338",
+              "gate_trace_sha256": "579810b6f6fdbfa86de0810f832ac190f9141984f7548eace480fdf00a5851fa"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "807fbaeb75873d6f068f3da16fdee9a8d0c29e66bb4b693fc6714783aab0aea8",
+              "gate_trace_sha256": "0225f7d3aff34884f27c691949c0d15cb5a3c704ee12147c2c15fb549206d435"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "29bceb4d9534d25c3f2a411876af584e08da86e9fa372f7e2ec411891d881e05",
+              "gate_trace_sha256": "60ee945fd436f851742ff9d9c3af604a55a01a379b175b5e082a46c6b2cdc43b"
+            }
+          ],
+          "numerical": {
+            "cases": 65536,
+            "vectors_sha256": "1b2fc3defc2e057d1bdaf014c1b67c2fe86607524bf54184ccbdbb9e47c635fa",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 9115.119999999999
+      }
+    },
+    "bf16.rcp": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 5,
+      "initiation_interval": 1,
+      "rtl_sha256": "562d109f9ab3a4a222fb45d5f3e17092c5620e2f6e83ddae1cfefb26080cd829",
+      "physical": {
+        "unit": "bf16.rcp",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "562d109f9ab3a4a222fb45d5f3e17092c5620e2f6e83ddae1cfefb26080cd829",
+        "source_snapshot": true,
+        "latency": 5,
+        "configuration_sha256": "50cbc22d8dde25f313e00c4e32020924006d2d36b2b8781513712582ba9658d0",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 243.28054458397673,
+        "source": "build/ppa/bf16_rcp_TC/562d109f9ab3/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 290.404,
+        "setup_slack_ps": 183.088,
+        "hold_slack_ps": 1.1203,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "562d109f9ab3a4a222fb45d5f3e17092c5620e2f6e83ddae1cfefb26080cd829",
+          "configuration_sha256": "50cbc22d8dde25f313e00c4e32020924006d2d36b2b8781513712582ba9658d0",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            183.087875,
+            1.120298
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "fb4ca656d3cd43222f6ed9f51ea8f2e90f4e44bb11486a181dc166cdb35f9dee",
+            "6_final.spef": "b14b059d0261cbc7108f9ea5b4d74f5d828e12135225fc48c57fee8b8bc3ec34",
+            "6_final.sdc": "592a71e0cbaf07f19fda4aa6323ed638215015fa6dd900aa1212b59141a2f828",
+            "6_final.v": "3b2e936a75ab2d7c198cabc05a51af3094cd3349584d8aa9d3c395647898fdee"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "562d109f9ab3a4a222fb45d5f3e17092c5620e2f6e83ddae1cfefb26080cd829",
+          "netlist_sha256": "3b2e936a75ab2d7c198cabc05a51af3094cd3349584d8aa9d3c395647898fdee",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "3b581066c0be064511614b57b3c23987ea2ce4435f185944b00e3f912774edda",
+              "gate_trace_sha256": "07189b1d5b811e7cbac88a8fdc1b563ccf789891bb540a79194003437807b907"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1261d589cad62e5c23708696960089e4626bf32435c6cb295831e4b7eceda341",
+              "gate_trace_sha256": "11228308101c538640eefabd89c0e3f3aac39cb9e833853f771acd9454920785"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c70b22b581b2a8de3fca001340d6befd741742cf5b7f91d73d5bbfb5053ff237",
+              "gate_trace_sha256": "54d50144ad8f9df17c8cd39c9e9c0ccc826ded7ecf2949f3bfb98b4b56d7f080"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "51538eb4a6f451cb1243a119a28e352f1ee5b0fc5ebfb2769612711d3826ec89",
+              "gate_trace_sha256": "ce791197c87305b6281439445148c25fa8376432e9d18a7d21cc7ec6ee359704"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c785c58ffdd6636581e266f4845666b263ccdba8cf3c9e17451c313e52c57f57",
+              "gate_trace_sha256": "fd4ae0d5126fbd1779d3d3170279a731e6d17a099612d3ad5e71d0c8c0f850a1"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "41584750e13f5dd460e3783dc0153dd567b48fd5a74e77511cd72ed963dcc1bf",
+              "gate_trace_sha256": "c0558150431a1274baca7306c056cc5f457fc176d56e8a8b2aded4a1140e2e7a"
+            }
+          ],
+          "numerical": {
+            "cases": 327680,
+            "vectors_sha256": "b2c4c617a48c64793ae459fc880afc3fc292cf470ee69e9bee7192e536eca29a",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 1452.02
+      }
+    },
+    "bf16.sqrt": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 5,
+      "initiation_interval": 1,
+      "rtl_sha256": "3f9d0db5778cd24bd7d7f5cb2b1919bb1b8ec0c184e391044791f2d354231ed0",
+      "physical": {
+        "unit": "bf16.sqrt",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "3f9d0db5778cd24bd7d7f5cb2b1919bb1b8ec0c184e391044791f2d354231ed0",
+        "source_snapshot": true,
+        "latency": 5,
+        "configuration_sha256": "530e76674781f868f9f51219d7de7b4d154492c62a29851b6187754345999961",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 286.7539097080007,
+        "source": "build/ppa/bf16_sqrt_TC/3f9d0db5778c/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 300.581,
+        "setup_slack_ps": 258.089,
+        "hold_slack_ps": 0.674724,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "3f9d0db5778cd24bd7d7f5cb2b1919bb1b8ec0c184e391044791f2d354231ed0",
+          "configuration_sha256": "530e76674781f868f9f51219d7de7b4d154492c62a29851b6187754345999961",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            258.088562,
+            0.674724
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "d518add332861668e5ac57ebbad8a7dda138e76caa42529a9eb1775e2ec82a53",
+            "6_final.spef": "780c7a6d98fa45642706a84f7ac8ca24b720d4a7c6ee136f4a80cba4b05ea65d",
+            "6_final.sdc": "f5fcf02b0e89fb55f1b8773ea9ace3f97e4e889d0c1bf341916d1e9ee1dda4d7",
+            "6_final.v": "3b5d3274148d2eaa3d5faecccd21303c33eb617a9bcd2668c338b947431c1fd3"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "3f9d0db5778cd24bd7d7f5cb2b1919bb1b8ec0c184e391044791f2d354231ed0",
+          "netlist_sha256": "3b5d3274148d2eaa3d5faecccd21303c33eb617a9bcd2668c338b947431c1fd3",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "3b581066c0be064511614b57b3c23987ea2ce4435f185944b00e3f912774edda",
+              "gate_trace_sha256": "49201849d83ae5f61ee2004ad7cd9c5612216614223ed589eac6c5527075ab5e"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1261d589cad62e5c23708696960089e4626bf32435c6cb295831e4b7eceda341",
+              "gate_trace_sha256": "ca8078cb86fbe186b7b354561f957167f7d652a8629f74dfe211a65775ccc687"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c70b22b581b2a8de3fca001340d6befd741742cf5b7f91d73d5bbfb5053ff237",
+              "gate_trace_sha256": "ef99b9969920c4d0a24d4a05ec26942d2842229757ef67929bcf118f5ca1c798"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "51538eb4a6f451cb1243a119a28e352f1ee5b0fc5ebfb2769612711d3826ec89",
+              "gate_trace_sha256": "6ed67be3c186ef28e7fe08ec6796ee53ad57ebf8b9ee2c10db92f3d779525f56"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c785c58ffdd6636581e266f4845666b263ccdba8cf3c9e17451c313e52c57f57",
+              "gate_trace_sha256": "ac5a2a94fe0e7e81ab78f50dd828bd0656b2a20403bf63e42f0aa87c7f040f1a"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "41584750e13f5dd460e3783dc0153dd567b48fd5a74e77511cd72ed963dcc1bf",
+              "gate_trace_sha256": "62fa08904786b2dc831c795dc9a3bae07be5ffd369773a30c9097bfd2d4db18e"
+            }
+          ],
+          "numerical": {
+            "cases": 327680,
+            "vectors_sha256": "9b54cefd5eb4150bd59c2497f9155c938aa31257c16b2e95a0e3b08fb68e2e26",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 1502.9050000000002
+      }
+    },
+    "bf16.rsqrt": {
+      "status": "dual-verified",
+      "qualified": true,
+      "numerics": "passed",
+      "cycle_alignment": "passed",
+      "asap7_1ghz": "passed",
+      "latency": 5,
+      "initiation_interval": 1,
+      "rtl_sha256": "f9491977bc2cfa24403e30fcf1ad19534720847e58f5d6b368fdbece2a5e83c2",
+      "physical": {
+        "unit": "bf16.rsqrt",
+        "corner": "TC",
+        "platform": "ASAP7",
+        "voltage": 0.7,
+        "temperature_c": 0,
+        "clock_period_ps": 1000,
+        "io_delay_ps": 200,
+        "uncertainty_ps": 50,
+        "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+        "rtl_sha256": "f9491977bc2cfa24403e30fcf1ad19534720847e58f5d6b368fdbece2a5e83c2",
+        "source_snapshot": true,
+        "latency": 5,
+        "configuration_sha256": "2713de3255dc9b5d05232e3f3fd164cca4671fa8c5c99ab2f3492c25a4079930",
+        "initiation_interval": 1,
+        "target": "finish",
+        "setup_repair_margin_ps": 0,
+        "hold_repair_margin_ps": 0,
+        "synth_memory_max_bits": 32768,
+        "post_resize_formal_lec": false,
+        "exit_code": 0,
+        "elapsed_seconds": 260.52991954097524,
+        "source": "build/ppa/bf16_rsqrt_TC/f9491977bc2c/physical.json",
+        "evaluation_level": "detailed-route",
+        "area_um2": 309.898,
+        "setup_slack_ps": 181.964,
+        "hold_slack_ps": 1.34655,
+        "timing_pass": true,
+        "physical_checks": {
+          "rtl_sha256": "f9491977bc2cfa24403e30fcf1ad19534720847e58f5d6b368fdbece2a5e83c2",
+          "configuration_sha256": "2713de3255dc9b5d05232e3f3fd164cca4671fa8c5c99ab2f3492c25a4079930",
+          "clock_period_ps": 1000,
+          "corner": "TC",
+          "voltage": 0.7,
+          "temperature_c": 0,
+          "slacks_ps": [
+            181.96405,
+            1.346548
+          ],
+          "check_setup": "",
+          "clock_checks": "",
+          "route_drc": 0,
+          "artifact_sha256": {
+            "6_final.odb": "327818e1ada39defc2c7379a71b8ca16c9299687b8c22ab05cec4c6f33f2badf",
+            "6_final.spef": "b9df93f040bdef9752a041d6dceba93f562c64a4a93cd70e35a5a77d7cb804e3",
+            "6_final.sdc": "b91e7b56fa70c9517f7cb46e974e60d333c0082c481e3bd94be90c113c32716c",
+            "6_final.v": "81684a1272b349cd87a840de7946dcb9df38cf189d512cf31151ec2b7e511eca"
+          },
+          "passed": true
+        },
+        "netlist_equivalence": {
+          "method": "RTL/routed-netlist trace equivalence with functional Liberty models",
+          "rtl_sha256": "f9491977bc2cfa24403e30fcf1ad19534720847e58f5d6b368fdbece2a5e83c2",
+          "netlist_sha256": "81684a1272b349cd87a840de7946dcb9df38cf189d512cf31151ec2b7e511eca",
+          "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260905",
+          "library": {
+            "image": "openroad/orfs@sha256:696763e68f34723118155f28f86851077847948e139d1495c67860066028b386",
+            "model_sha256": "6d2fbcedfb3cfbc0367b375d74396f5be877c4c400b52ad7571707aa40cb6b8c",
+            "libraries": {
+              "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+              "asap7sc7p5t_DFFHQNH2V2X_RVT_TT_nldm_FAKE.lib": "69f120a3a6a717717ffa24e17ca2045a8b8cbf60fe67ddcaba27534262e1cfe7",
+              "asap7sc7p5t_DFFHQNV2X_RVT_TT_nldm_FAKE.lib": "3e5f960c641007e2cef7a9918380d3b045bdc120f0429753a76cea55e7a6ad08",
+              "asap7sc7p5t_DFFHQNV4X_RVT_TT_nldm_FAKE.lib": "49af1e15ef89df27505b522cc0c75801373aad8106a3cacb9017f9995ba0dc9d",
+              "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+              "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+              "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+              "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+            },
+            "license_sha256": "df0c04b7633a00c037310e9b7ee66d77edeb9c5be23879a3bad449f5bec140f6"
+          },
+          "campaigns": [
+            {
+              "seed": 104729,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "3b581066c0be064511614b57b3c23987ea2ce4435f185944b00e3f912774edda",
+              "gate_trace_sha256": "b2d772cfa698cc336338d4fb2a9b89f13fa6286b239652aed32336121b97d272"
+            },
+            {
+              "seed": 11509,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "1261d589cad62e5c23708696960089e4626bf32435c6cb295831e4b7eceda341",
+              "gate_trace_sha256": "6b42a16738784451d3cbfe1c9a6c78f06357c8a4b7f9abb50f10ebe2eae369f0"
+            },
+            {
+              "seed": 2026,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c70b22b581b2a8de3fca001340d6befd741742cf5b7f91d73d5bbfb5053ff237",
+              "gate_trace_sha256": "57709d1dff778ffafcea27cb3de5bc7b988156d293659cf235ea9cef1cddec98"
+            },
+            {
+              "seed": 65537,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "51538eb4a6f451cb1243a119a28e352f1ee5b0fc5ebfb2769612711d3826ec89",
+              "gate_trace_sha256": "9d53f14469a1fb6ea5e814be552cbf6028f255a7ebe100d038bebef926df51ed"
+            },
+            {
+              "seed": 751,
+              "cycles": 100000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "c785c58ffdd6636581e266f4845666b263ccdba8cf3c9e17451c313e52c57f57",
+              "gate_trace_sha256": "5e4914c2c7d0767fbad132972ccdb971b7acf26b0f6f55d6ce487f0067bcf5d3"
+            },
+            {
+              "seed": 751,
+              "cycles": 20000,
+              "discrepancy_cycles": 0,
+              "stimulus_sha256": "41584750e13f5dd460e3783dc0153dd567b48fd5a74e77511cd72ed963dcc1bf",
+              "gate_trace_sha256": "5ec0f5864c9f7fa9e8dc61954fcefc7cccaaa42a4e3623a13fec439c38d45f50"
+            }
+          ],
+          "numerical": {
+            "cases": 327680,
+            "vectors_sha256": "64138588ca49fcc0bbf9807b762fc1dff96fd667b357cfe8d2fa8c1b0f9bc521",
+            "discrepancies": 0
+          },
+          "discrepancy_cycles": 0
+        },
+        "area_latency_um2_ns": 1549.4900000000002
       }
     }
   }

@@ -42,7 +42,11 @@ def main():
         status='dual-verified' if cycleok and pyok and perfok and netok and macrok and physical else 'cycle-verified' if cycleok and pyok else 'unqualified'
         record=dict(status=status,configuration=c,cycle_alignment=cycleok,functional_tests=pyok,performance=perfok,network_alignment=netok,
             physical=physical,rtl_sha256=rtlsha,alignment_source=str(path.relative_to(ROOT)),runs=a['runs'])
-        if key not in records or status=='dual-verified':records[key]=record
+        # The report and distributed qualification index contain configurations
+        # with current cycle or physical evidence. Other legal parameter sets
+        # remain callable and resolve to the default status at query time.
+        if status != 'unqualified' and (key not in records or status=='dual-verified'):
+            records[key]=record
     report=dict(implementation_hash=implementation,contract_hash=contract,configurations=records,python=python,benchmark=benchmark,cold_compilation=cold,macro_adapter=macro,platform_views=platform,network=network,physical_history=physical_records)
     (ROOT/'reports/spm-validation.json').write_text(json.dumps(portable(report),indent=2)+'\n')
     (ROOT/'src/zircon_asic/data/spm_qualification.json').write_text(json.dumps(portable({k:report[k] for k in ('implementation_hash','contract_hash','configurations')}),indent=2)+'\n')
